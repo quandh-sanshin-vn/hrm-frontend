@@ -15,16 +15,17 @@ import { EMAIL_REGEX } from "@/utilities/validate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import iconEyeOn from "../assets/icons/iconEye.png";
 import iconEyeOff from "../assets/icons/iconEyeOff.png";
 import profilePic from "../assets/images/bgLogin.png";
 import loginLogo from "../assets/logo/loginLogo.png";
-import { setCookie } from "cookies-next";
+import { getCookie, setCookie } from "cookies-next";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/utilities/static-value";
 import { toast } from "@/hooks/use-toast";
+import StyledOverlay from "@/components/common/StyledOverlay";
 
 const authRepo = new AuthRepositoryImpl();
 const loginUseCase = new LoginUseCase(authRepo);
@@ -51,8 +52,8 @@ const LoginPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "quansang@gmail.com",
-      password: "Admin123",
+      username: "",
+      password: "",
     },
   });
   const router = useRouter();
@@ -70,18 +71,17 @@ const LoginPage = () => {
         email: data.username,
         password: data.password,
       };
-      console.log("------------params------res ui", params);
       const response = await loginUseCase.execute(params);
-      console.log("------------------res ui", response);
-      if (response?.token) setCookie(ACCESS_TOKEN_KEY, response.token);
-      if (response?.refreshToken)
-        setCookie(REFRESH_TOKEN_KEY, response.refreshToken);
       if (response.code === 1) {
         toast({
           duration: 2000,
           description: response.message,
           color: "bg-red-100",
         });
+      } else {
+        setCookie(ACCESS_TOKEN_KEY, response.token);
+        setCookie(REFRESH_TOKEN_KEY, response.refreshToken);
+        router.push("/dashboard");
       }
     } catch (error) {
     } finally {
@@ -89,14 +89,17 @@ const LoginPage = () => {
     }
   };
 
+  const token = useMemo(() => getCookie(ACCESS_TOKEN_KEY), []);
+
   useEffect(() => {
-    // if (session?.sessionToken) {
-    //   setCookie(ACCESS_TOKEN_KEY, session?.sessionToken);
-    //   router.push("/dashboard");
-    // }
-  }, [router]);
+    if (token) {
+      router.push("/dashboard");
+    }
+  }, [router, token]);
+
   return (
-    <div className="min-h-screen w-screen bg-background flex flex-1 overscroll-none overflow-hidden ">
+    <div className="max-h-screen w-screen bg-background flex flex-1 overscroll-none overflow-hidden ">
+      <StyledOverlay isVisible={loading} />
       <div className="flex flex-1 mobile:w-0 laptop:w-2/3 py-[52px] px-5 ">
         <Image
           src={profilePic}

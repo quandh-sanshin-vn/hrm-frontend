@@ -25,15 +25,16 @@ export class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  async getUser(token: AuthToken): Promise<User | null> {
+  async getUser(token: AuthToken): Promise<any | null> {
     return null;
   }
 
-  async signOut(): Promise<void> {
+  async signOut(): Promise<any> {
     try {
       const res = await logoutRequest();
-      console.log("--------", res);
-      return;
-    } catch (error) {}
+      return res;
+    } catch (error) {
+      return error;
+    }
   }
 }

@@ -15,10 +15,9 @@ export class UserRepositoryImpl implements UserRepository {
         newPassword: password.newPassword,
       };
       const response: any = await changePasswordRequest(params);
-
       const formattedResponse: CommonResponse = {
-        data: response?.data || [],
-        code: response?.code || 1,
+        data: response?.data,
+        code: response?.code,
         message: response?.message || "",
         requestStatus: response.status,
       };

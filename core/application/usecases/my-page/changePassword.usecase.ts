@@ -7,7 +7,8 @@ export class ChangePasswordUseCase {
     this.userRepo = userRepo;
   }
   async execute(password: Password): Promise<any | null> {
-    const changePasswordResponse = await this.userRepo.changePassword(password);
-    return changePasswordResponse;
+    const reponse = await this.userRepo.changePassword(password);
+    console.log("---------reponse usecase ----------", reponse);
+    return reponse;
   }
 }

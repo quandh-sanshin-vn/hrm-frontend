@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import iconEyeOn from "../../assets/icons/iconEye.png";
 import iconEyeOff from "../../assets/icons/iconEyeOff.png";
+import StyledOverlay from "@/components/common/StyledOverlay";
 const formSchema = z.object({
   currentPassword: z
     .string({ required_error: "Vui lòng nhập mật khẩu" })
@@ -59,21 +60,22 @@ export default function ChangePasswordForm() {
       const res = await changePassword.execute(params);
       if (res.code === 0) {
         toast({
-          title: "Success",
           description: "Change password success",
-          color: "bg-primary",
+          color: "bg-blue-200",
         });
       } else {
-        console.log("error");
         toast({
-          title: "Failed",
-          description: "Mos",
+          description: "Change password failed",
+          color: "bg-red-100",
         });
       }
     } catch (error) {
     } finally {
       setLoading(false);
     }
+  };
+  const onClearForm = () => {
+    form.reset();
   };
 
   const toggleHideCurrentPassword = () => {
@@ -85,10 +87,10 @@ export default function ChangePasswordForm() {
   const toggleHideConfirmPassword = () => {
     setHideConfirmPassword(!hideConfirmPassword);
   };
-  // if (loading) return <></>;
 
   return (
     <div className=" bg-white flex flex-1 h-full">
+      <StyledOverlay isVisible={loading} />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -168,13 +170,14 @@ export default function ChangePasswordForm() {
           />
           <div className="flex justify-end gap-x-4 pt-[70px]">
             <Button
+              onClick={onClearForm}
               variant="outline"
               disabled={loading}
               tabIndex={3}
               className="w-[152px] h-[50px] font-normal border-border bg-white text-[14px] hover:bg-gray-100 rounded-lg"
-              type="submit"
+              type="button"
             >
-              {"Cancel"}
+              {"Clear"}
             </Button>
             <Button
               disabled={loading}

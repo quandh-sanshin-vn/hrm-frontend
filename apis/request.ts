@@ -15,10 +15,10 @@ const api = axios.create({
 api.interceptors.request.use(
   async (config) => {
     if (typeof window !== "undefined") {
-      // const token = getCookie(ACCESS_TOKEN_KEY);
-      // if (token) {
-      //   config.headers.Authorization = "Bearer " + token;
-      // }
+      const token = getCookie(ACCESS_TOKEN_KEY);
+      if (token) {
+        config.headers.Authorization = "Bearer " + token;
+      }
       return config;
     } else {
       return config;

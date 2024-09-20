@@ -1,3 +1,5 @@
+import { Toaster } from "@/components/ui/toaster";
+
 export default function MyPageScreenLayout({
   children,
 }: Readonly<{
@@ -5,10 +7,9 @@ export default function MyPageScreenLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`min-h-screen w-screen flex flex-1 overscroll-none overflow-hidden`}
-      >
-        {children}
+      <body>
+        <main>{children}</main>
+        <Toaster />
       </body>
     </html>
   );

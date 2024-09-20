@@ -7,7 +7,7 @@ import MyPageTab from "./components/MyPageTab";
 
 export default function MyPageScreen() {
   return (
-    <div className="flex w-full h-full">
+    <div className="flex flex-1 w-full h-full">
       <SideBarComponent />
       <div className="flex flex-1 flex-col">
         <div className="h-[100px] w-full px-4 py-4">

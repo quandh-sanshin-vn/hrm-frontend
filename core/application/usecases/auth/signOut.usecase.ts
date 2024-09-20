@@ -7,7 +7,8 @@ export class LogoutUseCase {
     this.authRepo = authRepo;
   }
 
-  async execute(): Promise<void> {
-    await this.authRepo.signOut();
+  async execute(): Promise<any> {
+    const res = await this.authRepo.signOut();
+    return res;
   }
 }

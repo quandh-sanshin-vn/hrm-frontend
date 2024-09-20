@@ -5,5 +5,5 @@ import { User } from "@/core/entities/models/user.model";
 export interface AuthRepository {
   signIn(credentials: AuthCredentials): Promise<AuthToken | any>;
   getUser(token: AuthToken): Promise<User | null>;
-  signOut(): Promise<void>;
+  signOut(): Promise<any>;
 }
