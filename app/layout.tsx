@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { SessionProvider } from "next-auth/react";
 
 const inter = localFont({
   src: "./fonts/Inter-VariableFont_opsz,wght.ttf",
@@ -21,8 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={` ${inter.variable} ${inter.className} antialiased`}>
-        <SessionProvider>{children}</SessionProvider>
+      <body className={`${inter.variable} ${inter.className} antialiased`}>
+        {children}
       </body>
     </html>
   );

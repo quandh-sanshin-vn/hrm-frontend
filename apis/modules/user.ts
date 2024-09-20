@@ -6,7 +6,7 @@ export interface ChangePasswordParams {
 }
 
 export function changePasswordRequest(params: ChangePasswordParams) {
-  return api.post(`/login`, {
+  return api.post(`/change-password`, {
     current_password: params.currentPassword,
     new_password: params.newPassword,
   });

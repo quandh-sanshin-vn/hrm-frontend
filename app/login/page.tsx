@@ -6,21 +6,28 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { LoginUseCase } from "@/core/application/usecases/auth/signIn.usecase";
+import { AuthCredentials } from "@/core/entities/models/authCredentials.model";
+import { AuthRepositoryImpl } from "@/core/infrastructure/repositories/auth.repo";
+import { EMAIL_REGEX } from "@/utilities/validate";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import iconEyeOn from "../assets/icons/iconEye.png";
 import iconEyeOff from "../assets/icons/iconEyeOff.png";
-import loginLogo from "../assets/logo/loginLogo.png";
 import profilePic from "../assets/images/bgLogin.png";
-import { useSession, signIn, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { EMAIL_REGEX } from "@/utilities/validate";
+import loginLogo from "../assets/logo/loginLogo.png";
+import { setCookie } from "cookies-next";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/utilities/static-value";
+import { toast } from "@/hooks/use-toast";
+
+const authRepo = new AuthRepositoryImpl();
+const loginUseCase = new LoginUseCase(authRepo);
 
 const formSchema = z.object({
   username: z
@@ -30,15 +37,15 @@ const formSchema = z.object({
   password: z
     .string({ required_error: "Vui lòng nhập mật khẩu" })
     .trim()
-    .min(1, { message: "Chưa nhập mật khẩu" }),
-  // .regex(
-  //   /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-  //   "Mật khẩu không đúng định dạng"
-  // ),
+    .min(1, { message: "Chưa nhập mật khẩu" })
+    .regex(
+      /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
+      "Mật khẩu không đúng định dạng"
+    ),
 });
 
 const LoginPage = () => {
-  const [hidePassword, setHidePassword] = useState(false);
+  const [hidePassword, setHidePassword] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -48,7 +55,6 @@ const LoginPage = () => {
       password: "Admin123",
     },
   });
-  const { data: session, status } = useSession();
   const router = useRouter();
 
   const toggleHidePassword = () => {
@@ -56,26 +62,41 @@ const LoginPage = () => {
   };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    // FLOW: UI -> next-auth -> use cases -> repositories -> API
-    // API response -> next-auth: save to session. UI use "useSession" -> isLogin: true||false
-    setLoading(true);
-    await signIn("credentials", {
-      redirect: false,
-      email: data.username,
-      password: data.password,
-    });
-    setLoading(false);
+    // FLOW: UI --> use cases -> repositories -> API
+    // API response -> isLogin: true||false
+    try {
+      setLoading(true);
+      const params: AuthCredentials = {
+        email: data.username,
+        password: data.password,
+      };
+      console.log("------------params------res ui", params);
+      const response = await loginUseCase.execute(params);
+      console.log("------------------res ui", response);
+      if (response?.token) setCookie(ACCESS_TOKEN_KEY, response.token);
+      if (response?.refreshToken)
+        setCookie(REFRESH_TOKEN_KEY, response.refreshToken);
+      if (response.code === 1) {
+        toast({
+          duration: 2000,
+          description: response.message,
+          color: "bg-red-100",
+        });
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
-    console.log("-----session---login----", session);
-    if (status === "loading") return;
-    if (session?.sessionToken) router.push("/dashboard");
-  }, [session, status, router]);
-
-  if (status === "loading") return <></>;
+    // if (session?.sessionToken) {
+    //   setCookie(ACCESS_TOKEN_KEY, session?.sessionToken);
+    //   router.push("/dashboard");
+    // }
+  }, [router]);
   return (
-    <div className="bg-background flex flex-1 overscroll-none overflow-hidden ">
+    <div className="min-h-screen w-screen bg-background flex flex-1 overscroll-none overflow-hidden ">
       <div className="flex flex-1 mobile:w-0 laptop:w-2/3 py-[52px] px-5 ">
         <Image
           src={profilePic}
@@ -136,16 +157,11 @@ const LoginPage = () => {
                   <FormControl>
                     <Input
                       tabIndex={2}
+                      type={hidePassword ? "password" : "text"}
                       placeholder="Enter your password"
                       {...field}
                       className="border-border focus:border-primary"
-                      endIcon={() => (
-                        <Image
-                          src={hidePassword ? iconEyeOff : iconEyeOn}
-                          alt=""
-                          className="h-4 w-4"
-                        />
-                      )}
+                      endIcon={hidePassword ? iconEyeOff : iconEyeOn}
                       endIconOnClick={toggleHidePassword}
                     />
                   </FormControl>

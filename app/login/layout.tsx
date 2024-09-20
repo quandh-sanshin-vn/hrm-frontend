@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function LoginLayout({
   children,
@@ -7,10 +7,9 @@ export default function LoginLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`min-h-screen w-screen  overscroll-none overflow-hidden`}
-      >
-        {children}
+      <body>
+        <main>{children}</main>
+        <Toaster />
       </body>
     </html>
   );

@@ -3,14 +3,11 @@ import SideBarComponent from "@/components/common/SideBarComponent";
 import Image from "next/image";
 import React from "react";
 import GoodMorningIcon from "../assets/icons/iconSunrise.png";
-import GoodAfternoonIcon from "../assets/icons/iconSunset.png";
-import ArrowDownIcon from "../assets/icons/icon-arrow-down.svg";
-import AvatarDefault from "../assets/images/avatar_default.png";
 import MyPageTab from "./components/MyPageTab";
 
 export default function MyPageScreen() {
   return (
-    <div className="flex">
+    <div className="flex w-full h-full">
       <SideBarComponent />
       <div className="flex flex-1 flex-col">
         <div className="h-[100px] w-full px-4 py-4">

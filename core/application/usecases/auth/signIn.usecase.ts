@@ -1,22 +1,25 @@
+"use client";
 import { AuthCredentials } from "@/core/entities/models/authCredentials.model";
 import { AuthToken } from "@/core/entities/models/authToken.model";
 import { AuthRepository } from "../../infrastructure-interface/repositories/auth.repo-interface";
-import { AuthService } from "../../infrastructure-interface/services/auth.service-interface";
 
 export class LoginUseCase {
   private authRepo: AuthRepository;
-  private authService: AuthService;
 
-  constructor(authRepo: AuthRepository, authService: AuthService) {
+  constructor(authRepo: AuthRepository) {
     this.authRepo = authRepo;
-    this.authService = authService;
   }
-  async execute(credentials: AuthCredentials): Promise<AuthToken | null> {
+  async execute(credentials: AuthCredentials): Promise<AuthToken | any> {
     const authData = await this.authRepo.signIn(credentials);
     if (authData?.token) {
-      this.authService.saveToken(authData?.token);
+      // get user info here
+      // const user = await this.authRepository.getUser(token);
       return authData;
     }
-    return null;
+    return {
+      message: authData.response.message,
+      code: authData.response.code,
+      statusCode: authData.status,
+    };
   }
 }

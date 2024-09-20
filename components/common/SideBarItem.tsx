@@ -1,7 +1,6 @@
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import React, { useMemo } from "react";
 
 export interface SideBarItemProps {
@@ -10,7 +9,7 @@ export interface SideBarItemProps {
   title: string;
   sidebarOpenStatus?: boolean;
   route: string;
-  pathname: string;
+  pathname?: string;
 }
 
 const SideBarItem = (props: SideBarItemProps) => {

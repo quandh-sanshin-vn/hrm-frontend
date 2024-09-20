@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 
 const SideBarComponent = () => {
   const [isOpen, setIsOpen] = useState(true);
+
   const pathname = usePathname();
 
   const toggleSidebar = () => {

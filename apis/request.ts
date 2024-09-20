@@ -1,9 +1,8 @@
-import { AuthServiceImpl } from "@/core/infrastructure/services/auth.service";
+import { ACCESS_TOKEN_KEY } from "@/utilities/static-value";
 import axios, { AxiosError } from "axios";
 import { deleteCookie, getCookie } from "cookies-next";
 
 export const BASE_URL = process.env.BASE_URL;
-const authService = new AuthServiceImpl();
 const api = axios.create({
   baseURL: "http://192.168.1.171:8000/api/v1",
   headers: {
@@ -15,14 +14,17 @@ const api = axios.create({
 
 api.interceptors.request.use(
   async (config) => {
-    const token = authService.getToken();
-    console.log("===========", token);
-    if (token) {
-      config.headers.Authorization = "Bearer " + token;
+    if (typeof window !== "undefined") {
+      // const token = getCookie(ACCESS_TOKEN_KEY);
+      // if (token) {
+      //   config.headers.Authorization = "Bearer " + token;
+      // }
+      return config;
+    } else {
+      return config;
     }
-    return config;
   },
-  (error: any) => {
+  (error: AxiosError) => {
     return Promise.reject(error);
   }
 );
@@ -39,16 +41,14 @@ api.interceptors.response.use(
   },
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      window.location.replace(
-        `/cms/login?company_cd=${getCookie("company_cd")}`
-      );
-      deleteCookie("token");
+      // window.location.replace(`/login`);
+      // deleteCookie(ACCESS_TOKEN_KEY);
     }
-    // check conditions to refresh token if needed
     return Promise.reject({
       message: error.message,
       code: error.code,
       response: error.response?.data,
+      status: error.status,
     });
   }
 );

@@ -8,6 +8,9 @@ import StaffIcon from "../app/assets/icons/iconStaff.png";
 import StaffIconActive from "../app/assets/icons/iconStaffActive.png";
 import { SideBarItemProps } from "@/components/common/SideBarItem";
 
+export const ACCESS_TOKEN_KEY = "ACCESS_TOKEN_KEY";
+export const REFRESH_TOKEN_KEY = "REFRESH_TOKEN_KEY";
+
 export const SIDEBAR_ITEMS: SideBarItemProps[] = [
   {
     icon: DashboardIcon,

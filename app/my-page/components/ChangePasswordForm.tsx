@@ -1,20 +1,17 @@
+"use client";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ChangePasswordUseCase } from "@/core/application/usecases/my-page/changePassword.usecase";
+import { Password } from "@/core/entities/models/password.model";
+import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
+import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import iconEyeOn from "../../assets/icons/iconEye.png";
 import iconEyeOff from "../../assets/icons/iconEyeOff.png";
-
 const formSchema = z.object({
   currentPassword: z
     .string({ required_error: "Vui lòng nhập mật khẩu" })
@@ -32,12 +29,15 @@ const formSchema = z.object({
     .min(1, { message: "Chưa nhập mật khẩu xác nhận" })
     .min(8, { message: "Mật khẩu hiện tại không đúng định dạng" }),
 });
+const userRepo = new UserRepositoryImpl();
+const changePassword = new ChangePasswordUseCase(userRepo);
 
 export default function ChangePasswordForm() {
-  const [hideCurrentPassword, setHideCurrentPassword] = useState(false);
-  const [hideNewPassword, setHideNewPassword] = useState(false);
-  const [hideConfirmPassword, setHideConfirmPassword] = useState(false);
+  const [hideCurrentPassword, setHideCurrentPassword] = useState(true);
+  const [hideNewPassword, setHideNewPassword] = useState(true);
+  const [hideConfirmPassword, setHideConfirmPassword] = useState(true);
   const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,8 +50,30 @@ export default function ChangePasswordForm() {
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     // FLOW: UI -> use cases -> repositories -> API
-    // API response -> next-auth: save to session. UI use "useSession" -> isLogin: true||false
-    setLoading(true);
+    try {
+      setLoading(true);
+      const params: Password = {
+        currentPassword: data.currentPassword,
+        newPassword: data.newPassword,
+      };
+      const res = await changePassword.execute(params);
+      if (res.code === 0) {
+        toast({
+          title: "Success",
+          description: "Change password success",
+          color: "bg-primary",
+        });
+      } else {
+        console.log("error");
+        toast({
+          title: "Failed",
+          description: "Mos",
+        });
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
 
   const toggleHideCurrentPassword = () => {
@@ -79,17 +101,12 @@ export default function ChangePasswordForm() {
               <FormItem className="w-1/2">
                 <FormControl>
                   <Input
-                    tabIndex={2}
+                    tabIndex={1}
                     placeholder="Current Password"
                     {...field}
                     className="border-border focus:border-primary h-14"
-                    endIcon={() => (
-                      <Image
-                        src={hideCurrentPassword ? iconEyeOn : iconEyeOff}
-                        alt=""
-                        className="h-4 w-4"
-                      />
-                    )}
+                    type={hideCurrentPassword ? "password" : "text"}
+                    endIcon={hideCurrentPassword ? iconEyeOff : iconEyeOn}
                     endIconOnClick={toggleHideCurrentPassword}
                   />
                 </FormControl>
@@ -112,13 +129,8 @@ export default function ChangePasswordForm() {
                     placeholder="New Password"
                     {...field}
                     className="border-border focus:border-primary h-14"
-                    endIcon={() => (
-                      <Image
-                        src={hideNewPassword ? iconEyeOn : iconEyeOff}
-                        alt=""
-                        className="h-4 w-4"
-                      />
-                    )}
+                    type={hideNewPassword ? "password" : "text"}
+                    endIcon={hideNewPassword ? iconEyeOff : iconEyeOn}
                     endIconOnClick={toggleHideNewPassword}
                   />
                 </FormControl>
@@ -141,13 +153,8 @@ export default function ChangePasswordForm() {
                     placeholder="Enter your password"
                     {...field}
                     className="border-border focus:border-primary h-14"
-                    endIcon={() => (
-                      <Image
-                        src={hideConfirmPassword ? iconEyeOn : iconEyeOff}
-                        alt=""
-                        className="h-4 w-4"
-                      />
-                    )}
+                    type={hideConfirmPassword ? "password" : "text"}
+                    endIcon={hideConfirmPassword ? iconEyeOff : iconEyeOn}
                     endIconOnClick={toggleHideConfirmPassword}
                   />
                 </FormControl>

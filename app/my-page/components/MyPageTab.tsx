@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
@@ -16,7 +18,7 @@ export default function MyPageTab() {
     <Tabs
       onValueChange={changeTab}
       defaultValue="password"
-      className="flex flex-1 flex-col bg-white h-full"
+      className="flex flex-1 flex-col bg-white h-full w-full"
     >
       <TabsList className="w-full justify-start ">
         <TabsTrigger value="personal">

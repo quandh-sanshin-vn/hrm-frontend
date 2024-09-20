@@ -1,11 +1,13 @@
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
-  startIcon?: any;
-  endIcon?: any;
+  startIcon?: StaticImport;
+  endIcon?: StaticImport;
   endIconOnClick?(): void;
 }
 
@@ -18,7 +20,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
       <div className="w-full relative">
         {StartIcon && (
           <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
-            <StartIcon size={18} className="text-muted-foreground" />
+            <Image
+              src={StartIcon}
+              alt=""
+              className="text-muted-foreground h-4 w-4"
+            />
           </div>
         )}
         <input
@@ -37,7 +43,11 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             onClick={endIconOnClick}
             className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1"
           >
-            <EndIcon className="text-muted-foreground" />
+            <Image
+              src={EndIcon}
+              alt=""
+              className="text-muted-foreground h-4 w-4"
+            />
           </div>
         )}
       </div>

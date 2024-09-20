@@ -1,5 +1,4 @@
-import type { Metadata } from "next";
-
+"use client";
 export default function LoginLayout({
   children,
 }: Readonly<{
