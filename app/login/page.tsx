@@ -33,15 +33,15 @@ const loginUseCase = new LoginUseCase(authRepo);
 const formSchema = z.object({
   username: z
     .string()
-    .min(1, { message: "Chưa nhập email" })
-    .regex(EMAIL_REGEX, "Email không đúng định dạng "),
+    .min(1, { message: "Email is required" })
+    .regex(EMAIL_REGEX, "Invalid email format"),
   password: z
-    .string({ required_error: "Vui lòng nhập mật khẩu" })
+    .string()
     .trim()
-    .min(1, { message: "Chưa nhập mật khẩu" })
+    .min(1, { message: "Password is required" })
     .regex(
       /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-      "Mật khẩu không đúng định dạng"
+      "Password must be at least 8 characters long and include both letters and numbers"
     ),
 });
 
@@ -73,9 +73,14 @@ const LoginPage = () => {
       };
       const response = await loginUseCase.execute(params);
       if (response.code === 1) {
+        // toast({
+        //   duration: 2000,
+        //   description: response.message,
+        //   color: "bg-red-100",
+        // });
         toast({
           duration: 2000,
-          description: response.message,
+          description: "Invalid login credentials",
           color: "bg-red-100",
         });
       } else {

@@ -29,7 +29,7 @@ export default function MyPageTab() {
               <Image src={PersonalIcon} alt="" className="h-6 w-6 mx-1" />
             )}
             <p
-              className="text-[16px]"
+              className="text-[16px] font-normal"
               style={{
                 // fontWeight: tab === "personal" ? "700" : "400",
                 color: tab === "personal" ? "var(--primary)" : "black",
@@ -38,7 +38,12 @@ export default function MyPageTab() {
               Personal Information
             </p>
           </div>
-          {tab === "personal" && <div className="h-1 w-full bg-primary mt-1" />}
+          <div
+            className="h-1 w-full  mt-1"
+            style={{
+              backgroundColor: tab === "personal" ? "var(--primary)" : "white",
+            }}
+          />
         </TabsTrigger>
         <TabsTrigger value="professional" className="flex-col">
           <div className="flex items-center">
@@ -52,7 +57,7 @@ export default function MyPageTab() {
               <Image src={ProfessionalIcon} alt="" className="h-6 w-6 mx-1" />
             )}
             <p
-              className="text-[16px]"
+              className="text-[16px] font-normal"
               style={{
                 // fontWeight: tab === "professional" ? "700" : "400",
                 color: tab === "professional" ? "var(--primary)" : "black",
@@ -61,9 +66,14 @@ export default function MyPageTab() {
               Professional Information
             </p>
           </div>
-          {tab === "professional" && (
-            <div className="h-1 w-full bg-primary mt-1" />
-          )}
+
+          <div
+            className="h-1 w-full  mt-1"
+            style={{
+              backgroundColor:
+                tab === "professional" ? "var(--primary)" : "white",
+            }}
+          />
         </TabsTrigger>
 
         <TabsTrigger value="password" className="flex-col">
@@ -78,7 +88,7 @@ export default function MyPageTab() {
               <Image src={ChangePasswordIcon} alt="" className="h-6 w-6 mx-1" />
             )}
             <p
-              className="text-[16px]"
+              className="text-[16px] font-normal"
               style={{
                 // fontWeight: tab === "password" ? "700" : "400",
                 color: tab === "password" ? "var(--primary)" : "black",
@@ -87,7 +97,12 @@ export default function MyPageTab() {
               Change Password
             </p>
           </div>
-          {tab === "password" && <div className="h-1 w-full bg-primary mt-1" />}
+          <div
+            className="h-1 w-full  mt-1"
+            style={{
+              backgroundColor: tab === "password" ? "var(--primary)" : "white",
+            }}
+          />
         </TabsTrigger>
       </TabsList>
       <TabsContent value="personal">Personal Information form</TabsContent>

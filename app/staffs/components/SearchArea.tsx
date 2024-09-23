@@ -80,13 +80,13 @@ export default function SearchArea(props: Props) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="mt-1 flex w-full items-center justify-center"
+          className="mt-1 flex w-full items-center "
         >
           <FormField
             control={form.control}
             name="staffName"
             render={({ field, fieldState }) => (
-              <FormItem>
+              <FormItem className="flex-1">
                 <FormLabel className="text-primary font-light text-[12px]">
                   Employee Name:
                 </FormLabel>
@@ -105,7 +105,7 @@ export default function SearchArea(props: Props) {
             control={form.control}
             name="position"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex-1">
                 <FormLabel>Email</FormLabel>
                 <Select
                   onValueChange={field.onChange}
@@ -137,7 +137,7 @@ export default function SearchArea(props: Props) {
             control={form.control}
             name="position"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex-1">
                 <FormLabel>Email</FormLabel>
                 <Select
                   onValueChange={field.onChange}
@@ -170,7 +170,7 @@ export default function SearchArea(props: Props) {
             control={form.control}
             name="position"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="flex-1">
                 <FormLabel>Email</FormLabel>
                 <Select
                   onValueChange={field.onChange}
