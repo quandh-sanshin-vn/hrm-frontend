@@ -11,6 +11,44 @@ import { SideBarItemProps } from "@/components/common/SideBarItem";
 export const ACCESS_TOKEN_KEY = "ACCESS_TOKEN_KEY";
 export const REFRESH_TOKEN_KEY = "REFRESH_TOKEN_KEY";
 
+export const STAFF_STATUS = [
+  {
+    value: 0,
+    name: "In Active",
+  },
+  {
+    value: 1,
+    name: "Active",
+  },
+  {
+    value: 2,
+    name: "Block",
+  },
+];
+
+export const STAFF_STATUS_WORKING = [
+  {
+    value: 1,
+    name: "Intern",
+  },
+  {
+    value: 2,
+    name: "Probationary period",
+  },
+  {
+    value: 3,
+    name: "Official",
+  },
+  {
+    value: 4,
+    name: "Leave of absence",
+  },
+  {
+    value: 5,
+    name: "Temporarily off",
+  },
+];
+
 export const SIDEBAR_ITEMS: SideBarItemProps[] = [
   {
     icon: DashboardIcon,

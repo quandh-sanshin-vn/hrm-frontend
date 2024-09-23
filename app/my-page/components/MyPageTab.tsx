@@ -31,7 +31,7 @@ export default function MyPageTab() {
             <p
               className="text-[16px]"
               style={{
-                fontWeight: tab === "personal" ? "700" : "400",
+                // fontWeight: tab === "personal" ? "700" : "400",
                 color: tab === "personal" ? "var(--primary)" : "black",
               }}
             >
@@ -54,7 +54,7 @@ export default function MyPageTab() {
             <p
               className="text-[16px]"
               style={{
-                fontWeight: tab === "professional" ? "700" : "400",
+                // fontWeight: tab === "professional" ? "700" : "400",
                 color: tab === "professional" ? "var(--primary)" : "black",
               }}
             >
@@ -80,7 +80,7 @@ export default function MyPageTab() {
             <p
               className="text-[16px]"
               style={{
-                fontWeight: tab === "password" ? "700" : "400",
+                // fontWeight: tab === "password" ? "700" : "400",
                 color: tab === "password" ? "var(--primary)" : "black",
               }}
             >
