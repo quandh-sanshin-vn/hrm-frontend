@@ -23,11 +23,13 @@ export class UserRepositoryImpl implements UserRepository {
       };
       return formattedResponse;
     } catch (error: any) {
+      console.log("--------------", error.response.data.error_code);
       const formattedResponse: CommonResponse = {
         data: error.response?.data || [],
         code: error.response?.code || 1,
         message: error.response?.message,
         requestStatus: error.status,
+        errorCode: error?.data?.error_code || 0,
       };
       return formattedResponse;
     }

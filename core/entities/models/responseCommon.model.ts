@@ -3,6 +3,7 @@ export class CommonResponse {
     public code: string | number,
     public message: string,
     public requestStatus: number,
-    public data: any
+    public data: any,
+    public errorCode?: string | number
   ) {}
 }

@@ -13,23 +13,32 @@ import { z } from "zod";
 import iconEyeOn from "../../assets/icons/iconEye.png";
 import iconEyeOff from "../../assets/icons/iconEyeOff.png";
 import StyledOverlay from "@/components/common/StyledOverlay";
-const formSchema = z.object({
-  currentPassword: z
-    .string({ required_error: "Vui lòng nhập mật khẩu" })
-    .trim()
-    .min(1, { message: "Chưa nhập mật khẩu hiện tại" })
-    .min(8, { message: "Mật khẩu hiện tại không đúng định dạng" }),
-  newPassword: z
-    .string({ required_error: "Vui lòng nhập mật khẩu" })
-    .trim()
-    .min(1, { message: "Chưa nhập mật khẩu mới" })
-    .min(8, { message: "Mật khẩu hiện tại không đúng định dạng" }),
-  confirmPassword: z
-    .string({ required_error: "Vui lòng nhập mật khẩu" })
-    .trim()
-    .min(1, { message: "Chưa nhập mật khẩu xác nhận" })
-    .min(8, { message: "Mật khẩu hiện tại không đúng định dạng" }),
-});
+const formSchema = z
+  .object({
+    currentPassword: z
+      .string()
+      .trim()
+      .min(1, { message: "Current password is required" })
+      .min(8, {
+        message: "Current password does not meet the required format",
+      }),
+    newPassword: z
+      .string()
+      .trim()
+      .min(1, { message: "New password is required" })
+      .min(8, { message: "New password does not meet the required format" }),
+    confirmPassword: z
+      .string()
+      .trim()
+      .min(1, { message: "Confirmation password is required" })
+      .min(8, {
+        message: "Confirmation password does not meet the required format",
+      }),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Confirmation password does not match the new password.",
+    path: ["confirmPassword"], // Set the error path to `confirmPassword`
+  });
 const userRepo = new UserRepositoryImpl();
 const changePassword = new ChangePasswordUseCase(userRepo);
 
@@ -58,16 +67,30 @@ export default function ChangePasswordForm() {
         newPassword: data.newPassword,
       };
       const res = await changePassword.execute(params);
-      if (res.code === 0) {
+      if (res?.code === 0) {
         toast({
           description: "Change password success",
           color: "bg-blue-200",
         });
       } else {
-        toast({
-          description: "Change password failed",
-          color: "bg-red-100",
-        });
+        if (res?.data?.error_code === "CURRENT_PASSWORD_IS_CORRECT") {
+          toast({
+            description: "Current password is incorrect.",
+            color: "bg-red-100",
+          });
+        } else if (
+          res?.data?.error_code === "NEW_PASSWORD_NOT_THE_SAME_CURRENT_PASSWORD"
+        ) {
+          toast({
+            description: "New password is the same as the current password.",
+            color: "bg-red-100",
+          });
+        } else {
+          toast({
+            description: "Change password failed",
+            color: "bg-red-100",
+          });
+        }
       }
     } catch (error) {
     } finally {
@@ -152,7 +175,7 @@ export default function ChangePasswordForm() {
                 <FormControl>
                   <Input
                     tabIndex={3}
-                    placeholder="Enter your password"
+                    placeholder="Confirm New password"
                     {...field}
                     className="border-border focus:border-primary h-14"
                     type={hideConfirmPassword ? "password" : "text"}

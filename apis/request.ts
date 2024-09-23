@@ -41,8 +41,8 @@ api.interceptors.response.use(
   },
   (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // window.location.replace(`/login`);
-      // deleteCookie(ACCESS_TOKEN_KEY);
+      window.location.replace(`/login`);
+      deleteCookie(ACCESS_TOKEN_KEY);
     }
     return Promise.reject({
       message: error.message,

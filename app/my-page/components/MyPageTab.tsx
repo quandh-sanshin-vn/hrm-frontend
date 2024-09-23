@@ -32,6 +32,7 @@ export default function MyPageTab() {
               className="text-[16px]"
               style={{
                 fontWeight: tab === "personal" ? "700" : "400",
+                color: tab === "personal" ? "var(--primary)" : "black",
               }}
             >
               Personal Information
@@ -54,6 +55,7 @@ export default function MyPageTab() {
               className="text-[16px]"
               style={{
                 fontWeight: tab === "professional" ? "700" : "400",
+                color: tab === "professional" ? "var(--primary)" : "black",
               }}
             >
               Professional Information
@@ -79,6 +81,7 @@ export default function MyPageTab() {
               className="text-[16px]"
               style={{
                 fontWeight: tab === "password" ? "700" : "400",
+                color: tab === "password" ? "var(--primary)" : "black",
               }}
             >
               Change Password
