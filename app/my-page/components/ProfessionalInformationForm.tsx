@@ -6,19 +6,23 @@ import { useEffect, useState } from "react";
 import { User } from "@/core/entities/models/user.model";
 import { Input } from "@/components/ui/input";
 import useWindowSize from "@/hooks/use-dimession";
+import StyledOverlay from "@/components/common/StyledOverlay";
+import { useUserStore } from "@/stores/staffStore";
 
 const userRepo = new UserRepositoryImpl();
 const showMyPage = new ShowMyPageUseCase(userRepo);
 
 export default function ProfessionalInformationForm() {
   const { toast } = useToast();
-  const [userProfile, setUserProfile] = useState<User | null>(null);
   const useDimession = useWindowSize();
+  const [loading, setLoading] = useState(false);
+  const { user, setUser } = useUserStore((state) => state);
 
   const getMyPage = async () => {
     try {
+      setLoading(true);
       const res: any = await showMyPage.execute();
-      setUserProfile(res.data);
+      setUser(res.data);
       console.log(res);
     } catch (error: any) {
       console.error("Lỗi khi lấy thông tin người dùng:", error);
@@ -27,6 +31,7 @@ export default function ProfessionalInformationForm() {
         description: "Không thể lấy thông tin người dùng.",
       });
     } finally {
+      setLoading(false);
     }
   };
 
@@ -44,15 +49,15 @@ export default function ProfessionalInformationForm() {
         scrollbarWidth: "none",
       }}
     >
-      {userProfile ? (
+      {user ? (
         <div className="grid grid-cols-2 gap-7 w-full">
-          <div className="flex flex-col pb-2 col-span-1 gap-7">
+          <div className="flex flex-col pb-2 col-span-1 gap-5">
             <div className="flex flex-col border-b">
               <p className="text-[#A2A1A8] font-light text-[0.9rem]">
                 Employee ID
               </p>
               <Input
-                value={userProfile.idkey}
+                value={user.idkey}
                 disabled
                 className="text-[#16151] text-base border-none focus:ring-0 p-0"
                 style={{ color: "#16151", opacity: 1 }}
@@ -63,7 +68,7 @@ export default function ProfessionalInformationForm() {
                 Employee Type
               </p>
               <Input
-                value={userProfile.status_working}
+                value={user.status_working}
                 disabled
                 className="text-[#16151] text-base border-none focus:ring-0 p-0"
                 style={{ color: "#16151", opacity: 1 }}
@@ -74,7 +79,7 @@ export default function ProfessionalInformationForm() {
                 Department
               </p>
               <Input
-                value={userProfile.department}
+                value={user.department}
                 disabled
                 className="text-[#16151] text-base border-none focus:ring-0 p-0"
                 style={{ color: "#16151", opacity: 1 }}
@@ -85,9 +90,7 @@ export default function ProfessionalInformationForm() {
                 Joining Date
               </p>
               <Input
-                value={new Date(userProfile.started_at).toLocaleDateString(
-                  "en-GB"
-                )}
+                value={new Date(user.started_at).toLocaleDateString("en-GB")}
                 disabled
                 className="text-[#16151] text-base border-none focus:ring-0 p-0"
                 style={{ color: "#16151", opacity: 1 }}
@@ -98,20 +101,20 @@ export default function ProfessionalInformationForm() {
                 Remaining leave hours
               </p>
               <Input
-                value={userProfile.time_off_hours}
+                value={user.time_off_hours}
                 disabled
                 className="text-[#16151] text-base border-none focus:ring-0 p-0"
                 style={{ color: "#16151", opacity: 1 }}
               />
             </div>
           </div>
-          <div className="flex flex-col pb-2 gap-7 col-span-1">
+          <div className="flex flex-col pb-2 gap-5 col-span-1">
             <div className="flex flex-col border-b">
               <p className="text-[#A2A1A8] font-light text-[0.9rem]">
                 User Name
               </p>
               <Input
-                value={userProfile.username}
+                value={user.username}
                 disabled
                 className="text-[#16151] text-base border-none focus:ring-0 p-0"
                 style={{ color: "#16151", opacity: 1 }}
@@ -120,7 +123,7 @@ export default function ProfessionalInformationForm() {
             <div className="flex flex-col border-b">
               <p className="text-[#A2A1A8] font-light text-[0.9rem]">Email</p>
               <Input
-                value={userProfile.email}
+                value={user.email}
                 disabled
                 className="text-[#16151] text-base border-none focus:ring-0 p-0"
                 style={{ color: "#16151", opacity: 1 }}
@@ -131,7 +134,7 @@ export default function ProfessionalInformationForm() {
                 Position
               </p>
               <Input
-                value={userProfile.position_name}
+                value={user.position_name}
                 disabled
                 className="text-[#16151] text-base border-none focus:ring-0 p-0"
                 style={{ color: "#16151", opacity: 1 }}
@@ -142,7 +145,11 @@ export default function ProfessionalInformationForm() {
                 Terminate Date
               </p>
               <Input
-                value={userProfile.ended_at}
+                value={
+                  user.ended_at
+                    ? new Date(user.ended_at).toLocaleDateString("en-GB")
+                    : ""
+                }
                 disabled
                 className="text-[#16151] text-base border-none focus:ring-0 p-0"
                 style={{ color: "#16151", opacity: 1 }}
@@ -151,7 +158,7 @@ export default function ProfessionalInformationForm() {
           </div>
         </div>
       ) : (
-        <p>Đợi trong giây lát.</p>
+        <StyledOverlay isVisible={loading} />
       )}
     </div>
   );

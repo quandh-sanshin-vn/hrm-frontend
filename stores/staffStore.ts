@@ -26,3 +26,25 @@ export const useStaffStore = create<StaffState>()(
     )
   )
 );
+
+interface UserState {
+  user: User | null; 
+  setUser: (user: any) => void; 
+}
+
+export const useUserStore = create<UserState>((set) => {
+  const storedUser = localStorage.getItem("user");
+  const initialUser = storedUser ? JSON.parse(storedUser) : null;
+
+  return {
+    user: initialUser,
+    setUser: (user: User | null) => {
+      set({ user });
+      if (user) {
+        localStorage.setItem("user", JSON.stringify(user)); 
+      } else {
+        localStorage.removeItem("user");
+      }
+    },
+  };
+});
