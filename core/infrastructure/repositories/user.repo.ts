@@ -3,6 +3,7 @@ import {
   changePasswordRequest,
   getStaffListRequest,
   GetStaffListParams,
+  getProfileRequest,
 } from "@/apis/modules/user";
 import { UserRepository } from "@/core/application/infrastructure-interface/repositories/user.repo-interface";
 import { Password } from "@/core/entities/models/password.model";
@@ -49,6 +50,30 @@ export class UserRepositoryImpl implements UserRepository {
       };
       return formattedResponse;
     } catch (error: any) {
+      const formattedResponse: CommonResponse = {
+        data: error.response?.data || [],
+        code: error.response?.code || 1,
+        message: error.response?.message,
+        requestStatus: error.status,
+        errorCode: error?.data?.error_code || 0,
+        totalItem: 0,
+      };
+      return formattedResponse;
+    }
+  }
+
+  async getProfile(): Promise<CommonResponse | null> {
+    try {
+        const response : any = await getProfileRequest();
+        const formattedResponse: CommonResponse = {
+          data: response?.data,
+          code: response?.code,
+          message: response?.message || "",
+          requestStatus: response.status,
+        };
+        return formattedResponse;
+    }catch(error : any) {
+      console.log("--------------", error.response.data);
       const formattedResponse: CommonResponse = {
         data: error.response?.data || [],
         code: error.response?.code || 1,
