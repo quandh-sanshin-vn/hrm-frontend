@@ -12,17 +12,18 @@ export function changePasswordRequest(params: ChangePasswordParams) {
   });
 }
 
-export interface GetUsersListParams {
-  page: string;
-  sort_by: string;
-  sort_order: string;
-  position: string;
-  status: string;
-  type: string;
-  employee_name: string;
+export interface GetStaffListParams {
+  page?: number;
+  sort_by?: string;
+  sort_order?: string;
+  position?: string;
+  status?: number;
+  type?: number;
+  employee_name?: string;
+  limit?: number;
 }
 
-export function getStaffListRequest(params: GetUsersListParams) {
+export function getStaffListRequest(params: GetStaffListParams) {
   return api.get(`/users`, { params });
 }
 

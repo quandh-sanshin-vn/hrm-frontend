@@ -7,12 +7,18 @@
   --foreground: #171717;
   --primary: #2B4CD2;
   --primary-hover: #203ba7;
-  --secondary: #A2A1A8,
+  --secondary: #A2A1A8;
   --gray:#030303;
   --sidebar-primary: #DCFAFF;
   --sidebar-hover: #D0EDF9;
   --red-logout: #EC8383;
   --red-logout-hover: #E75F60;
+  --green: #50D23E;
+  --green-hover: #DBF5DD;
+  --block: #C4C940;
+  --block-hover: #F6F8EC;
+  --inactive:  #D14918;
+  --inactive-hover: #FCDACF;
 }
 
 
@@ -54,4 +60,16 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+
+/* Hide scrollbar for Webkit-based browsers */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.hide-scrollbar {
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For IE and Edge */
 }
