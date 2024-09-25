@@ -10,41 +10,55 @@ import { SideBarItemProps } from "@/components/common/SideBarItem";
 
 export const ACCESS_TOKEN_KEY = "ACCESS_TOKEN_KEY";
 export const REFRESH_TOKEN_KEY = "REFRESH_TOKEN_KEY";
+export const ITEM_PER_PAGE = 10;
+
+export interface CommonDataDropdown {
+  value: string;
+  name: string;
+}
 
 export const STAFF_STATUS = [
   {
-    value: 0,
+    value: "-1",
+    name: "All",
+  },
+  {
+    value: "0",
     name: "In Active",
   },
   {
-    value: 1,
+    value: "1",
     name: "Active",
   },
   {
-    value: 2,
+    value: "2",
     name: "Block",
   },
 ];
 
 export const STAFF_STATUS_WORKING = [
   {
-    value: 1,
+    value: "-1",
+    name: "All",
+  },
+  {
+    value: "1",
     name: "Intern",
   },
   {
-    value: 2,
+    value: "2",
     name: "Probationary period",
   },
   {
-    value: 3,
+    value: "3",
     name: "Official",
   },
   {
-    value: 4,
+    value: "4",
     name: "Leave of absence",
   },
   {
-    value: 5,
+    value: "5",
     name: "Temporarily off",
   },
 ];

@@ -1,24 +1,90 @@
 "use client";
 import SideBarComponent from "@/components/common/SideBarComponent";
 import StyledHeader from "@/components/common/StyledHeader";
-import React, { useState } from "react";
-import MyPageTab from "../my-page/components/MyPageTab";
+import React, { useEffect, useState } from "react";
 import SearchArea from "./components/SearchArea";
 import StyledOverlay from "@/components/common/StyledOverlay";
+import StyledStaffMasterTable from "./components/StyledStaffMasterTable";
+import StyledPagination from "@/components/common/StyledPagination";
+import { useStaffStore } from "@/stores/staffStore";
+import { ITEM_PER_PAGE } from "@/utilities/static-value";
+import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
+import { GetStaffListUseCase } from "@/core/application/usecases/staff-master/getUserList.usecase";
+import { GetStaffListParams } from "@/apis/modules/user";
+import useWindowSize from "@/hooks/useWindowSize";
 
 export default function StaffScreen() {
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const totalItems = useStaffStore((state) => state.totalItems);
+  const userRepo = new UserRepositoryImpl();
+  const getStaffListUseCase = new GetStaffListUseCase(userRepo);
+
+  const { searchParams, updateStaffListData, updateSearchParams } =
+    useStaffStore((state) => state);
+
+  const onPageChange = async (page: number) => {
+    try {
+      setLoading(true);
+      const params = { ...searchParams, page };
+      const response = await getStaffListUseCase.execute(params);
+      setPage(page);
+      updateSearchParams(params);
+      updateStaffListData(response?.data, response?.totalItem || 0);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    // onFirstLoad();
+  }, []);
+  const onFirstLoad = async () => {
+    try {
+      setLoading(true);
+      const params: GetStaffListParams = {
+        page: 1,
+        limit: ITEM_PER_PAGE,
+      };
+      const response = await getStaffListUseCase.execute(params);
+      updateStaffListData(response?.data, response?.totalItem || 0);
+      updateSearchParams(params);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+  const windowSize = useWindowSize();
 
   return (
-    <div className="flex flex-1 w-full h-full">
+    <div className="flex flex-1 w-full h-full max-h-screen overflow-y-none overscroll-none">
       <SideBarComponent />
-      <div className="flex flex-1 flex-col">
-        <StyledOverlay isVisible={loading} />
+      <StyledOverlay isVisible={loading} />
+      <div className="w-full block max-h-screen">
         <StyledHeader />
-        <div className="flex-1 py-5 px-10 w-full h-full ">
-          <div className="border  bg-white w-full h-full">
-            <SearchArea setLoading={setLoading} />
+        <div
+          style={{
+            maxHeight: windowSize.height - 100 - 20,
+            minHeight: windowSize.height - 100 - 20,
+          }}
+          className="px-5 w-full pb-4"
+        >
+          <div
+            style={{
+              maxHeight: windowSize.height - 100 - 40 - 20,
+              minHeight: windowSize.height - 100 - 40 - 20,
+            }}
+            className="border w-full rounded-sm px-5 py-2 "
+          >
+            <SearchArea loading setLoading={setLoading} />
+            <StyledStaffMasterTable />
           </div>
+          <StyledPagination
+            totalItems={totalItems}
+            itemsPerPage={ITEM_PER_PAGE}
+            currentPage={page}
+            onPageChange={onPageChange}
+          />
         </div>
       </div>
     </div>

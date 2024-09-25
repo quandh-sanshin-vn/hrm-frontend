@@ -52,6 +52,12 @@ const config: Config = {
         ring: "hsl(var(--ring))",
         red_login: "var(--red-logout)",
         red_login_hover: "var(--red-logout-hover)",
+        active: "var(--green)",
+        active_hover: "var(--green-hover)",
+        inactive: "var(--inactive)",
+        inactive_hover: "var(--inactive-hover)",
+        block: "var(--block)",
+        block_hover: "var(--block-hover)",
       },
       borderRadius: {
         lg: "var(--radius)",
