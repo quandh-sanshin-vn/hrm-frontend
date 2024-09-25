@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { DATE_OF_BIRTH } from "@/utilities/format";
 
 interface Props {
   title: string;
@@ -32,12 +33,13 @@ export function StyledDatePicker(props: Props) {
           )}
         >
           {field.value ? (
-            format(field.value, "DATE_OF_BIRTH")
+            <p className="w-full text-secondary">
+              {format(field.value, DATE_OF_BIRTH)}
+            </p>
           ) : (
             <p className="w-full text-secondary">{props.title}</p>
           )}
           <Image src={IconCalendar} alt="" />
-          {/* <CalendarIcon className="mr-2 h-4 w-4" /> */}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0 bg-white">
