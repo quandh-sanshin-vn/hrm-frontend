@@ -37,7 +37,7 @@ export default function StaffScreen() {
     }
   };
   useEffect(() => {
-    // onFirstLoad();
+    onFirstLoad();
   }, []);
   const onFirstLoad = async () => {
     try {

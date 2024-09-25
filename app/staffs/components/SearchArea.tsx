@@ -112,7 +112,7 @@ export default function SearchArea(props: Props) {
   };
 
   useEffect(() => {
-    // getPosition();
+    getPosition();
   }, []);
 
   return (
