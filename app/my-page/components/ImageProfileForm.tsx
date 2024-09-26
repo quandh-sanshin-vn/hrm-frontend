@@ -1,17 +1,17 @@
-import Image, { StaticImageData } from "next/image";
+import StyledOverlay from "@/components/common/StyledOverlay";
+import { Button } from "@/components/ui/button";
 import { ShowMyPageUseCase } from "@/core/application/usecases/my-page/showMyPage.usecase";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import { useToast } from "@/hooks/use-toast";
-import AvatarDefault from "../../assets/images/avatar_default.png";
-import IconBriefCase from "../../assets/icons/iconBriefcase.svg";
-import IconEmail from "../../assets/icons/iconGmail.svg";
-import IconCamera from "../../assets/icons/iconCamera.svg";
-import React, { useEffect, useState } from "react";
-import StyledOverlay from "@/components/common/StyledOverlay";
-import { Button } from "@/components/ui/button";
 import { useEditingStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import Image, { StaticImageData } from "next/image";
+import React, { useEffect, useState } from "react";
+import IconBriefCase from "../../assets/icons/iconBriefcase.svg";
+import IconCamera from "../../assets/icons/iconCamera.svg";
+import IconEmail from "../../assets/icons/iconGmail.svg";
+import AvatarDefault from "../../assets/images/avatar_default.png";
 
 const userRepo = new UserRepositoryImpl();
 const showMyPage = new ShowMyPageUseCase(userRepo);

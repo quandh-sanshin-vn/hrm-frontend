@@ -1,13 +1,12 @@
 "use client";
-import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
-import { useToast } from "@/hooks/use-toast";
-import { ShowMyPageUseCase } from "@/core/application/usecases/my-page/showMyPage.usecase";
-import { useEffect, useState } from "react";
-import { User } from "@/core/entities/models/user.model";
-import { Input } from "@/components/ui/input";
-import useWindowSize from "@/hooks/use-dimession";
 import StyledOverlay from "@/components/common/StyledOverlay";
+import { Input } from "@/components/ui/input";
+import { ShowMyPageUseCase } from "@/core/application/usecases/my-page/showMyPage.usecase";
+import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
+import useWindowSize from "@/hooks/use-dimession";
+import { useToast } from "@/hooks/use-toast";
 import { useUserStore } from "@/stores/userStore";
+import { useEffect, useState } from "react";
 
 const userRepo = new UserRepositoryImpl();
 const showMyPage = new ShowMyPageUseCase(userRepo);

@@ -1,8 +1,7 @@
 "use client";
-import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
-import { useToast } from "@/hooks/use-toast";
-import { ShowMyPageUseCase } from "@/core/application/usecases/my-page/showMyPage.usecase";
-import { useEffect, useState } from "react";
+import { StyledDatePicker_v1 } from "@/components/common/StyledDatePicker_v1";
+import StyledOverlay from "@/components/common/StyledOverlay";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -10,18 +9,20 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ShowMyPageUseCase } from "@/core/application/usecases/my-page/showMyPage.usecase";
+import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import useWindowSize from "@/hooks/use-dimession";
-import StyledOverlay from "@/components/common/StyledOverlay";
-import { boolean, z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { StyledDatePicker_v1 } from "@/components/common/StyledDatePicker_v1";
+import useFocus from "@/hooks/use-focus";
+import { useToast } from "@/hooks/use-toast";
 import { useEditingStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
-import useFocus from "@/hooks/use-focus";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 const formSchema = z.object({
+  fullname: z.string().trim(),
   phone: z.string().trim(),
   birth_day: z.string().trim(),
   address: z.string().trim(),
@@ -50,23 +51,18 @@ export default function PersonalInformationForm() {
     },
   });
 
-  const [address = "Hanoi", birth_day, phone, country, image] = form.watch([
-    "address",
-    "birth_day",
-    "phone",
-    "country",
-    "image",
-  ]);
+  const isReserveForm = form.watch("fullname");
   const isFocus = useFocus();
   useEffect(() => {
     if (isFocus) {
+      form.setValue("fullname", user?.fullname || "");
       form.setValue("address", user?.address || "");
       form.setValue("phone", user?.phone || "");
       form.setValue("country", user?.country || "");
       form.setValue("image", user?.image || "");
       form.setValue("birth_day", user?.birth_day || "");
     }
-  }, ["Hanoi", birth_day, phone, country, image, isFocus]);
+  }, [isReserveForm, isFocus]);
 
   const getMyPage = async () => {
     try {
@@ -123,7 +119,6 @@ export default function PersonalInformationForm() {
       style={{
         maxHeight: useDimession.height - 100 - 100 - 120,
         minHeight: useDimession.height - 100 - 100 - 120,
-        overflowY: "scroll",
         scrollbarWidth: "none",
       }}
     >
@@ -136,14 +131,34 @@ export default function PersonalInformationForm() {
             <div className="grid grid-cols-2 gap-5 w-full">
               <div className="flex flex-col pb-2 col-span-1 gap-5">
                 <div className={`flex flex-col border-b`}>
-                  <p className="text-[#A2A1A8] font-light text-[0.9rem]">
-                    Fullname
-                  </p>
-                  <Input
-                    value={user.fullname}
-                    disabled
-                    className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full`}
-                    style={{ color: "#16151", opacity: 1 }}
+                  <FormField
+                    control={form.control}
+                    name={"fullname"}
+                    render={({ field, fieldState }) => {
+                      return (
+                        <FormItem className={`w-full`}>
+                          <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
+                            Fullname
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              tabIndex={2}
+                              disabled
+                              className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full ${
+                                isEditing ? "hover:cursor-not-allowed" : ""
+                              }`}
+                              style={{ color: "#16151", opacity: 1 }}
+                            />
+                          </FormControl>
+                          {isEditing && fieldState.error?.message && (
+                            <p className={"text-red-500 text-[10px]"}>
+                              {fieldState.error?.message}
+                            </p>
+                          )}
+                        </FormItem>
+                      );
+                    }}
                   />
                 </div>
                 <div
@@ -160,14 +175,7 @@ export default function PersonalInformationForm() {
                           Date of Birth
                         </FormLabel>
                         <FormControl>
-                          <StyledDatePicker_v1
-                            field={field}
-                            // title={
-                            //   user.birth_day
-                            //     ? user.birth_day.toString()
-                            //     : String(new Date())
-                            // }
-                          />
+                          <StyledDatePicker_v1 field={field} />
                         </FormControl>
                         {isEditing && fieldState.error?.message && (
                           <p className={"text-red-500 text-[10px]"}>
@@ -221,7 +229,7 @@ export default function PersonalInformationForm() {
                             {...field}
                             tabIndex={3}
                             disabled={!isEditing}
-                            className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full placeholder-[#16151C]`}
+                            className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full`}
                             style={{ color: "#16151", opacity: 1 }}
                           />
                         </FormControl>
@@ -251,7 +259,7 @@ export default function PersonalInformationForm() {
                             {...field}
                             tabIndex={4}
                             disabled={!isEditing}
-                            className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full placeholder-[#16151C]`}
+                            className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full`}
                             style={{ color: "#16151", opacity: 1 }}
                           />
                         </FormControl>

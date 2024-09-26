@@ -1,7 +1,6 @@
 "use client";
 
 import { format } from "date-fns";
-import * as React from "react";
 
 import IconCalendar from "@/app/assets/icons/iconCalendar.svg";
 import { Button } from "@/components/ui/button";
@@ -12,9 +11,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
-import { DATE_OF_BIRTH } from "@/utilities/format";
 import { useEditingStore } from "@/stores/commonStore";
+import { DATE_OF_BIRTH } from "@/utilities/format";
+import Image from "next/image";
 
 interface Props {
   title?: string;
@@ -34,7 +33,7 @@ export function StyledDatePicker_v1(props: Props) {
         <Button
           variant={"outline"}
           className={cn(
-            "w-full h-[52px] justify-start text-left font-normal border border-none ",
+            "w-full h-[52px] justify-start text-left font-normal border border-none px-0",
             !field.value &&
               `text-muted-foreground px-0 ${
                 !isEditing ? "hover:cursor-not-allowed" : ""
