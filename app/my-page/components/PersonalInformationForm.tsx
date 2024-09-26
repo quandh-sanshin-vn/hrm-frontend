@@ -14,12 +14,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useWindowSize from "@/hooks/use-dimession";
 import StyledOverlay from "@/components/common/StyledOverlay";
-import { z } from "zod";
+import { boolean, z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StyledDatePicker_v1 } from "@/components/common/StyledDatePicker_v1";
 import { useEditingStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
+import useFocus from "@/hooks/use-focus";
 const formSchema = z.object({
   phone: z.string().trim(),
   birth_day: z.string().trim(),
@@ -41,13 +42,31 @@ export default function PersonalInformationForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      phone: "",
-      birth_day: "",
-      address: "",
-      country: "",
-      image: "",
+      phone: user?.phone,
+      birth_day: user?.birth_day,
+      address: user?.address,
+      country: user?.country,
+      image: user?.image,
     },
   });
+
+  const [address = "Hanoi", birth_day, phone, country, image] = form.watch([
+    "address",
+    "birth_day",
+    "phone",
+    "country",
+    "image",
+  ]);
+  const isFocus = useFocus();
+  useEffect(() => {
+    if (isFocus) {
+      form.setValue("address", user?.address || "");
+      form.setValue("phone", user?.phone || "");
+      form.setValue("country", user?.country || "");
+      form.setValue("image", user?.image || "");
+      form.setValue("birth_day", user?.birth_day || "");
+    }
+  }, ["Hanoi", birth_day, phone, country, image, isFocus]);
 
   const getMyPage = async () => {
     try {
@@ -143,11 +162,11 @@ export default function PersonalInformationForm() {
                         <FormControl>
                           <StyledDatePicker_v1
                             field={field}
-                            title={
-                              user.birth_day
-                                ? user.birth_day.toString()
-                                : String(new Date())
-                            }
+                            // title={
+                            //   user.birth_day
+                            //     ? user.birth_day.toString()
+                            //     : String(new Date())
+                            // }
                           />
                         </FormControl>
                         {isEditing && fieldState.error?.message && (
@@ -163,28 +182,29 @@ export default function PersonalInformationForm() {
                   <FormField
                     control={form.control}
                     name={"address"}
-                    render={({ field, fieldState }) => (
-                      <FormItem className="w-full">
-                        <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
-                          Address
-                        </FormLabel>
-                        <FormControl>
-                          <Input
-                            tabIndex={2}
-                            disabled={!isEditing}
-                            {...(isEditing ? field : { value: user.address })}
-                            placeholder={user.address}
-                            className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full placeholder-[#16151C]`}
-                            style={{ color: "#16151", opacity: 1 }}
-                          />
-                        </FormControl>
-                        {isEditing && fieldState.error?.message && (
-                          <p className={"text-red-500 text-[10px]"}>
-                            {fieldState.error?.message}
-                          </p>
-                        )}
-                      </FormItem>
-                    )}
+                    render={({ field, fieldState }) => {
+                      return (
+                        <FormItem className="w-full">
+                          <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
+                            Address
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              tabIndex={2}
+                              disabled={!isEditing}
+                              className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full`}
+                              style={{ color: "#16151", opacity: 1 }}
+                            />
+                          </FormControl>
+                          {isEditing && fieldState.error?.message && (
+                            <p className={"text-red-500 text-[10px]"}>
+                              {fieldState.error?.message}
+                            </p>
+                          )}
+                        </FormItem>
+                      );
+                    }}
                   />
                 </div>
                 <div className={`flex flex-col border-b`}>
@@ -198,10 +218,9 @@ export default function PersonalInformationForm() {
                         </FormLabel>
                         <FormControl>
                           <Input
+                            {...field}
                             tabIndex={3}
                             disabled={!isEditing}
-                            {...(isEditing ? field : { value: user.country })}
-                            placeholder={user.country}
                             className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full placeholder-[#16151C]`}
                             style={{ color: "#16151", opacity: 1 }}
                           />
@@ -229,10 +248,9 @@ export default function PersonalInformationForm() {
                         </FormLabel>
                         <FormControl>
                           <Input
+                            {...field}
                             tabIndex={4}
                             disabled={!isEditing}
-                            {...(isEditing ? field : { value: user.phone })}
-                            placeholder={user.phone}
                             className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full placeholder-[#16151C]`}
                             style={{ color: "#16151", opacity: 1 }}
                           />
