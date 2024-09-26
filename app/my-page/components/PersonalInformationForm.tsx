@@ -127,7 +127,11 @@ export default function PersonalInformationForm() {
                     style={{ color: "#16151", opacity: 1 }}
                   />
                 </div>
-                <div className={`flex flex-col border-b`}>
+                <div
+                  className={`flex flex-col border-b ${
+                    isEditing ? "" : "hover:cursor-not-allowed"
+                  }`}
+                >
                   <FormField
                     control={form.control}
                     name={"birth_day"}
