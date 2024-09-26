@@ -21,3 +21,13 @@ export const useCommonStore = create<CommonState>()(
     )
   )
 );
+
+interface EditingState {
+  isEditing: boolean;
+  setIsEditing: (value: boolean) => void;
+}
+
+export const useEditingStore = create<EditingState>((set) => ({
+  isEditing: false,
+  setIsEditing: (value: boolean) => set({ isEditing: value }),
+}));

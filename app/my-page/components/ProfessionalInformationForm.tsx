@@ -7,7 +7,7 @@ import { User } from "@/core/entities/models/user.model";
 import { Input } from "@/components/ui/input";
 import useWindowSize from "@/hooks/use-dimession";
 import StyledOverlay from "@/components/common/StyledOverlay";
-import { useUserStore } from "@/stores/staffStore";
+import { useUserStore } from "@/stores/userStore";
 
 const userRepo = new UserRepositoryImpl();
 const showMyPage = new ShowMyPageUseCase(userRepo);
@@ -90,7 +90,11 @@ export default function ProfessionalInformationForm() {
                 Joining Date
               </p>
               <Input
-                value={new Date(user.started_at).toLocaleDateString("en-GB")}
+                value={
+                  user.started_at
+                    ? new Date(user.started_at).toLocaleDateString("en-GB")
+                    : ""
+                }
                 disabled
                 className="text-[#16151] text-base border-none focus:ring-0 p-0"
                 style={{ color: "#16151", opacity: 1 }}
