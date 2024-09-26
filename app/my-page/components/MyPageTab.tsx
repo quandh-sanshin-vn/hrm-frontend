@@ -13,13 +13,16 @@ import ProfessionalActiveIcon from "../../assets/icons/iconBriefcaseActive.svg";
 import ChangePasswordForm from "./ChangePasswordForm";
 import PersonalInformationForm from "@/app/my-page/components/PersonalInformationForm";
 import ProfessionalInformationForm from "@/app/my-page/components/ProfessionalInformationForm";
+import { useEditingStore } from "@/stores/commonStore";
 
 export default function MyPageTab() {
-  const [tab, changeTab] = useState("password");
+  const [tab, changeTab] = useState("personal");
+  const { isEditing, setIsEditing } = useEditingStore((state) => state);
+
   return (
     <Tabs
       onValueChange={changeTab}
-      defaultValue="password"
+      defaultValue="personal"
       className="flex flex-1 flex-col bg-white h-full w-full min-w-full"
     >
       <TabsList className="w-full justify-start ">
@@ -77,35 +80,41 @@ export default function MyPageTab() {
             }}
           />
         </TabsTrigger>
-
-        <TabsTrigger value="password" className="flex-col">
-          <div className="flex items-center">
-            {tab === "password" ? (
-              <Image
-                src={ChangePasswordActiveIcon}
-                alt=""
-                className="h-6 w-6 mx-1"
-              />
-            ) : (
-              <Image src={ChangePasswordIcon} alt="" className="h-6 w-6 mx-1" />
-            )}
-            <p
-              className="text-[16px] font-normal"
+        {!isEditing && (
+          <TabsTrigger value="password" className="flex-col">
+            <div className="flex items-center">
+              {tab === "password" ? (
+                <Image
+                  src={ChangePasswordActiveIcon}
+                  alt=""
+                  className="h-6 w-6 mx-1"
+                />
+              ) : (
+                <Image
+                  src={ChangePasswordIcon}
+                  alt=""
+                  className="h-6 w-6 mx-1"
+                />
+              )}
+              <p
+                className="text-[16px] font-normal"
+                style={{
+                  // fontWeight: tab === "password" ? "700" : "400",
+                  color: tab === "password" ? "var(--primary)" : "black",
+                }}
+              >
+                Change Password
+              </p>
+            </div>
+            <div
+              className="h-1 w-full  mt-1"
               style={{
-                // fontWeight: tab === "password" ? "700" : "400",
-                color: tab === "password" ? "var(--primary)" : "black",
+                backgroundColor:
+                  tab === "password" ? "var(--primary)" : "white",
               }}
-            >
-              Change Password
-            </p>
-          </div>
-          <div
-            className="h-1 w-full  mt-1"
-            style={{
-              backgroundColor: tab === "password" ? "var(--primary)" : "white",
-            }}
-          />
-        </TabsTrigger>
+            />
+          </TabsTrigger>
+        )}
       </TabsList>
       <TabsContent value="personal">
         <PersonalInformationForm />
@@ -113,9 +122,11 @@ export default function MyPageTab() {
       <TabsContent value="professional">
         <ProfessionalInformationForm />
       </TabsContent>
-      <TabsContent value="password" className="flex flex-1 w-full">
-        <ChangePasswordForm />
-      </TabsContent>
+      {!isEditing && (
+        <TabsContent value="password" className="flex flex-1 w-full">
+          <ChangePasswordForm />
+        </TabsContent>
+      )}
     </Tabs>
   );
 }

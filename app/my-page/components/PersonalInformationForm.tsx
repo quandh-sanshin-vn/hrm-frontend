@@ -14,10 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import useWindowSize from "@/hooks/use-dimession";
 import StyledOverlay from "@/components/common/StyledOverlay";
-import { useUserStore } from "@/stores/staffStore";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { StyledDatePicker_v1 } from "@/components/common/StyledDatePicker_v1";
+import { useEditingStore } from "@/stores/commonStore";
+import { useUserStore } from "@/stores/userStore";
 const formSchema = z.object({
   phone: z.string().trim(),
   birth_day: z.string().trim(),
@@ -34,7 +36,7 @@ export default function PersonalInformationForm() {
   const [loading, setLoading] = useState(false);
   const useDimession = useWindowSize();
   const { user, setUser } = useUserStore((state) => state);
-  const [isEditing, setIsEditing] = useState(false);
+  const { isEditing, setIsEditing } = useEditingStore((state) => state);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -53,10 +55,9 @@ export default function PersonalInformationForm() {
       const res: any = await showMyPage.execute();
       setUser(res.data);
     } catch (error: any) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
       toast({
-        title: "Lỗi",
-        description: "Không thể lấy thông tin người dùng.",
+        title: "Error",
+        description: "Unable to get user information",
       });
     } finally {
       setLoading(false);
@@ -115,53 +116,35 @@ export default function PersonalInformationForm() {
           {user ? (
             <div className="grid grid-cols-2 gap-5 w-full">
               <div className="flex flex-col pb-2 col-span-1 gap-5">
-                <div className={`flex flex-col ${isEditing ? "" : "border-b"}`}>
-                  {!isEditing && (
-                    <p className="text-[#A2A1A8] font-light text-[0.9rem]">
-                      Fullname
-                    </p>
-                  )}
+                <div className={`flex flex-col border-b`}>
+                  <p className="text-[#A2A1A8] font-light text-[0.9rem]">
+                    Fullname
+                  </p>
                   <Input
                     value={user.fullname}
                     disabled
-                    className={`text-[#16151C] text-base focus:ring-0 ${
-                      isEditing
-                        ? "border border-border p-4 w-full focus:border-primary h-14"
-                        : "border-b p-0 border-none w-full"
-                    }`}
+                    className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full`}
                     style={{ color: "#16151", opacity: 1 }}
                   />
                 </div>
-                <div className={`flex flex-col ${isEditing ? "" : "border-b"}`}>
+                <div className={`flex flex-col border-b`}>
                   <FormField
                     control={form.control}
                     name={"birth_day"}
                     render={({ field, fieldState }) => (
                       <FormItem className="w-full">
                         {" "}
-                        {!isEditing && (
-                          <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
-                            Date of Birth
-                          </FormLabel>
-                        )}
+                        <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
+                          Date of Birth
+                        </FormLabel>
                         <FormControl>
-                          <Input
-                            tabIndex={1}
-                            disabled={!isEditing}
-                            {...(isEditing
-                              ? field
-                              : {
-                                  value: new Date(
-                                    user.birth_day
-                                  ).toLocaleDateString("en-GB"),
-                                })}
-                            placeholder="Enter your birth day"
-                            className={`text-[#16151C] text-base focus:ring-0 ${
-                              isEditing
-                                ? "border border-[#A2A1A8] p-4 w-full focus:border-primary h-14"
-                                : "border-b p-0 border-none w-full"
-                            }`}
-                            style={{ color: "#16151", opacity: 1 }}
+                          <StyledDatePicker_v1
+                            field={field}
+                            title={
+                              user.birth_day
+                                ? user.birth_day.toString()
+                                : "Default Title"
+                            }
                           />
                         </FormControl>
                         {isEditing && fieldState.error?.message && (
@@ -173,29 +156,22 @@ export default function PersonalInformationForm() {
                     )}
                   />
                 </div>
-                <div className={`flex flex-col ${isEditing ? "" : "border-b"}`}>
+                <div className={`flex flex-col border-b`}>
                   <FormField
                     control={form.control}
                     name={"address"}
                     render={({ field, fieldState }) => (
                       <FormItem className="w-full">
-                        {" "}
-                        {!isEditing && (
-                          <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
-                            Address
-                          </FormLabel>
-                        )}
+                        <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
+                          Address
+                        </FormLabel>
                         <FormControl>
                           <Input
                             tabIndex={2}
                             disabled={!isEditing}
                             {...(isEditing ? field : { value: user.address })}
-                            placeholder="Enter your address"
-                            className={`text-[#16151C] text-base focus:ring-0 ${
-                              isEditing
-                                ? "border border-[#A2A1A8] p-4 w-full focus:border-primary h-14"
-                                : "border-b p-0 border-none w-full"
-                            }`}
+                            placeholder={user.address}
+                            className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full placeholder-[#16151C]`}
                             style={{ color: "#16151", opacity: 1 }}
                           />
                         </FormControl>
@@ -208,29 +184,22 @@ export default function PersonalInformationForm() {
                     )}
                   />
                 </div>
-                <div className={`flex flex-col ${isEditing ? "" : "border-b"}`}>
+                <div className={`flex flex-col border-b`}>
                   <FormField
                     control={form.control}
                     name={"country"}
                     render={({ field, fieldState }) => (
                       <FormItem className="w-full">
-                        {" "}
-                        {!isEditing && (
-                          <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
-                            Nationality
-                          </FormLabel>
-                        )}
+                        <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
+                          Nationality
+                        </FormLabel>
                         <FormControl>
                           <Input
                             tabIndex={3}
                             disabled={!isEditing}
                             {...(isEditing ? field : { value: user.country })}
-                            placeholder="Enter your country"
-                            className={`text-[#16151C] text-base focus:ring-0 ${
-                              isEditing
-                                ? "border border-[#A2A1A8] p-4 w-full focus:border-primary h-14"
-                                : "border-b p-0 border-none w-full"
-                            }`}
+                            placeholder={user.country}
+                            className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full placeholder-[#16151C]`}
                             style={{ color: "#16151", opacity: 1 }}
                           />
                         </FormControl>
@@ -246,29 +215,22 @@ export default function PersonalInformationForm() {
               </div>
 
               <div className="flex flex-col pb-2 col-span-1 gap-5">
-                <div className={`flex flex-col ${isEditing ? "" : "border-b"}`}>
+                <div className={`flex flex-col border-b`}>
                   <FormField
                     control={form.control}
                     name={"phone"}
                     render={({ field, fieldState }) => (
                       <FormItem className="w-full">
-                        {" "}
-                        {!isEditing && (
-                          <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
-                            Mobile Number
-                          </FormLabel>
-                        )}
+                        <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
+                          Mobile Number
+                        </FormLabel>
                         <FormControl>
                           <Input
                             tabIndex={4}
                             disabled={!isEditing}
                             {...(isEditing ? field : { value: user.phone })}
-                            placeholder="Enter mobile number"
-                            className={`text-[#16151C] text-base focus:ring-0 ${
-                              isEditing
-                                ? "border border-[#A2A1A8] p-4 w-full focus:border-primary h-14"
-                                : "border-b p-0 border-none w-full"
-                            }`}
+                            placeholder={user.phone}
+                            className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full placeholder-[#16151C]`}
                             style={{ color: "#16151", opacity: 1 }}
                           />
                         </FormControl>
@@ -287,20 +249,11 @@ export default function PersonalInformationForm() {
             <StyledOverlay isVisible={loading} />
           )}
           <div className="fixed bottom-[26px] right-[27px]">
-            {!isEditing ? (
-              <Button
-                tabIndex={3}
-                className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
-                type="button"
-                onClick={handleEdit}
-              >
-                Edit
-              </Button>
-            ) : (
+            {isEditing && (
               <div className="flex gap-4">
                 <Button
                   tabIndex={3}
-                  className="w-[152px] h-[50px] font-normal text-white text-[14px] bg-gray-500 hover:bg-gray-600 rounded-lg"
+                  className="w-[152px] h-[50px] font-normal bg-white text-[#16151C] text-[14px] border border-[#A2A1A8] hover:bg-gray-100 rounded-lg"
                   type="button"
                   onClick={handleCancel}
                 >
