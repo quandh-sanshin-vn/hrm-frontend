@@ -49,7 +49,6 @@ interface Props {
 
 export default function PersonalInfoTab(props: Props) {
   const [loading, setLoading] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
   // const { toast } = useToast();
   const windowSize = useWindowSize();
   const { updateStaffEditing, editingStaff } = useStaffStore((state) => state);
@@ -125,49 +124,23 @@ export default function PersonalInfoTab(props: Props) {
               control={form.control}
               name={"fullname"}
               render={({ field, fieldState }) => (
-                <FormField
-                  control={form.control}
-                  name={"country"}
-                  render={({ field, fieldState }) => (
-                    <FormItem className="w-full">
-                      <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
-                        Full name
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          tabIndex={3}
-                          disabled={!isEditing}
-                          // {...(isEditing ? field : { value: user.country })}
-                          placeholder={"Full name"}
-                          className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full placeholder-[#16151C]`}
-                          style={{ color: "#16151", opacity: 1 }}
-                        />
-                      </FormControl>
-                      {isEditing && fieldState.error?.message && (
-                        <p className={"text-red-500 text-[10px]"}>
-                          {fieldState.error?.message}
-                        </p>
-                      )}
-                    </FormItem>
+                <FormItem className="w-1/2" tabIndex={1}>
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Full name
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      // placeholder="Enter your full name"
+                      className=" border-b border-border h-10 rounded-none"
+                    />
+                  </FormControl>
+                  {fieldState.error?.message && (
+                    <p className={"text-red-500 text-[10px]"}>
+                      {fieldState.error?.message}
+                    </p>
                   )}
-                />
-                // <FormItem className="w-1/2" tabIndex={1}>
-                //   <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
-                //     Date of Birth
-                //   </FormLabel>
-                //   <FormControl>
-                //     <Input
-                //       placeholder="Full name"
-                //       {...field}
-                //       className="border-border focus:border-primary h-[52px]"
-                //     />
-                //   </FormControl>
-                //   {fieldState.error?.message && (
-                //     <p className={"text-red-500 text-[10px]"}>
-                //       {fieldState.error?.message}
-                //     </p>
-                //   )}
-                // </FormItem>
+                </FormItem>
               )}
             />
             <FormField
@@ -175,11 +148,14 @@ export default function PersonalInfoTab(props: Props) {
               name={"phoneNumber"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={2}>
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Phone number
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Phone Number"
                       {...field}
-                      className="border-border focus:border-primary h-[52px]"
+                      // placeholder="Enter your full name"
+                      className=" border-b border-border h-10 rounded-none"
                     />
                   </FormControl>
                   {fieldState.error?.message && (
@@ -197,8 +173,11 @@ export default function PersonalInfoTab(props: Props) {
               name={"dateOfBirth"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={3}>
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Date Of Birth
+                  </FormLabel>
                   <FormControl>
-                    <StyledDatePicker field={field} title={"Date of Birth"} />
+                    <StyledDatePicker field={field} title={""} />
                   </FormControl>
                   {fieldState.error?.message && (
                     <p className={"text-red-500 text-[10px]"}>
@@ -213,11 +192,14 @@ export default function PersonalInfoTab(props: Props) {
               name={"address"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={4}>
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Address
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Address"
                       {...field}
-                      className="border-border focus:border-primary h-14"
+                      // placeholder="Enter your full name"
+                      className=" border-b border-border h-10 rounded-none"
                     />
                   </FormControl>
                   {fieldState.error?.message && (
@@ -235,11 +217,13 @@ export default function PersonalInfoTab(props: Props) {
               name={"country"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={5}>
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Country
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Country"
                       {...field}
-                      className="border-border focus:border-primary h-[52px]"
+                      className=" border-b border-border h-10 rounded-none"
                     />
                   </FormControl>
                   {fieldState.error?.message && (

@@ -103,7 +103,7 @@ export default function ProfessionalInfoTab(props: Props) {
             maxHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
             minHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
           }}
-          className=" flex flex-col space-y-4 mt-1  w-full p-5  rounded-md  overflow-y-auto hide-scrollbar"
+          className="flex flex-col space-y-4 mt-1  w-full p-5  rounded-md  overflow-y-auto hide-scrollbar"
         >
           <div className={"flex items-center justify-between gap-x-5"}>
             <FormField
@@ -111,12 +111,13 @@ export default function ProfessionalInfoTab(props: Props) {
               name={"username"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2">
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    User Name
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      tabIndex={1}
-                      placeholder="User Name"
                       {...field}
-                      className="border-border focus:border-primary h-14"
+                      className=" border-b border-border h-10 rounded-none"
                     />
                   </FormControl>
                   {fieldState.error?.message && (
@@ -132,12 +133,13 @@ export default function ProfessionalInfoTab(props: Props) {
               name={"email"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2">
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Email
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      tabIndex={1}
-                      placeholder="Email Address"
                       {...field}
-                      className="border-border focus:border-primary h-14"
+                      className=" border-b border-border h-10 rounded-none"
                     />
                   </FormControl>
                   {fieldState.error?.message && (
@@ -155,6 +157,9 @@ export default function ProfessionalInfoTab(props: Props) {
               name="statusWorking"
               render={({ field }) => (
                 <FormItem className="flex-1">
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Employee Type
+                  </FormLabel>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -164,12 +169,9 @@ export default function ProfessionalInfoTab(props: Props) {
                         style={{
                           color: !field.value ? "var(--secondary)" : "black",
                         }}
-                        className="border-border border h-[52px]  text-secondary"
+                        className="border-b border-border h-10 rounded-none"
                       >
-                        <SelectValue
-                          placeholder={"Employee Type"}
-                          className=" border-border border w-full"
-                        />
+                        <SelectValue className=" border-border border w-full" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-white">
