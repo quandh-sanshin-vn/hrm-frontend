@@ -17,26 +17,39 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChangePasswordUseCase } from "@/core/application/usecases/my-page/changePassword.usecase";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import useWindowSize from "@/hooks/useWindowSize";
-import { STAFF_STATUS } from "@/utilities/static-value";
+import { useCommonStore } from "@/stores/commonStore";
+import { useStaffStore } from "@/stores/staffStore";
+import { STAFF_STATUS, STAFF_STATUS_WORKING } from "@/utilities/static-value";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 const formSchema = z.object({
-  username: z.string().trim(),
+  username: z.string().trim().min(1, "Full name is required"),
+  email: z.string().trim().min(1, "Email is required"),
   statusWorking: z.string().trim(),
-  email: z.string().trim(),
   department: z.string().trim(),
   position: z.string().trim(),
-  joiningDate: z.string().trim(),
-  leavesHours: z.string().trim(),
+  joiningDate: z
+    .union([z.string(), z.date()])
+    .refine(
+      (value) => {
+        const date = new Date(value);
+        const today = new Date();
+        return date < today;
+      },
+      {
+        message: "Joining date must be in the past",
+      }
+    )
+    .transform((value) => new Date(value)),
+  leavesHours: z.string(),
 });
 
 const userRepo = new UserRepositoryImpl();
-const changePassword = new ChangePasswordUseCase(userRepo);
+// const changePassword = new ChangePasswordUseCase(userRepo);
 
 interface Props {
   changeTab(name: string): void;
@@ -44,23 +57,23 @@ interface Props {
 
 export default function ProfessionalInfoTab(props: Props) {
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState("view");
   // const { toast } = useToast();
   const windowSize = useWindowSize();
+  const { positionData } = useCommonStore((state) => state);
+  const { editingStaff } = useStaffStore((state) => state);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
-      statusWorking: "",
       email: "",
-      department: "",
-      position: "",
-      joiningDate: "",
-      leavesHours: "",
+      leavesHours: "0",
     },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    console.log("-----editingStaff------", editingStaff);
     // FLOW: UI -> use cases -> repositories -> API
     try {
       //
@@ -77,8 +90,8 @@ export default function ProfessionalInfoTab(props: Props) {
   return (
     <div
       style={{
-        maxHeight: windowSize.height - 100 - 40 - 48 - 50,
-        minHeight: windowSize.height - 100 - 40 - 48 - 50,
+        maxHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
+        minHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
       }}
       className=" bg-white flex flex-1 h-full rounded-md "
     >
@@ -87,8 +100,8 @@ export default function ProfessionalInfoTab(props: Props) {
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           style={{
-            maxHeight: windowSize.height - 100 - 40 - 48 - 50,
-            minHeight: windowSize.height - 100 - 40 - 48 - 50,
+            maxHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
+            minHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
           }}
           className=" flex flex-col space-y-4 mt-1  w-full p-5  rounded-md  overflow-y-auto hide-scrollbar"
         >
@@ -101,7 +114,7 @@ export default function ProfessionalInfoTab(props: Props) {
                   <FormControl>
                     <Input
                       tabIndex={1}
-                      placeholder="User Name  "
+                      placeholder="User Name"
                       {...field}
                       className="border-border focus:border-primary h-14"
                     />
@@ -160,7 +173,7 @@ export default function ProfessionalInfoTab(props: Props) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-white">
-                      {STAFF_STATUS.map((item) => {
+                      {STAFF_STATUS_WORKING.map((item) => {
                         return (
                           <SelectItem
                             key={item.value}
@@ -177,7 +190,7 @@ export default function ProfessionalInfoTab(props: Props) {
             />
             <FormField
               control={form.control}
-              name="statusWorking"
+              name="position"
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <Select
@@ -198,16 +211,18 @@ export default function ProfessionalInfoTab(props: Props) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-white">
-                      {STAFF_STATUS.map((item) => {
-                        return (
-                          <SelectItem
-                            key={item.value}
-                            value={String(item.value)}
-                          >
-                            {item.name}
-                          </SelectItem>
-                        );
-                      })}
+                      {[{ value: "-1", name: "All" }, ...positionData].map(
+                        (item) => {
+                          return (
+                            <SelectItem
+                              key={item.value}
+                              value={String(item.value)}
+                            >
+                              {item.name}
+                            </SelectItem>
+                          );
+                        }
+                      )}
                     </SelectContent>
                   </Select>
                 </FormItem>
@@ -281,6 +296,7 @@ export default function ProfessionalInfoTab(props: Props) {
                 <FormItem className="w-1/2">
                   <FormControl>
                     <Input
+                      disabled={true}
                       tabIndex={1}
                       placeholder="Leaves Hours"
                       {...field}

@@ -1,16 +1,21 @@
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 
+interface PositionProps {
+  value: string | number;
+  name: string;
+}
 interface CommonState {
-  bears: number;
-  updateCommonData: (by: number) => void;
+  positionData: PositionProps[];
+  updatePositionData: (positionData: PositionProps[]) => void;
 }
 export const useCommonStore = create<CommonState>()(
   devtools(
     persist(
       (set) => ({
-        bears: 0,
-        updateCommonData: (by) => set((state) => ({ bears: state.bears + by })),
+        positionData: [],
+        updatePositionData: (positionData) =>
+          set((state) => ({ ...state, positionData: positionData })),
       }),
       { name: "commonStore" }
     )

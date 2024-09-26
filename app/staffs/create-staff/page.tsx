@@ -5,6 +5,8 @@ import StyledOverlay from "@/components/common/StyledOverlay";
 import useWindowSize from "@/hooks/useWindowSize";
 import React, { useState } from "react";
 import StyledUserInfoTab from "../components/StyledUserInfoTab";
+import IconUserWhite from "@/app/assets/icons/iconUserWhite.svg";
+import Image from "next/image";
 
 export default function CreateStaffScreen() {
   const [loading, setLoading] = useState(false);
@@ -32,12 +34,12 @@ export default function CreateStaffScreen() {
           >
             <div className="w-[242px] h-[110px] border border-border rounded-md flex items-center justify-center flex-col ">
               <div className="flex flex-1 items-center justify-start px-5 bg-primary w-full rounded-tl-md rounded-tr-md">
-                <div className="h-3 w-3 rounded-full bg-white mx-2" />
+                <Image alt="" src={IconUserWhite} />
                 <p className="text-[16px] font-semibold text-white">Profile</p>
               </div>
-              <div className="flex flex-1 items-center justify-start px-5 bg-white w-full rounded-bl-md rounded-br-md">
+              <div className="flex flex-1 items-center justify-start px-5 bg-white w-full rounded-bl-md rounded-br-md hover:cursor-not-allowed">
                 <div className="h-3 w-3 rounded-full bg-white mx-2" />
-                <p className="text-[16px] font-semibold text-white">Leaves</p>
+                <p className="text-[16px] font-semibold text-white"></p>
               </div>
             </div>
             <div

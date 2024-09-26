@@ -27,13 +27,13 @@ export function getStaffListRequest(params: GetStaffListParams) {
   return api.get(`/users`, { params });
 }
 
-export interface GetUsersParams {
+export interface DeleteUsersParams {
   id: string;
   updated_at: string;
 }
 
-export function getStaffRequest(params: GetUsersParams) {
-  return api.get(`/user`, { params });
+export function deleteStaffRequest(params: DeleteUsersParams) {
+  return api.delete(`/user`, { params });
 }
 
 export interface CreateUsersParams {
@@ -51,11 +51,11 @@ export interface CreateUsersParams {
   updated_at: string;
 }
 
-export function createStaffRequest(params: GetUsersParams) {
+export function createStaffRequest(params: CreateUsersParams) {
   return api.post(`/users`, params);
 }
 
-export interface CreateUsersParams {
+export interface UpdateUsersParams {
   id: string;
   idkey: string;
   fullname: string;
@@ -72,7 +72,7 @@ export interface CreateUsersParams {
   updated_at: string;
 }
 
-export function updateStaffRequest(params: GetUsersParams) {
+export function updateStaffRequest(params: UpdateUsersParams) {
   return api.put(`/users`, params);
 }
 
