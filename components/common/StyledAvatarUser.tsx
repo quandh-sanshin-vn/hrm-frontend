@@ -19,7 +19,7 @@ export default function StyledAvatarUser(props: Props) {
         <Image
           src={imageUrl ? imageUrl : DefaultImage}
           alt=""
-          className=" object-contain w-full h-full"
+          className="object-cover w-full h-full"
         />
       </div>
       <div className=" h-[100px] flex flex-col gap-y-2 items-start ">

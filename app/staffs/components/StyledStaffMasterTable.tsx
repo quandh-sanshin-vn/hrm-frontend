@@ -25,14 +25,20 @@ export default function StyledStaffMasterTable(props: Props) {
   const windowSize = useWindowSize();
   const router = useRouter();
   const staffList = useStaffStore((state) => state.staffList);
-  const { searchParams, updateStaffListData, updateSearchParams } =
-    useStaffStore((state) => state);
+  const {
+    searchParams,
+    updateStaffListData,
+    updateSearchParams,
+    updateSelectedStaff,
+  } = useStaffStore((state) => state);
 
   const goToDetailPage = (user: User) => {
+    updateSelectedStaff(user);
     router.push(`/staffs/detail-staff/${user.id}`);
   };
 
   const goToEditPage = (user: User) => {
+    updateSelectedStaff(user);
     router.push(`/staffs/edit-staff/${user.id}`);
   };
 
@@ -142,7 +148,7 @@ export default function StyledStaffMasterTable(props: Props) {
                       className="h-[24px] aspect-square hover:cursor-pointer"
                     />
                     <Image
-                      onClick={goToEditPage}
+                      onClick={() => goToEditPage(user)}
                       alt="Go to edit"
                       src={IconEdit}
                       className="h-[24px] aspect-square hover:cursor-pointer"
