@@ -75,3 +75,7 @@ export interface CreateUsersParams {
 export function updateStaffRequest(params: GetUsersParams) {
   return api.put(`/users`, params);
 }
+
+export function getProfileRequest() {
+  return api.get('/my-page')
+}

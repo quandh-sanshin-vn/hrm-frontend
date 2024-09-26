@@ -11,6 +11,8 @@ import PersonalActiveIcon from "../../assets/icons/iconUserActive.svg";
 import ProfessionalIcon from "../../assets/icons/iconBriefcase.svg";
 import ProfessionalActiveIcon from "../../assets/icons/iconBriefcaseActive.svg";
 import ChangePasswordForm from "./ChangePasswordForm";
+import PersonalInformationForm from "@/app/my-page/components/PersonalInformationForm";
+import ProfessionalInformationForm from "@/app/my-page/components/ProfessionalInformationForm";
 
 export default function MyPageTab() {
   const [tab, changeTab] = useState("password");
@@ -105,9 +107,11 @@ export default function MyPageTab() {
           />
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="personal">Personal Information form</TabsContent>
+      <TabsContent value="personal">
+        <PersonalInformationForm />
+      </TabsContent>
       <TabsContent value="professional">
-        Professional Information form
+        <ProfessionalInformationForm />
       </TabsContent>
       <TabsContent value="password" className="flex flex-1 w-full">
         <ChangePasswordForm />
