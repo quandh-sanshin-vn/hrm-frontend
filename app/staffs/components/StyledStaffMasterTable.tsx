@@ -1,25 +1,54 @@
-import DefaultImage from "@/app/assets/images/avatar_default.png";
-import IconDetail from "@/app/assets/icons/iconEye.png";
 import IconEdit from "@/app/assets/icons/iconEdit.svg";
-import IconTrash from "@/app/assets/icons/iconTrash.svg";
+import IconDetail from "@/app/assets/icons/iconViewDetail.svg";
+import DefaultImage from "@/app/assets/images/avatar_default.png";
+import { ALertDialogDeleteStaff } from "@/components/common/ALertDialogDeleteStaff";
+import { GetStaffListUseCase } from "@/core/application/usecases/staff-master/getUserList.usecase";
 import { User } from "@/core/entities/models/user.model";
+import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
+import useWindowSize from "@/hooks/useWindowSize";
 import { useStaffStore } from "@/stores/staffStore";
-import { STAFF_STATUS_WORKING } from "@/utilities/static-value";
+import { STAFF_STATUS, STAFF_STATUS_WORKING } from "@/utilities/static-value";
 import Image from "next/image";
 import StyledTableStatusItem from "./StyledTableStatusItem";
-import useWindowSize from "@/hooks/useWindowSize";
+import { useRouter } from "next/navigation";
 
-export default function StyledStaffMasterTable() {
-  const onClickColumnHeader = (columnName: string) => {};
+const userRepo = new UserRepositoryImpl();
+const getStaffListUseCase = new GetStaffListUseCase(userRepo);
+
+interface Props {
+  setLoading(loading: boolean): void;
+  loading: boolean;
+}
+
+export default function StyledStaffMasterTable(props: Props) {
+  const { setLoading } = props;
   const windowSize = useWindowSize();
-
+  const router = useRouter();
   const staffList = useStaffStore((state) => state.staffList);
+  const { searchParams, updateStaffListData, updateSearchParams } =
+    useStaffStore((state) => state);
 
-  const goToDetailPage = () => {};
+  const goToDetailPage = (user: User) => {
+    router.push(`/staffs/detail-staff/${user.id}`);
+  };
 
-  const goToEditPage = () => {};
+  const goToEditPage = (user: User) => {
+    router.push(`/staffs/edit-staff/${user.id}`);
+  };
 
-  const onDeleteStaff = () => {};
+  const onReloadData = async () => {
+    try {
+      setLoading(true);
+      const params = { ...searchParams, page: 1 };
+      const response = await getStaffListUseCase.execute(params);
+      updateSearchParams(params);
+      updateStaffListData(response?.data, response?.totalItem || 0);
+    } catch (error: any) {
+    } finally {
+      setLoading(false);
+    }
+  };
+  const onClickColumnHeader = (columnName: string) => {};
 
   return (
     <div
@@ -105,22 +134,25 @@ export default function StyledStaffMasterTable() {
                   <StyledTableStatusItem value={user?.status || ""} />
                 </td>
                 <td className="pl-2 w-[112px] text-[16px] font-normal border-b border-[#F6F6F6]">
-                  <div className="flex items-center justify-center w-full gap-x-2">
+                  <div className="flex items-center justify-start w-full gap-x-2">
                     <Image
-                      onClick={goToDetailPage}
+                      onClick={() => goToDetailPage(user)}
                       alt="See detail"
                       src={IconDetail}
+                      className="h-[24px] aspect-square hover:cursor-pointer"
                     />
                     <Image
                       onClick={goToEditPage}
                       alt="Go to edit"
                       src={IconEdit}
+                      className="h-[24px] aspect-square hover:cursor-pointer"
                     />
-                    <Image
-                      onClick={onDeleteStaff}
-                      alt="Delete"
-                      src={IconTrash}
-                    />
+                    {user.status != STAFF_STATUS[0].value && (
+                      <ALertDialogDeleteStaff
+                        onClose={onReloadData}
+                        user={user}
+                      />
+                    )}
                   </div>
                 </td>
               </tr>

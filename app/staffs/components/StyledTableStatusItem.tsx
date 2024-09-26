@@ -1,5 +1,5 @@
 import { STAFF_STATUS } from "@/utilities/static-value";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 
 interface Props {
   value: string;
@@ -10,10 +10,11 @@ interface Props {
 // --block-hover: #F6F8EC
 export default function StyledTableStatusItem(props: Props) {
   const name = useMemo(() => {
+    if (!props.value && props.value != "0") return STAFF_STATUS[0].name;
     const res = STAFF_STATUS.filter(
       (item) => item.value == String(props.value)
     );
-    return res[0].name;
+    return res[0]?.name;
   }, [props.value]);
 
   if (props.value == "0") {
@@ -49,4 +50,13 @@ export default function StyledTableStatusItem(props: Props) {
       </div>
     );
   }
+  return (
+    <div
+      className={
+        " bg-inactive_hover items-center justify-center w-fit px-2 py-1 rounded-sm"
+      }
+    >
+      <p className={"text-inactive font-normal text-[12px]"}>{name}</p>
+    </div>
+  );
 }

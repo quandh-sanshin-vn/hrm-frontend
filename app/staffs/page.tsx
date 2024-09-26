@@ -76,8 +76,8 @@ export default function StaffScreen() {
             }}
             className="border w-full rounded-sm px-5 py-2 "
           >
-            <SearchArea loading setLoading={setLoading} />
-            <StyledStaffMasterTable />
+            <SearchArea loading={loading} setLoading={setLoading} />
+            <StyledStaffMasterTable loading={loading} setLoading={setLoading} />
           </div>
           <StyledPagination
             totalItems={totalItems}

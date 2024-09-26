@@ -1,14 +1,14 @@
 "use client";
+import IconLeaves from "@/app/assets/icons/iconLeaves.png";
+import IconUserWhite from "@/app/assets/icons/iconUserWhite.svg";
 import SideBarComponent from "@/components/common/SideBarComponent";
+import StyledAvatarUser from "@/components/common/StyledAvatarUser";
 import StyledHeader from "@/components/common/StyledHeader";
 import StyledOverlay from "@/components/common/StyledOverlay";
 import useWindowSize from "@/hooks/useWindowSize";
-import React, { useState } from "react";
-import StyledUserInfoTab from "../../components/StyledUserInfoTab";
 import Image from "next/image";
-import IconUserWhite from "@/app/assets/icons/iconUserWhite.svg";
-import IconLeaves from "@/app/assets/icons/iconLeaves.png";
-import StyledAvatarUser from "@/components/common/StyledAvatarUser";
+import { useState } from "react";
+import StyledUserInfoTab from "../../components/StyledUserInfoTab";
 
 export default function CreateStaffScreen() {
   const [loading, setLoading] = useState(false);
