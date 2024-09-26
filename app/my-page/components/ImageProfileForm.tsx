@@ -27,10 +27,10 @@ const ImageProfileForm: React.FC = () => {
       const res: any = await showMyPage.execute();
       setUser(res.data);
     } catch (error: any) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
+      console.error("Error getting user information:", error);
       toast({
-        title: "Lỗi",
-        description: "Không thể lấy thông tin người dùng.",
+        title: "Error",
+        description: "Unable to get user information",
       });
     } finally {
       setLoading(false);
@@ -38,7 +38,6 @@ const ImageProfileForm: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log(user);
     getMyPage();
   }, []);
 
