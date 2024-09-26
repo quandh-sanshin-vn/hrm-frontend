@@ -2,7 +2,7 @@ import { DeleteUsersParams } from "@/apis/modules/user";
 import { CommonResponse } from "@/core/entities/models/responseCommon.model";
 import { UserRepository } from "../../infrastructure-interface/repositories/user.repo-interface";
 
-export class EditStaffUseCase {
+export class DeleteStaffUseCase {
   private userRepo: UserRepository;
   constructor(userRepo: UserRepository) {
     this.userRepo = userRepo;

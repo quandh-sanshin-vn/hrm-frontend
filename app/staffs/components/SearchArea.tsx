@@ -22,16 +22,16 @@ import {
   STAFF_STATUS_WORKING,
 } from "@/utilities/static-value";
 
+import { GetStaffListParams } from "@/apis/modules/user";
 import { GetStaffListUseCase } from "@/core/application/usecases/staff-master/getUserList.usecase";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
+import { useCommonStore } from "@/stores/commonStore";
 import { useStaffStore } from "@/stores/staffStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { GetStaffListParams } from "@/apis/modules/user";
-import { useRouter } from "next/navigation";
-import { useCommonStore } from "@/stores/commonStore";
 
 const userRepo = new UserRepositoryImpl();
 const getStaffListUseCase = new GetStaffListUseCase(userRepo);
@@ -198,16 +198,18 @@ export default function SearchArea(props: Props) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-white">
-                      {STAFF_STATUS.map((item) => {
-                        return (
-                          <SelectItem
-                            key={item.value}
-                            value={String(item.value)}
-                          >
-                            {item.name}
-                          </SelectItem>
-                        );
-                      })}
+                      {[{ value: "-1", name: "All" }, ...STAFF_STATUS].map(
+                        (item) => {
+                          return (
+                            <SelectItem
+                              key={item.value}
+                              value={String(item.value)}
+                            >
+                              {item.name}
+                            </SelectItem>
+                          );
+                        }
+                      )}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -233,7 +235,10 @@ export default function SearchArea(props: Props) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-white">
-                      {STAFF_STATUS_WORKING.map((item) => {
+                      {[
+                        { value: "-1", name: "All" },
+                        ...STAFF_STATUS_WORKING,
+                      ].map((item) => {
                         return (
                           <SelectItem
                             key={item.value}

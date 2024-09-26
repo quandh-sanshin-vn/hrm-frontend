@@ -19,10 +19,6 @@ export interface CommonDataDropdown {
 
 export const STAFF_STATUS = [
   {
-    value: "-1",
-    name: "All",
-  },
-  {
     value: "0",
     name: "In Active",
   },
@@ -37,10 +33,6 @@ export const STAFF_STATUS = [
 ];
 
 export const STAFF_STATUS_WORKING = [
-  {
-    value: "-1",
-    name: "All",
-  },
   {
     value: "1",
     name: "Intern",

@@ -33,7 +33,7 @@ export interface DeleteUsersParams {
 }
 
 export function deleteStaffRequest(params: DeleteUsersParams) {
-  return api.delete(`/user`, { params });
+  return api.delete(`/users`, { data: params });
 }
 
 export interface CreateUsersParams {
@@ -77,5 +77,5 @@ export function updateStaffRequest(params: UpdateUsersParams) {
 }
 
 export function getProfileRequest() {
-  return api.get('/my-page')
+  return api.get("/my-page");
 }

@@ -81,72 +81,28 @@ export class UserRepositoryImpl implements UserRepository {
   ): Promise<CommonResponse | null> {
     try {
       const response: any = await createStaffRequest(params);
-      const formattedResponse: CommonResponse = {
-        data: response?.data,
-        code: response?.code,
-        message: response?.message || "",
-        requestStatus: response.status,
-        totalItem: response.total,
-      };
-      return formattedResponse;
+
+      return response;
     } catch (error: any) {
-      const formattedResponse: CommonResponse = {
-        data: error.response?.data || [],
-        code: error.response?.code || 1,
-        message: error.response?.message,
-        requestStatus: error.status,
-        errorCode: error?.data?.error_code || 0,
-        totalItem: 0,
-      };
-      return formattedResponse;
+      return error;
     }
   }
 
   async editStaff(params: UpdateUsersParams): Promise<CommonResponse | null> {
     try {
       const response: any = await updateStaffRequest(params);
-      const formattedResponse: CommonResponse = {
-        data: response?.data,
-        code: response?.code,
-        message: response?.message || "",
-        requestStatus: response.status,
-        totalItem: response.total,
-      };
-      return formattedResponse;
+      return response;
     } catch (error: any) {
-      const formattedResponse: CommonResponse = {
-        data: error.response?.data || [],
-        code: error.response?.code || 1,
-        message: error.response?.message,
-        requestStatus: error.status,
-        errorCode: error?.data?.error_code || 0,
-        totalItem: 0,
-      };
-      return formattedResponse;
+      return error;
     }
   }
 
   async deleteStaff(params: DeleteUsersParams): Promise<CommonResponse | null> {
     try {
       const response: any = await deleteStaffRequest(params);
-      const formattedResponse: CommonResponse = {
-        data: response?.data,
-        code: response?.code,
-        message: response?.message || "",
-        requestStatus: response.status,
-        totalItem: response.total,
-      };
-      return formattedResponse;
+      return response;
     } catch (error: any) {
-      const formattedResponse: CommonResponse = {
-        data: error.response?.data || [],
-        code: error.response?.code || 1,
-        message: error.response?.message,
-        requestStatus: error.status,
-        errorCode: error?.data?.error_code || 0,
-        totalItem: 0,
-      };
-      return formattedResponse;
+      return error;
     }
   }
 }
