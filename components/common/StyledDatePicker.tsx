@@ -18,6 +18,7 @@ import { DATE_OF_BIRTH } from "@/utilities/format";
 interface Props {
   title: string;
   field: any;
+  tabIndex?: number;
 }
 export function StyledDatePicker(props: Props) {
   const { field, title } = props;
@@ -31,9 +32,15 @@ export function StyledDatePicker(props: Props) {
             "w-full h-[52px] justify-end text-left font-normal border border-border",
             !field.value && "text-muted-foreground"
           )}
+          tabIndex={props.tabIndex}
         >
           {field.value ? (
-            <p className="w-full text-secondary">
+            <p
+              style={{
+                color: !field.value ? "var(--secondary)" : "black",
+              }}
+              className="w-full text-secondary"
+            >
               {format(field.value, DATE_OF_BIRTH)}
             </p>
           ) : (
@@ -47,7 +54,10 @@ export function StyledDatePicker(props: Props) {
           mode="single"
           selected={field.value}
           onSelect={field.onChange}
+          fromYear={1970}
+          toYear={2030}
           initialFocus
+          captionLayout="dropdown"
         />
       </PopoverContent>
     </Popover>

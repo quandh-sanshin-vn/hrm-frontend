@@ -31,6 +31,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { GetStaffListParams } from "@/apis/modules/user";
 import { useRouter } from "next/navigation";
+import { useCommonStore } from "@/stores/commonStore";
 
 const userRepo = new UserRepositoryImpl();
 const getStaffListUseCase = new GetStaffListUseCase(userRepo);
@@ -54,6 +55,7 @@ export default function SearchArea(props: Props) {
   const { updateStaffListData, updateSearchParams } = useStaffStore(
     (state) => state
   );
+  const { updatePositionData } = useCommonStore((state) => state);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -104,6 +106,7 @@ export default function SearchArea(props: Props) {
             return { value: i.id, name: i.name };
           })
         : [];
+      updatePositionData(formattedData);
       setPosition([{ value: "-1", name: "All" }, ...formattedData]);
     } catch (error) {
     } finally {

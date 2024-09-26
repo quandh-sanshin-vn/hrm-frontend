@@ -1,4 +1,7 @@
 import DefaultImage from "@/app/assets/images/avatar_default.png";
+import IconDetail from "@/app/assets/icons/iconEye.png";
+import IconEdit from "@/app/assets/icons/iconEdit.svg";
+import IconTrash from "@/app/assets/icons/iconTrash.svg";
 import { User } from "@/core/entities/models/user.model";
 import { useStaffStore } from "@/stores/staffStore";
 import { STAFF_STATUS_WORKING } from "@/utilities/static-value";
@@ -11,6 +14,12 @@ export default function StyledStaffMasterTable() {
   const windowSize = useWindowSize();
 
   const staffList = useStaffStore((state) => state.staffList);
+
+  const goToDetailPage = () => {};
+
+  const goToEditPage = () => {};
+
+  const onDeleteStaff = () => {};
 
   return (
     <div
@@ -62,10 +71,10 @@ export default function StyledStaffMasterTable() {
           </tr>
         </thead>
         <tbody className=" hide-scrollbar">
-          {staffList.map((user: User) => {
+          {staffList.map((user: User, index: number) => {
             return (
               <tr
-                key={user.id.toString()}
+                key={user?.id ? user?.id.toString() : String(index)}
                 className="align-center bg-white h-[52px]"
               >
                 <td className="pl-2 w-[116px] text-start text-[16px] font-normal border-b border-[#F6F6F6]">
@@ -93,10 +102,26 @@ export default function StyledStaffMasterTable() {
                   }
                 </td>
                 <td className="pl-2 w-[144px] text-[16px] font-normal border-b border-[#F6F6F6]">
-                  <StyledTableStatusItem value={user.status} />
+                  <StyledTableStatusItem value={user?.status || ""} />
                 </td>
                 <td className="pl-2 w-[112px] text-[16px] font-normal border-b border-[#F6F6F6]">
-                  Edit
+                  <div className="flex items-center justify-center w-full gap-x-2">
+                    <Image
+                      onClick={goToDetailPage}
+                      alt="See detail"
+                      src={IconDetail}
+                    />
+                    <Image
+                      onClick={goToEditPage}
+                      alt="Go to edit"
+                      src={IconEdit}
+                    />
+                    <Image
+                      onClick={onDeleteStaff}
+                      alt="Delete"
+                      src={IconTrash}
+                    />
+                  </div>
                 </td>
               </tr>
             );
