@@ -29,7 +29,7 @@ export function StyledDatePicker_v1(props: Props) {
         <Button
           variant={"outline"}
           className={cn(
-            "w-full h-[52px] justify-end text-left font-normal border border-none",
+            "w-full h-[52px] justify-start text-left font-normal border border-none",
             !field.value && "text-muted-foreground px-0"
           )}
           tabIndex={props.tabIndex}
