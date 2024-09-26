@@ -19,6 +19,7 @@ export default function StaffScreen() {
   const totalItems = useStaffStore((state) => state.totalItems);
   const userRepo = new UserRepositoryImpl();
   const getStaffListUseCase = new GetStaffListUseCase(userRepo);
+  const windowSize = useWindowSize();
 
   const { searchParams, updateStaffListData, updateSearchParams } =
     useStaffStore((state) => state);
@@ -36,9 +37,11 @@ export default function StaffScreen() {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     onFirstLoad();
   }, []);
+
   const onFirstLoad = async () => {
     try {
       setLoading(true);
@@ -54,7 +57,6 @@ export default function StaffScreen() {
       setLoading(false);
     }
   };
-  const windowSize = useWindowSize();
 
   return (
     <div className="flex flex-1 w-full h-full max-h-screen overflow-y-none overscroll-none">

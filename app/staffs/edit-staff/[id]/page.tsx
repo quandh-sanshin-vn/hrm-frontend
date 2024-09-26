@@ -10,7 +10,7 @@ import Image from "next/image";
 import { useState } from "react";
 import StyledUserInfoTab from "../../components/StyledUserInfoTab";
 
-export default function DetailStaffScreen() {
+export default function EditStaffScreen() {
   const [loading, setLoading] = useState(false);
   const windowSize = useWindowSize();
 

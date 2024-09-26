@@ -8,14 +8,17 @@ interface StaffState {
   staffList: User[];
   totalItems: number;
   searchParams: GetStaffListParams;
+  selectedStaff: User;
   updateStaffListData: (data: User[], totalItems: number) => void;
   updateSearchParams: (params: GetStaffListParams) => void;
   updateStaffEditing: (staff: User) => void;
+  updateSelectedStaff: (staff: User) => void;
 }
 export const useStaffStore = create<StaffState>()(
   devtools(
     (set) => ({
       editingStaff: {},
+      selectedStaff: {},
       staffList: [],
       totalItems: 0,
       searchParams: {},
@@ -25,6 +28,8 @@ export const useStaffStore = create<StaffState>()(
         set((state) => ({ ...state, searchParams: params })),
       updateStaffEditing: (staff: User) =>
         set((state) => ({ ...state, editingStaff: staff })),
+      updateSelectedStaff: (staff: User) =>
+        set((state) => ({ ...state, selectedStaff: staff })),
     }),
     { name: "staffStore" }
   )

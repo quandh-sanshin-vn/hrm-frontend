@@ -6,6 +6,8 @@ import {
   isBefore,
 } from "date-fns";
 
+const isEqual = require("react-fast-compare");
+
 const now = new Date();
 export const expirationDate = (expirationTime: number) =>
   addSeconds(now, expirationTime);
@@ -19,4 +21,8 @@ export const isTargetAfterCurrent = (targetDate: string | any) =>
 export const isMorningTime = () => {
   const hours = now.getHours();
   return hours < 12;
+};
+
+export const commonIsEqual = (a: any, b: any) => {
+  return isEqual(a, b);
 };

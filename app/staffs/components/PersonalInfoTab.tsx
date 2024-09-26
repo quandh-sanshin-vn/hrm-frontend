@@ -2,7 +2,13 @@
 import { StyledDatePicker } from "@/components/common/StyledDatePicker";
 import StyledOverlay from "@/components/common/StyledOverlay";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import useFocus from "@/hooks/use-focus";
 import useWindowSize from "@/hooks/useWindowSize";
@@ -43,6 +49,7 @@ interface Props {
 
 export default function PersonalInfoTab(props: Props) {
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   // const { toast } = useToast();
   const windowSize = useWindowSize();
   const { updateStaffEditing, editingStaff } = useStaffStore((state) => state);
@@ -118,20 +125,49 @@ export default function PersonalInfoTab(props: Props) {
               control={form.control}
               name={"fullname"}
               render={({ field, fieldState }) => (
-                <FormItem className="w-1/2" tabIndex={1}>
-                  <FormControl>
-                    <Input
-                      placeholder="Full name"
-                      {...field}
-                      className="border-border focus:border-primary h-[52px]"
-                    />
-                  </FormControl>
-                  {fieldState.error?.message && (
-                    <p className={"text-red-500 text-[10px]"}>
-                      {fieldState.error?.message}
-                    </p>
+                <FormField
+                  control={form.control}
+                  name={"country"}
+                  render={({ field, fieldState }) => (
+                    <FormItem className="w-full">
+                      <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
+                        Full name
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          tabIndex={3}
+                          disabled={!isEditing}
+                          // {...(isEditing ? field : { value: user.country })}
+                          placeholder={"Full name"}
+                          className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full placeholder-[#16151C]`}
+                          style={{ color: "#16151", opacity: 1 }}
+                        />
+                      </FormControl>
+                      {isEditing && fieldState.error?.message && (
+                        <p className={"text-red-500 text-[10px]"}>
+                          {fieldState.error?.message}
+                        </p>
+                      )}
+                    </FormItem>
                   )}
-                </FormItem>
+                />
+                // <FormItem className="w-1/2" tabIndex={1}>
+                //   <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
+                //     Date of Birth
+                //   </FormLabel>
+                //   <FormControl>
+                //     <Input
+                //       placeholder="Full name"
+                //       {...field}
+                //       className="border-border focus:border-primary h-[52px]"
+                //     />
+                //   </FormControl>
+                //   {fieldState.error?.message && (
+                //     <p className={"text-red-500 text-[10px]"}>
+                //       {fieldState.error?.message}
+                //     </p>
+                //   )}
+                // </FormItem>
               )}
             />
             <FormField

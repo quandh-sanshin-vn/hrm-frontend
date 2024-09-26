@@ -17,7 +17,7 @@ import { DATE_OF_BIRTH } from "@/utilities/format";
 import { useEditingStore } from "@/stores/commonStore";
 
 interface Props {
-  title: string;
+  title?: string;
   field: any;
   tabIndex?: number;
 }
@@ -53,7 +53,7 @@ export function StyledDatePicker_v1(props: Props) {
             </p>
           ) : (
             <p className="w-full text-[#16151C] text-base">
-              {format(props.title, DATE_OF_BIRTH)}
+              {props?.title && format(props.title, DATE_OF_BIRTH)}
             </p>
           )}
           <Image src={IconCalendar} alt="" />
