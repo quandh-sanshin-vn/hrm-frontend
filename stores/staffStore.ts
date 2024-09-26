@@ -33,17 +33,20 @@ interface UserState {
 }
 
 export const useUserStore = create<UserState>((set) => {
-  const storedUser = localStorage.getItem("user");
+  const isBrowser = typeof window !== "undefined";
+  const storedUser = isBrowser ? localStorage.getItem("user") : null;
   const initialUser = storedUser ? JSON.parse(storedUser) : null;
 
   return {
     user: initialUser,
     setUser: (user: User | null) => {
       set({ user });
-      if (user) {
-        localStorage.setItem("user", JSON.stringify(user)); 
-      } else {
-        localStorage.removeItem("user");
+      if (isBrowser) {
+        if (user) {
+          localStorage.setItem("user", JSON.stringify(user)); 
+        } else {
+          localStorage.removeItem("user");
+        }
       }
     },
   };
