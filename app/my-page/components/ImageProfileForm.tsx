@@ -11,6 +11,7 @@ import StyledOverlay from "@/components/common/StyledOverlay";
 import { Button } from "@/components/ui/button";
 import { useEditingStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
 const userRepo = new UserRepositoryImpl();
 const showMyPage = new ShowMyPageUseCase(userRepo);
@@ -25,7 +26,7 @@ const ImageProfileForm: React.FC = () => {
   >(null); // State for the image URL to preview
   const { isEditing, setIsEditing } = useEditingStore((state) => state);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [image, setImage] = useState<string | StaticImport>("");
 
   const getMyPage = async () => {
     try {
@@ -46,6 +47,12 @@ const ImageProfileForm: React.FC = () => {
     getMyPage();
   }, []);
 
+  useEffect(() => {
+    if (!isEditing) {
+      setImage("");
+    }
+  }, [isEditing]);
+
   const handleImageClick = () => {
     setPreviewImage(user?.image ? user.image : AvatarDefault);
     setIsPreviewOpen(true);
@@ -63,13 +70,7 @@ const ImageProfileForm: React.FC = () => {
     const file = event.target.files?.[0];
     if (file) {
       setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        if (typeof reader.result === "string") {
-          setImagePreview(reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
+      setImage(URL.createObjectURL(file));
     }
   };
 
@@ -83,20 +84,20 @@ const ImageProfileForm: React.FC = () => {
               onClick={isEditing ? undefined : handleImageClick}
             >
               <Image
-                src={
-                  isEditing
-                    ? imagePreview || user?.image || AvatarDefault
-                    : user?.image || AvatarDefault
-                }
+                src={image || user?.image || AvatarDefault}
                 alt=""
                 width={100}
                 height={100}
-                className="w-full h-full object-cover cursor-pointer rounded-md"
+                className={`w-full h-full object-cover cursor-pointer rounded-md ${
+                  isEditing ? "opacity-60" : ""
+                }`}
               />
               {isEditing && (
                 <>
                   <div className="absolute inset-0 flex justify-center items-center cursor-pointer">
-                    <Image src={IconCamera} alt="" />
+                    <div className="p-1 rounded-full bg-white">
+                      <Image src={IconCamera} alt="" className="shadow-lg" />
+                    </div>
                   </div>
                   <input
                     type="file"

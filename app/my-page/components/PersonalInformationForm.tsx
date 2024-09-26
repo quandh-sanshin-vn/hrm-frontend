@@ -133,7 +133,6 @@ export default function PersonalInformationForm() {
                     name={"birth_day"}
                     render={({ field, fieldState }) => (
                       <FormItem className="w-full">
-                        {" "}
                         <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
                           Date of Birth
                         </FormLabel>
@@ -143,7 +142,7 @@ export default function PersonalInformationForm() {
                             title={
                               user.birth_day
                                 ? user.birth_day.toString()
-                                : "Default Title"
+                                : String(new Date())
                             }
                           />
                         </FormControl>
