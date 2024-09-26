@@ -14,6 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { DATE_OF_BIRTH } from "@/utilities/format";
+import { useEditingStore } from "@/stores/commonStore";
 
 interface Props {
   title: string;
@@ -22,15 +23,22 @@ interface Props {
 }
 export function StyledDatePicker_v1(props: Props) {
   const { field, title } = props;
+  const { isEditing, setIsEditing } = useEditingStore((state) => state);
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        asChild
+        className={`${isEditing ? "" : "pointer-events-none"}`}
+      >
         <Button
           variant={"outline"}
           className={cn(
-            "w-full h-[52px] justify-start text-left font-normal border border-none",
-            !field.value && "text-muted-foreground px-0"
+            "w-full h-[52px] justify-start text-left font-normal border border-none ",
+            !field.value &&
+              `text-muted-foreground px-0 ${
+                !isEditing ? "hover:cursor-not-allowed" : ""
+              }`
           )}
           tabIndex={props.tabIndex}
         >
