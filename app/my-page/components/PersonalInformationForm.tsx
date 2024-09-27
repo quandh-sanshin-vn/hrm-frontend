@@ -41,9 +41,6 @@ export default function PersonalInformationForm() {
   const { user, setUser } = useUserStore((state) => state);
   const { isEditing, setIsEditing } = useEditingStore((state) => state);
   const [isOpen, setIsOpen] = useState(true);
-  const toggleModalCancel = () => {
-    setIsOpen(!isOpen);
-  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
