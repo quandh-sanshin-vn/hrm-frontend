@@ -33,7 +33,7 @@ export function StyledDatePicker_v1(props: Props) {
         <Button
           variant={"outline"}
           className={cn(
-            "w-full h-[52px] justify-start text-left font-normal border border-none px-0",
+            "w-full h-[40px] justify-start text-left font-normal border border-none px-0",
             !field.value &&
               `text-muted-foreground px-0 ${
                 !isEditing ? "hover:cursor-not-allowed" : ""

@@ -1,27 +1,34 @@
 "use client";
 
-import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
+import PersonalInformationForm from "@/app/my-page/components/PersonalInformationForm";
+import ProfessionalInformationForm from "@/app/my-page/components/ProfessionalInformationForm";
+import { useEditingStore } from "@/stores/commonStore";
+import ProfessionalIcon from "../../assets/icons/iconBriefcase.svg";
+import ProfessionalActiveIcon from "../../assets/icons/iconBriefcaseActive.svg";
 import ChangePasswordIcon from "../../assets/icons/iconLock.svg";
 import ChangePasswordActiveIcon from "../../assets/icons/iconLockActive.svg";
 import PersonalIcon from "../../assets/icons/iconUser.svg";
 import PersonalActiveIcon from "../../assets/icons/iconUserActive.svg";
-import ProfessionalIcon from "../../assets/icons/iconBriefcase.svg";
-import ProfessionalActiveIcon from "../../assets/icons/iconBriefcaseActive.svg";
 import ChangePasswordForm from "./ChangePasswordForm";
-import PersonalInformationForm from "@/app/my-page/components/PersonalInformationForm";
-import ProfessionalInformationForm from "@/app/my-page/components/ProfessionalInformationForm";
-import { useEditingStore } from "@/stores/commonStore";
 
 export default function MyPageTab() {
   const [tab, changeTab] = useState("personal");
   const { isEditing, setIsEditing } = useEditingStore((state) => state);
 
+  useEffect(() => {
+    if (isEditing) {
+      changeTab("personal");
+    }
+  }, [isEditing]);
+
   return (
     <Tabs
       onValueChange={changeTab}
+      value={tab}
       defaultValue="personal"
       className="flex flex-1 flex-col bg-white h-full w-full min-w-full"
     >
@@ -50,36 +57,38 @@ export default function MyPageTab() {
             }}
           />
         </TabsTrigger>
-        <TabsTrigger value="professional" className="flex-col">
-          <div className="flex items-center">
-            {tab === "professional" ? (
-              <Image
-                src={ProfessionalActiveIcon}
-                alt=""
-                className="h-6 w-6 mx-1"
-              />
-            ) : (
-              <Image src={ProfessionalIcon} alt="" className="h-6 w-6 mx-1" />
-            )}
-            <p
-              className="text-[16px] font-normal"
-              style={{
-                // fontWeight: tab === "professional" ? "700" : "400",
-                color: tab === "professional" ? "var(--primary)" : "black",
-              }}
-            >
-              Professional Information
-            </p>
-          </div>
+        {!isEditing && (
+          <TabsTrigger value="professional" className="flex-col">
+            <div className="flex items-center">
+              {tab === "professional" ? (
+                <Image
+                  src={ProfessionalActiveIcon}
+                  alt=""
+                  className="h-6 w-6 mx-1"
+                />
+              ) : (
+                <Image src={ProfessionalIcon} alt="" className="h-6 w-6 mx-1" />
+              )}
+              <p
+                className="text-[16px] font-normal"
+                style={{
+                  // fontWeight: tab === "professional" ? "700" : "400",
+                  color: tab === "professional" ? "var(--primary)" : "black",
+                }}
+              >
+                Professional Information
+              </p>
+            </div>
 
-          <div
-            className="h-1 w-full  mt-1"
-            style={{
-              backgroundColor:
-                tab === "professional" ? "var(--primary)" : "white",
-            }}
-          />
-        </TabsTrigger>
+            <div
+              className="h-1 w-full  mt-1"
+              style={{
+                backgroundColor:
+                  tab === "professional" ? "var(--primary)" : "white",
+              }}
+            />
+          </TabsTrigger>
+        )}
         {!isEditing && (
           <TabsTrigger value="password" className="flex-col">
             <div className="flex items-center">
@@ -119,9 +128,11 @@ export default function MyPageTab() {
       <TabsContent value="personal">
         <PersonalInformationForm />
       </TabsContent>
-      <TabsContent value="professional">
-        <ProfessionalInformationForm />
-      </TabsContent>
+      {!isEditing && (
+        <TabsContent value="professional">
+          <ProfessionalInformationForm />
+        </TabsContent>
+      )}
       {!isEditing && (
         <TabsContent value="password" className="flex flex-1 w-full">
           <ChangePasswordForm />
