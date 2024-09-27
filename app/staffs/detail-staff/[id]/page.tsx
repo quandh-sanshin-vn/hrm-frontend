@@ -9,10 +9,13 @@ import useWindowSize from "@/hooks/useWindowSize";
 import Image from "next/image";
 import { useState } from "react";
 import StyledUserInfoTab from "../../components/StyledUserInfoTab";
+import { useStaffStore } from "@/stores/staffStore";
 
 export default function DetailStaffScreen() {
   const [loading, setLoading] = useState(false);
   const windowSize = useWindowSize();
+
+  const { selectedStaff } = useStaffStore((state) => state);
 
   return (
     <div className="w-full flex ">
@@ -29,10 +32,10 @@ export default function DetailStaffScreen() {
         >
           <div className="h-[120px]  rounded-sm bg-white w-full">
             <StyledAvatarUser
-              fullName="An"
-              positionName="Manager"
-              imageUrl={undefined}
-              email="machineX2gmail.com"
+              fullName={selectedStaff?.fullname || ""}
+              positionName={selectedStaff?.position_name || ""}
+              imageUrl={selectedStaff?.image}
+              email={selectedStaff?.email || ""}
             />
           </div>
 
@@ -64,7 +67,7 @@ export default function DetailStaffScreen() {
               }}
               className="w-full border border-border flex items-center justify-center flex-col rounded-md "
             >
-              <StyledUserInfoTab />
+              <StyledUserInfoTab mode={"view"} />
             </div>
           </div>
           {/* <SearchArea loading setLoading={setLoading} />

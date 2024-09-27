@@ -13,7 +13,6 @@ export class AuthServiceImpl implements AuthService {
 
   getToken(): string | null {
     if (typeof window !== "undefined") {
-      console.log("-------------", localStorage.getItem(this.tokenKey));
       return localStorage.getItem(this.tokenKey);
     }
     return null;

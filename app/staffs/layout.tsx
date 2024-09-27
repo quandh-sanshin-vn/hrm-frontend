@@ -1,3 +1,5 @@
+import { Toaster } from "@/components/ui/toaster";
+
 export default function StaffScreenLayout({
   children,
 }: Readonly<{
@@ -5,7 +7,10 @@ export default function StaffScreenLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <main>{children}</main>
+        <Toaster />
+      </body>
     </html>
   );
 }

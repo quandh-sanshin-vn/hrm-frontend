@@ -22,13 +22,12 @@ import { useToast } from "@/hooks/use-toast";
 import { useEditingStore, useFileStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
 import { DATE_OF_BIRTH } from "@/utilities/format";
-import { ACCESS_TOKEN_KEY } from "@/utilities/static-value";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getCookie } from "cookies-next";
 import { format } from "date-fns";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
 const formSchema = z.object({
   fullname: z.string().trim(),
   phone: z.string().trim(),

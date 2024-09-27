@@ -67,7 +67,6 @@ export class UserRepositoryImpl implements UserRepository {
   ): Promise<CommonResponse | null> {
     try {
       const response: any = await createStaffRequest(params);
-
       return response;
     } catch (error: any) {
       return error;

@@ -13,9 +13,14 @@ import { Input } from "@/components/ui/input";
 import useFocus from "@/hooks/use-focus";
 import useWindowSize from "@/hooks/useWindowSize";
 import { useStaffStore } from "@/stores/staffStore";
-import { DATE_OF_BIRTH } from "@/utilities/format";
+import {
+  formatDateToString,
+  formatDateToString1,
+  formatStringToDate,
+  formatStringToDateReverse,
+} from "@/utilities/format";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, parse } from "date-fns";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -45,39 +50,64 @@ const formSchema = z.object({
 
 interface Props {
   changeTab(name: string): void;
+  mode: "view" | "edit" | "create";
 }
 
 export default function PersonalInfoTab(props: Props) {
-  const [loading, setLoading] = useState(false);
-  // const { toast } = useToast();
+  const { mode } = props;
   const windowSize = useWindowSize();
-  const { updateStaffEditing, editingStaff } = useStaffStore((state) => state);
+  const isFocus = useFocus();
+  const params = useParams();
+
+  const [loading, setLoading] = useState(false);
+  const [formMaxHeight, setFormMaxHeight] = useState(windowSize.height);
+  const { updateStaffEditing, editingStaff, staffList } = useStaffStore(
+    (state) => state
+  );
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      fullname: "",
+      phoneNumber: "",
+      address: "",
+      country: "",
+      dateOfBirth: new Date(),
+    },
   });
 
-  const isFocus = useFocus();
+  useEffect(() => {
+    if (props.mode == "create") {
+      setFormMaxHeight(windowSize.height - 100 - 40 - 48 - 50 - 20);
+    }
+    if (props.mode == "view" || props.mode == "edit") {
+      setFormMaxHeight(windowSize.height - 100 - 40 - 48 - 50 - 20 - 120);
+    }
+  }, [props.mode, windowSize.height]);
 
   useEffect(() => {
     if (isFocus) {
-      if (editingStaff.fullname)
-        form.setValue("fullname", editingStaff?.fullname || "");
-      if (editingStaff.phone) form.setValue("phoneNumber", editingStaff?.phone);
-      if (editingStaff.fullname)
-        form.setValue(
-          "dateOfBirth",
-          parse(editingStaff?.birth_day || "", "dd/MM/yyyy", new Date()) ||
-            new Date()
-        );
-      if (editingStaff.fullname)
-        form.setValue("address", editingStaff?.address || "");
-      if (editingStaff.fullname)
-        form.setValue("country", editingStaff?.country || "");
-    } else {
-      form.setValue("fullname", "");
-      form.setValue("dateOfBirth", new Date());
-      form.setValue("address", "");
-      form.setValue("country", "");
+      if (mode == "create") {
+        if (editingStaff.fullname)
+          form.setValue("fullname", editingStaff?.fullname || "");
+        if (editingStaff.phone)
+          form.setValue("phoneNumber", editingStaff?.phone);
+        if (editingStaff.birth_day)
+          formatStringToDate(editingStaff?.birth_day || "");
+        if (editingStaff.address)
+          form.setValue("address", editingStaff?.address || "");
+        if (editingStaff.country)
+          form.setValue("country", editingStaff?.country || "");
+      }
+      if (mode == "view") {
+        const staff: any = staffList.find((staff) => staff.id == params.id);
+        if (staff?.fullname) form.setValue("fullname", staff?.fullname || "");
+        if (staff?.phone) form.setValue("phoneNumber", staff?.phone);
+        if (staff?.birth_day) formatStringToDateReverse(staff?.birth_day || "");
+        if (staff?.address) form.setValue("address", staff?.address || "");
+        if (staff?.country) form.setValue("country", staff?.country || "");
+      }
+      if (mode == "edit") {
+      }
     }
   }, [isFocus]);
 
@@ -86,40 +116,37 @@ export default function PersonalInfoTab(props: Props) {
       updateStaffEditing({
         fullname: data.fullname,
         phone: data.phoneNumber,
-        birth_day: format(data.dateOfBirth, DATE_OF_BIRTH),
+        birth_day: formatDateToString1(data.dateOfBirth),
         address: data.address,
         country: data.country,
       });
-      onNextForm();
+      props.changeTab("professional");
     } catch (error) {
     } finally {
       setLoading(false);
     }
   };
-  const onNextForm = () => {
-    // save and next
-    props.changeTab("professional");
-  };
 
   return (
     <div
       style={{
-        maxHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
-        minHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
+        maxHeight: formMaxHeight,
+        minHeight: formMaxHeight,
       }}
       className=" bg-white flex flex-1 h-full rounded-md "
     >
       <StyledOverlay isVisible={loading} />
       <Form {...form}>
         <form
+          contentEditable={false}
           onSubmit={form.handleSubmit(onSubmit)}
           style={{
-            maxHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
-            minHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
+            maxHeight: formMaxHeight,
+            minHeight: formMaxHeight,
           }}
           className=" flex flex-col space-y-4 mt-1  w-full p-5  rounded-md  overflow-y-auto hide-scrollbar"
         >
-          <div className={"flex items-center justify-between gap-x-5"}>
+          <div className={"flex items-start justify-between gap-x-5"}>
             <FormField
               control={form.control}
               name={"fullname"}
@@ -131,7 +158,6 @@ export default function PersonalInfoTab(props: Props) {
                   <FormControl>
                     <Input
                       {...field}
-                      // placeholder="Enter your full name"
                       className=" border-b border-border h-10 rounded-none"
                     />
                   </FormControl>
@@ -154,7 +180,6 @@ export default function PersonalInfoTab(props: Props) {
                   <FormControl>
                     <Input
                       {...field}
-                      // placeholder="Enter your full name"
                       className=" border-b border-border h-10 rounded-none"
                     />
                   </FormControl>
@@ -167,7 +192,7 @@ export default function PersonalInfoTab(props: Props) {
               )}
             />
           </div>
-          <div className={"flex items-center justify-between gap-x-5"}>
+          <div className={"flex items-start justify-between gap-x-5 "}>
             <FormField
               control={form.control}
               name={"dateOfBirth"}
@@ -198,7 +223,6 @@ export default function PersonalInfoTab(props: Props) {
                   <FormControl>
                     <Input
                       {...field}
-                      // placeholder="Enter your full name"
                       className=" border-b border-border h-10 rounded-none"
                     />
                   </FormControl>
@@ -211,7 +235,7 @@ export default function PersonalInfoTab(props: Props) {
               )}
             />
           </div>
-          <div className={"flex items-center justify-between gap-x-5"}>
+          <div className={"flex items-center justify-between gap-x-5 "}>
             <FormField
               control={form.control}
               name={"country"}
@@ -236,26 +260,18 @@ export default function PersonalInfoTab(props: Props) {
             />
             <div className="w-1/2" />
           </div>
-          <div className="flex flex-1 justify-end items-end gap-x-4 ">
-            {/* <Button
-              onClick={onClearForm}
-              variant="outline"
-              disabled={loading}
-              tabIndex={3}
-              className="w-[152px] h-[50px] font-normal border-border bg-white text-[14px] hover:bg-gray-100 rounded-lg"
-              type="button"
-            >
-              {"Clear"}
-            </Button> */}
-            <Button
-              disabled={loading}
-              tabIndex={3}
-              className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
-              type="submit"
-            >
-              Next
-            </Button>
-          </div>
+          {props.mode == "create" && (
+            <div className="flex flex-1 justify-end items-end gap-x-4">
+              <Button
+                disabled={loading}
+                tabIndex={3}
+                className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
+                type="submit"
+              >
+                Next
+              </Button>
+            </div>
+          )}
         </form>
       </Form>
     </div>

@@ -1,17 +1,19 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 
-import ChangePasswordIcon from "../../assets/icons/iconLock.svg";
-import ChangePasswordActiveIcon from "../../assets/icons/iconLockActive.svg";
-import PersonalIcon from "../../assets/icons/iconUser.svg";
-import PersonalActiveIcon from "../../assets/icons/iconUserActive.svg";
 import ProfessionalIcon from "../../assets/icons/iconBriefcase.svg";
 import ProfessionalActiveIcon from "../../assets/icons/iconBriefcaseActive.svg";
+import PersonalIcon from "../../assets/icons/iconUser.svg";
+import PersonalActiveIcon from "../../assets/icons/iconUserActive.svg";
 import PersonalInfoTab from "./PersonalInfoTab";
 import ProfessionalInfoTab from "./ProfessionalInfoTab";
 
-export default function StyledUserInfoTab() {
+interface Props {
+  mode: "view" | "edit" | "create";
+}
+
+export default function StyledUserInfoTab(props: Props) {
   const [tab, changeTab] = useState("personal");
   return (
     <Tabs
@@ -78,10 +80,10 @@ export default function StyledUserInfoTab() {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="personal">
-        <PersonalInfoTab changeTab={changeTab} />
+        <PersonalInfoTab mode={props.mode} changeTab={changeTab} />
       </TabsContent>
       <TabsContent value="professional">
-        <ProfessionalInfoTab changeTab={changeTab} />
+        <ProfessionalInfoTab mode={props.mode} changeTab={changeTab} />
       </TabsContent>
     </Tabs>
   );

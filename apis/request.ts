@@ -38,7 +38,7 @@ api.interceptors.response.use(
         code: response?.data?.code,
         message: response?.data?.message || "",
         requestStatus: response.status,
-        totalItem: response?.data?.total
+        totalItem: response?.data?.total,
       };
       return response.data.formattedResponse;
     }
@@ -61,11 +61,11 @@ export default api;
 
 function formatErrorResponse(error: any): CommonResponse {
   return {
-    data: error.response?.data || [],
-    code: error.response?.code || 1,
-    message: error.response?.message || "",
+    data: error.response?.data?.data || [],
+    code: error.response?.data?.code || 1,
+    message: error.response?.data?.message || "",
     requestStatus: error.response?.status || 500,
-    errorCode: error?.data?.error_code || 0,
+    errorCode: error.response?.data?.data.error_code || 0,
     totalItem: 0,
   };
 }

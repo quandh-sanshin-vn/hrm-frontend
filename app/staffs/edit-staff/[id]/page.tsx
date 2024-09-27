@@ -64,7 +64,7 @@ export default function EditStaffScreen() {
               }}
               className="w-full border border-border flex items-center justify-center flex-col rounded-md "
             >
-              <StyledUserInfoTab />
+              <StyledUserInfoTab mode={"edit"} />
             </div>
           </div>
           {/* <SearchArea loading setLoading={setLoading} />

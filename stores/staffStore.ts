@@ -27,7 +27,10 @@ export const useStaffStore = create<StaffState>()(
       updateSearchParams: (params: GetStaffListParams) =>
         set((state) => ({ ...state, searchParams: params })),
       updateStaffEditing: (staff: User) =>
-        set((state) => ({ ...state, editingStaff: staff })),
+        set((state) => ({
+          ...state,
+          editingStaff: { ...state.editingStaff, ...staff },
+        })),
       updateSelectedStaff: (staff: User) =>
         set((state) => ({ ...state, selectedStaff: staff })),
     }),

@@ -40,7 +40,7 @@ export function StyledDatePicker(props: Props) {
               }}
               className="w-full text-secondary"
             >
-              {format(field.value, DATE_OF_BIRTH)}
+              {format(field?.value, DATE_OF_BIRTH)}
             </p>
           ) : (
             <p className="w-full text-secondary">{props.title}</p>
