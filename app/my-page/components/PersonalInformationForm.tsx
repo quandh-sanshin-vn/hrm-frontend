@@ -21,7 +21,7 @@ import useFocus from "@/hooks/use-focus";
 import { useToast } from "@/hooks/use-toast";
 import { useEditingStore, useFileStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
-import { DATE } from "@/utilities/format";
+import { DATE, formatStringToDate } from "@/utilities/format";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
@@ -76,7 +76,7 @@ export default function PersonalInformationForm() {
       form.setValue("phone", user?.phone || "");
       form.setValue("country", user?.country || "");
       form.setValue("image", user?.image || "");
-      form.setValue("birth_day", user?.birth_day || "");
+      form.setValue("birth_day", formatStringToDate(user?.birth_day || ""));
     }
   }, [isReserveForm, isFocus]);
 
