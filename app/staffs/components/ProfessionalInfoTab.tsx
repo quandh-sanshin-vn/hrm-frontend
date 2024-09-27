@@ -1,4 +1,6 @@
 "use client";
+import { CreateUsersParams } from "@/apis/modules/user";
+import { StyledComboboxDepartment } from "@/components/common/StyledComboboxDepartment";
 import { StyledDatePicker } from "@/components/common/StyledDatePicker";
 import StyledOverlay from "@/components/common/StyledOverlay";
 import { Button } from "@/components/ui/button";
@@ -17,21 +19,59 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { CreateStaffUseCase } from "@/core/application/usecases/staff-master/createNewStaff.usecase";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
+import useFocus from "@/hooks/use-focus";
+import { toast } from "@/hooks/use-toast";
 import useWindowSize from "@/hooks/useWindowSize";
 import { useCommonStore } from "@/stores/commonStore";
 import { useStaffStore } from "@/stores/staffStore";
-import { STAFF_STATUS, STAFF_STATUS_WORKING } from "@/utilities/static-value";
+import {
+  convertIdToObject,
+  formatDateToString,
+  formatDateToString1,
+  formatFullStringToDateReverse,
+  formatStringToDate,
+  formatStringToDate1,
+} from "@/utilities/format";
+import { STAFF_STATUS_WORKING } from "@/utilities/static-value";
+import { EMAIL_REGEX } from "@/utilities/validate";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
 const formSchema = z.object({
   username: z.string().trim().min(1, "Full name is required"),
-  email: z.string().trim().min(1, "Email is required"),
-  statusWorking: z.string().trim(),
-  department: z.string().trim(),
-  position: z.string().trim(),
+  email: z
+    .string()
+    .trim()
+    .min(1, "Email is required")
+    .regex(EMAIL_REGEX, "Invalid email format"),
+  statusWorking: z.any().refine(
+    (value) => {
+      const numValue = Number(value);
+      return !isNaN(numValue) && numValue >= 0;
+    },
+    {
+      message: "Status working is required",
+    }
+  ),
+  department: z
+    .array(z.object({ id: z.number(), name: z.string() }))
+    .refine((value) => value?.length > 0, {
+      message: "Department is required",
+    }),
+  position: z.any().refine(
+    (value) => {
+      const numValue = Number(value);
+      return !isNaN(numValue) && numValue >= 0;
+    },
+    {
+      message: "Position is required",
+    }
+  ),
   joiningDate: z
     .union([z.string(), z.date()])
     .refine(
@@ -45,78 +85,232 @@ const formSchema = z.object({
       }
     )
     .transform((value) => new Date(value)),
-  leavesHours: z.string(),
+  leavesHours: z.string().trim(),
 });
-
 const userRepo = new UserRepositoryImpl();
-// const changePassword = new ChangePasswordUseCase(userRepo);
-
+const createStaff = new CreateStaffUseCase(userRepo);
 interface Props {
   changeTab(name: string): void;
+  mode: "view" | "edit" | "create";
 }
 
 export default function ProfessionalInfoTab(props: Props) {
+  const { mode } = props;
   const [loading, setLoading] = useState(false);
-  const [mode, setMode] = useState("view");
-  // const { toast } = useToast();
+  const isFocus = useFocus();
   const windowSize = useWindowSize();
-  const { positionData } = useCommonStore((state) => state);
-  const { editingStaff } = useStaffStore((state) => state);
+  const params = useParams();
+  const { positionData, departmentData } = useCommonStore((state) => state);
 
+  const { updateStaffEditing, editingStaff, staffList, selectedStaff } =
+    useStaffStore((state) => state);
+
+  console.log("--------selectedStaff------", selectedStaff);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      username: "",
-      email: "",
-      leavesHours: "0",
-    },
+    defaultValues:
+      mode === "create"
+        ? {
+            username: editingStaff?.username || "",
+            email: editingStaff?.email,
+            statusWorking: editingStaff?.status_working || "",
+            position: editingStaff?.position_id || "",
+            department: [],
+            leavesHours: "0",
+          }
+        : mode === "view"
+        ? {
+            username: selectedStaff?.username || "",
+            email: selectedStaff?.email,
+            statusWorking: selectedStaff?.status_working || "",
+            position: selectedStaff?.position_id || "",
+            department: convertIdToObject(
+              selectedStaff.department || [],
+              departmentData
+            ),
+            joiningDate: formatFullStringToDateReverse(
+              selectedStaff?.started_at || ""
+            ),
+            leavesHours: selectedStaff.time_off_hours,
+          }
+        : {},
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log("-----editingStaff------", editingStaff);
-    // FLOW: UI -> use cases -> repositories -> API
     try {
-      //
+      setLoading(true);
+      const departmentIds = data.department.map((i) => i.id);
+      const joiningDateFormatted = formatDateToString1(data.joiningDate);
+      const getPositionName =
+        positionData.find((i) => i.value == data.position)?.name || "";
+      updateStaffEditing({
+        username: data.username,
+        email: data.email,
+        status_working: data.statusWorking,
+        position_id: data.position,
+        position_name: getPositionName,
+        department: departmentIds,
+        started_at: joiningDateFormatted,
+        time_off_hours: data.leavesHours,
+      });
+      const params: CreateUsersParams = {
+        fullname: editingStaff?.fullname || "",
+        phone: editingStaff?.phone || "",
+        birth_day: editingStaff?.birth_day || "",
+        address: editingStaff?.address || "",
+        country: editingStaff?.country || "",
+        username: data?.username || "",
+        status_working:
+          data?.statusWorking || editingStaff?.status_working || "",
+        email: data.email || editingStaff?.email || "",
+        position: data?.position || editingStaff?.position_id || "",
+        started_at: joiningDateFormatted || editingStaff.started_at || "",
+        department_ids: departmentIds || editingStaff.department || [],
+      };
+      const result = await createStaff.execute(params);
+      if (result?.code == 0) {
+        toast({
+          description: "Create staff successfully",
+          color: `bg-blue-200`,
+        });
+        form.reset();
+        updateStaffEditing({});
+      } else {
+        toast({
+          description: "Create staff failed",
+          color: "bg-red-100",
+        });
+      }
     } catch (error) {
     } finally {
       setLoading(false);
     }
   };
+
   const onGoBack = () => {
-    // save and next
     props.changeTab("personal");
   };
+
+  const [formMaxHeight, setFormMaxHeight] = useState(windowSize.height);
+
+  useEffect(() => {
+    if (props.mode == "create") {
+      setFormMaxHeight(windowSize.height - 100 - 40 - 48 - 50 - 20);
+    }
+    if (props.mode == "view" || props.mode == "edit") {
+      setFormMaxHeight(windowSize.height - 100 - 40 - 48 - 50 - 20 - 120);
+    }
+  }, [props.mode, windowSize.height]);
+
+  useEffect(() => {
+    if (mode == "view") {
+      const departmentSelectedData = convertIdToObject(
+        selectedStaff?.department || [],
+        departmentData
+      );
+      if (selectedStaff?.username)
+        form.setValue("username", selectedStaff?.username || "");
+      if (selectedStaff?.email)
+        form.setValue("email", selectedStaff?.email || "");
+      if (selectedStaff?.status_working)
+        form.setValue("statusWorking", selectedStaff?.status_working || "");
+      if (selectedStaff?.position_id)
+        form.setValue("position", selectedStaff?.position_id || "");
+      if (departmentSelectedData?.length && departmentSelectedData?.length > 0)
+        form.setValue("department", departmentSelectedData || []);
+      if (selectedStaff?.started_at)
+        form.setValue(
+          "joiningDate",
+          formatFullStringToDateReverse(selectedStaff?.started_at)
+        );
+      form.setValue("leavesHours", selectedStaff?.time_off_hours || "0");
+    }
+  }, [mode, form.watch("username")]);
+
+  useEffect(() => {
+    if (isFocus) {
+      if (mode == "create") {
+        const departmentSelectedData = convertIdToObject(
+          editingStaff.department || [],
+          departmentData
+        );
+        if (editingStaff?.username)
+          form.setValue("username", editingStaff?.username || "");
+        if (editingStaff?.email) form.setValue("email", editingStaff?.email);
+        if (editingStaff?.status_working)
+          form.setValue("statusWorking", editingStaff.status_working);
+        if (editingStaff?.position_id)
+          form.setValue("position", editingStaff?.position_id || "");
+        if (
+          departmentSelectedData?.length &&
+          departmentSelectedData?.length > 0
+        )
+          form.setValue("department", departmentSelectedData || []);
+        if (editingStaff?.started_at)
+          form.setValue(
+            "joiningDate",
+            formatStringToDate(editingStaff?.started_at)
+          );
+        form.setValue("leavesHours", "0");
+      }
+      // if (mode == "view") {
+      //   const staff: any = staffList.find((staff) => staff.id == params.id);
+      //   const departmentSelectedData = convertIdToObject(
+      //     staff?.department || [],
+      //     departmentData
+      //   );
+      //   if (staff?.username) form.setValue("username", staff?.username || "");
+      //   if (staff?.email) form.setValue("email", staff?.email || "");
+      //   if (staff?.status_working)
+      //     form.setValue("statusWorking", staff?.status_working || "");
+      //   if (staff?.position_id)
+      //     form.setValue("position", staff?.position_id || "");
+      //   if (
+      //     departmentSelectedData?.length &&
+      //     departmentSelectedData?.length > 0
+      //   )
+      //     form.setValue("department", departmentSelectedData || []);
+      //   if (staff?.started_at)
+      //     form.setValue(
+      //       "joiningDate",
+      //       formatFullStringToDateReverse(staff?.started_at)
+      //     );
+      //   form.setValue("leavesHours", staff.time_off_hours);
+      // }
+    }
+  }, [isFocus]);
 
   return (
     <div
       style={{
-        maxHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
-        minHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
+        maxHeight: formMaxHeight,
+        minHeight: formMaxHeight,
       }}
-      className=" bg-white flex flex-1 h-full rounded-md "
+      className="bg-white flex flex-1 h-full rounded-md "
     >
       <StyledOverlay isVisible={loading} />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           style={{
-            maxHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
-            minHeight: windowSize.height - 100 - 40 - 48 - 50 - 120 - 20,
+            maxHeight: formMaxHeight,
+            minHeight: formMaxHeight,
           }}
-          className=" flex flex-col space-y-4 mt-1  w-full p-5  rounded-md  overflow-y-auto hide-scrollbar"
+          className="flex flex-col space-y-4 mt-1  w-full p-5  rounded-md  overflow-y-auto hide-scrollbar"
         >
-          <div className={"flex items-center justify-between gap-x-5"}>
+          <div className={"flex items-start justify-between gap-x-5 "}>
             <FormField
               control={form.control}
               name={"username"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2">
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    User Name
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      tabIndex={1}
-                      placeholder="User Name"
                       {...field}
-                      className="border-border focus:border-primary h-14"
+                      className=" border-b border-border h-10 rounded-none"
                     />
                   </FormControl>
                   {fieldState.error?.message && (
@@ -132,12 +326,13 @@ export default function ProfessionalInfoTab(props: Props) {
               name={"email"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2">
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Email
+                  </FormLabel>
                   <FormControl>
                     <Input
-                      tabIndex={1}
-                      placeholder="Email Address"
                       {...field}
-                      className="border-border focus:border-primary h-14"
+                      className=" border-b border-border h-10 rounded-none"
                     />
                   </FormControl>
                   {fieldState.error?.message && (
@@ -149,13 +344,17 @@ export default function ProfessionalInfoTab(props: Props) {
               )}
             />
           </div>
-          <div className={"flex items-center justify-between gap-x-5"}>
+          <div className={"flex items-start justify-between gap-x-5"}>
             <FormField
               control={form.control}
               name="statusWorking"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem className="flex-1">
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Status Working
+                  </FormLabel>
                   <Select
+                    value={field.value}
                     onValueChange={field.onChange}
                     defaultValue={field.value}
                   >
@@ -164,12 +363,9 @@ export default function ProfessionalInfoTab(props: Props) {
                         style={{
                           color: !field.value ? "var(--secondary)" : "black",
                         }}
-                        className="border-border border h-[52px]  text-secondary"
+                        className="border-b border-border h-10 rounded-none px-0"
                       >
-                        <SelectValue
-                          placeholder={"Employee Type"}
-                          className=" border-border border w-full"
-                        />
+                        <SelectValue className="w-full" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-white">
@@ -185,34 +381,40 @@ export default function ProfessionalInfoTab(props: Props) {
                       })}
                     </SelectContent>
                   </Select>
+                  {fieldState.error?.message && (
+                    <p className={"text-red-500 text-[10px]"}>
+                      {fieldState.error?.message}
+                    </p>
+                  )}
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
               name="position"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger
-                        style={{
-                          color: !field.value ? "var(--secondary)" : "black",
-                        }}
-                        className="border-border border  h-[52px]"
-                      >
-                        <SelectValue
-                          placeholder={"Position"}
-                          className=" border-border border w-[256px]"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-white">
-                      {[{ value: "-1", name: "All" }, ...positionData].map(
-                        (item) => {
+              render={({ field, fieldState }) => {
+                return (
+                  <FormItem className="flex-1">
+                    <FormLabel className={"font-normal text-[16px]"}>
+                      Position
+                    </FormLabel>
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger
+                          style={{
+                            color: !field.value ? "var(--secondary)" : "black",
+                          }}
+                          className="border-b border-border h-10 rounded-none px-0"
+                        >
+                          <SelectValue className="w-full" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-white">
+                        {[...positionData].map((item) => {
                           return (
                             <SelectItem
                               key={item.value}
@@ -221,63 +423,30 @@ export default function ProfessionalInfoTab(props: Props) {
                               {item.name}
                             </SelectItem>
                           );
-                        }
-                      )}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
+                        })}
+                      </SelectContent>
+                    </Select>
+                    {fieldState.error?.message && (
+                      <p className={"text-red-500 text-[10px]"}>
+                        {fieldState.error?.message}
+                      </p>
+                    )}
+                  </FormItem>
+                );
+              }}
             />
           </div>
-          <div className={"flex items-center justify-between gap-x-5"}>
-            <FormField
-              control={form.control}
-              name="statusWorking"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger
-                        style={{
-                          color: !field.value ? "var(--secondary)" : "black",
-                        }}
-                        className="border-border border h-[52px]"
-                      >
-                        <SelectValue
-                          placeholder={"Department"}
-                          className=" border-border border w-[256px]"
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-white">
-                      {STAFF_STATUS.map((item) => {
-                        return (
-                          <SelectItem
-                            key={item.value}
-                            value={String(item.value)}
-                          >
-                            {item.name}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                </FormItem>
-              )}
-            />
+          <div className={"flex items-start justify-between gap-x-5"}>
             <FormField
               control={form.control}
               name={"joiningDate"}
               render={({ field, fieldState }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-1 w-1/2">
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Joining Date
+                  </FormLabel>
                   <FormControl>
-                    <StyledDatePicker
-                      field={field}
-                      title={"Select Joining Date"}
-                    />
+                    <StyledDatePicker field={field} title={""} />
                   </FormControl>
                   {fieldState.error?.message && (
                     <p className={"text-red-500 text-[10px]"}>
@@ -287,20 +456,19 @@ export default function ProfessionalInfoTab(props: Props) {
                 </FormItem>
               )}
             />
-          </div>
-          <div className={"flex items-center justify-between gap-x-5"}>
             <FormField
               control={form.control}
               name={"leavesHours"}
               render={({ field, fieldState }) => (
-                <FormItem className="w-1/2">
+                <FormItem className=" flex-1 w-1/2">
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Leaves Hours
+                  </FormLabel>
                   <FormControl>
                     <Input
                       disabled={true}
-                      tabIndex={1}
-                      placeholder="Leaves Hours"
                       {...field}
-                      className="border-border focus:border-primary h-[52px]"
+                      className=" border-b border-border h-10 rounded-none"
                     />
                   </FormControl>
                   {fieldState.error?.message && (
@@ -311,28 +479,50 @@ export default function ProfessionalInfoTab(props: Props) {
                 </FormItem>
               )}
             />
+          </div>
+          <div className={"flex items-start justify-between gap-x-5"}>
+            <FormField
+              control={form.control}
+              name="department"
+              render={({ field, fieldState }) => (
+                <FormItem className="flex-1 w-full">
+                  <FormLabel className={"font-normal text-[16px]"}>
+                    Department
+                  </FormLabel>
+                  <StyledComboboxDepartment field={field} form={form} />
+                  {fieldState.error?.message && (
+                    <p className={"text-red-500 text-[10px]"}>
+                      {fieldState.error?.message}
+                    </p>
+                  )}
+                </FormItem>
+              )}
+            />
+
             <div className="w-1/2" />
           </div>
-          <div className="flex flex-1 justify-end items-end gap-x-4 ">
-            <Button
-              onClick={onGoBack}
-              variant="outline"
-              disabled={loading}
-              tabIndex={3}
-              className="w-[152px] h-[50px] font-normal border-border bg-white text-[14px] hover:bg-gray-100 rounded-lg"
-              type="button"
-            >
-              Back
-            </Button>
-            <Button
-              disabled={loading}
-              tabIndex={3}
-              className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
-              type="submit"
-            >
-              Create
-            </Button>
-          </div>
+          {props.mode === "create" && (
+            <div className="flex flex-1 justify-end items-end gap-x-4 ">
+              <Button
+                onClick={onGoBack}
+                variant="outline"
+                // disabled={loading}
+                tabIndex={3}
+                className="w-[152px] h-[50px] font-normal border-border bg-white text-[14px] hover:bg-gray-100 rounded-lg"
+                type="button"
+              >
+                Back
+              </Button>
+              <Button
+                // disabled={loading}
+                tabIndex={3}
+                className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
+                type="submit"
+              >
+                Create
+              </Button>
+            </div>
+          )}
         </form>
       </Form>
     </div>

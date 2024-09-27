@@ -47,8 +47,7 @@ export interface CreateUsersParams {
   email: string;
   position: string;
   started_at: string;
-  department_ids: string;
-  updated_at: string;
+  department_ids: number[];
 }
 
 export function createStaffRequest(params: CreateUsersParams) {

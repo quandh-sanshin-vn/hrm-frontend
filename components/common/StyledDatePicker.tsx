@@ -27,9 +27,8 @@ export function StyledDatePicker(props: Props) {
     <Popover>
       <PopoverTrigger asChild>
         <Button
-          variant={"outline"}
           className={cn(
-            "w-full h-[52px] justify-end text-left font-normal border border-border",
+            "w-full h-10 justify-end text-left px-0 bg-white font-normal border-b border-border rounded-none",
             !field.value && "text-muted-foreground"
           )}
           tabIndex={props.tabIndex}
@@ -41,7 +40,7 @@ export function StyledDatePicker(props: Props) {
               }}
               className="w-full text-secondary"
             >
-              {format(field.value, DATE_OF_BIRTH)}
+              {format(field?.value, DATE_OF_BIRTH)}
             </p>
           ) : (
             <p className="w-full text-secondary">{props.title}</p>
@@ -58,6 +57,7 @@ export function StyledDatePicker(props: Props) {
           toYear={2030}
           initialFocus
           captionLayout="dropdown"
+          className="border-none"
         />
       </PopoverContent>
     </Popover>

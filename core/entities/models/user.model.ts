@@ -13,7 +13,7 @@ export class User {
     public status_working?: string,
     public started_at?: string,
     public ended_at?: string,
-    public department?: string,
+    public department?: number[],
     public position_id?: string,
     public position_name?: string,
     public time_off_hours?: string,
