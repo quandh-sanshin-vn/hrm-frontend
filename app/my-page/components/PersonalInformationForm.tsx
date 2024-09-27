@@ -1,4 +1,5 @@
 "use client";
+import { AlertDialogCancelButton } from "@/components/common/AlertDialogCancelButton";
 import { StyledDatePicker_v1 } from "@/components/common/StyledDatePicker_v1";
 import StyledOverlay from "@/components/common/StyledOverlay";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,10 @@ export default function PersonalInformationForm() {
   const useDimession = useWindowSize();
   const { user, setUser } = useUserStore((state) => state);
   const { isEditing, setIsEditing } = useEditingStore((state) => state);
+  const [isOpen, setIsOpen] = useState(true);
+  const toggleModalCancel = () => {
+    setIsOpen(!isOpen);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -82,14 +87,6 @@ export default function PersonalInformationForm() {
   useEffect(() => {
     getMyPage();
   }, []);
-
-  const handleEdit = () => {
-    setIsEditing(true);
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-  };
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     // FLOW: UI -> use cases -> repositories -> API
@@ -280,14 +277,8 @@ export default function PersonalInformationForm() {
           <div className="fixed bottom-[26px] right-[27px]">
             {isEditing && (
               <div className="flex gap-4">
-                <Button
-                  tabIndex={3}
-                  className="w-[152px] h-[50px] font-normal bg-white text-[#16151C] text-[14px] border border-[#A2A1A8] hover:bg-gray-100 rounded-lg"
-                  type="button"
-                  onClick={handleCancel}
-                >
-                  Cancel
-                </Button>
+                <AlertDialogCancelButton isOpen={isOpen} />
+
                 <Button
                   tabIndex={3}
                   className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
