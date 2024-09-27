@@ -31,3 +31,16 @@ export const useEditingStore = create<EditingState>((set) => ({
   isEditing: false,
   setIsEditing: (value: boolean) => set({ isEditing: value }),
 }));
+
+
+interface FileStore {
+  image: File | null;
+  setImage: (file: File) => void;
+  clearImage: () => void;
+}
+
+export const useFileStore = create<FileStore>((set) => ({
+  image: null, 
+  setImage: (file: File) => set({ image: file }),  
+  clearImage: () => set({ image: null })
+}));

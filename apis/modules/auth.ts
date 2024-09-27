@@ -1,5 +1,7 @@
 import { AuthToken } from "@/core/entities/models/authToken.model";
 import api from "../request";
+import { ACCESS_TOKEN_KEY } from "@/utilities/static-value";
+import { getCookie } from "cookies-next";
 
 export interface LoginParams {
   email: string;
@@ -20,4 +22,22 @@ export const getUserRequest = async (token: AuthToken) => {
             Authorization: `Bearer ${token.token}`,
         },
     });
+};
+
+export interface UserProfileParams {
+  phone: string;
+  birth_day: string;
+  address: string;
+  country: string;
+  image: File | null;
+  updated_at: string | ""
+}
+
+export const updateUserRequest = async (params: FormData) => {
+  const token = getCookie(ACCESS_TOKEN_KEY);
+  return api.post('/my-page', params ,{
+      headers: {
+          Authorization: `Bearer ${token}`,
+      },
+  });
 };

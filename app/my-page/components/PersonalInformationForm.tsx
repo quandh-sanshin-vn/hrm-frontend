@@ -1,4 +1,5 @@
 "use client";
+import { UserProfileParams } from "@/apis/modules/auth";
 import { AlertDialogCancelButton } from "@/components/common/AlertDialogCancelButton";
 import { StyledDatePicker_v1 } from "@/components/common/StyledDatePicker_v1";
 import StyledOverlay from "@/components/common/StyledOverlay";
@@ -11,21 +12,31 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { EditMyPageUseCase } from "@/core/application/usecases/my-page/editMyPage.usecase";
 import { ShowMyPageUseCase } from "@/core/application/usecases/my-page/showMyPage.usecase";
+import { AuthRepositoryImpl } from "@/core/infrastructure/repositories/auth.repo";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import useWindowSize from "@/hooks/use-dimession";
 import useFocus from "@/hooks/use-focus";
 import { useToast } from "@/hooks/use-toast";
-import { useEditingStore } from "@/stores/commonStore";
+import { useEditingStore, useFileStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
+import { DATE_OF_BIRTH } from "@/utilities/format";
+import { ACCESS_TOKEN_KEY } from "@/utilities/static-value";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useState } from "react";
+import { getCookie } from "cookies-next";
+import { format } from "date-fns";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 const formSchema = z.object({
   fullname: z.string().trim(),
   phone: z.string().trim(),
   birth_day: z.string().trim(),
+  // .refine((value) => {
+  //   const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{2}$/;
+  //   return regex.test(value);
+  // }),
   address: z.string().trim(),
   country: z.string().trim(),
   image: z.string().trim(),
@@ -34,6 +45,9 @@ const formSchema = z.object({
 const userRepo = new UserRepositoryImpl();
 const showMyPage = new ShowMyPageUseCase(userRepo);
 
+const authRepo = new AuthRepositoryImpl();
+const editMyPage = new EditMyPageUseCase(authRepo);
+
 export default function PersonalInformationForm() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -41,6 +55,7 @@ export default function PersonalInformationForm() {
   const { user, setUser } = useUserStore((state) => state);
   const { isEditing, setIsEditing } = useEditingStore((state) => state);
   const [isOpen, setIsOpen] = useState(true);
+  const { image, setImage, clearImage } = useFileStore();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -68,7 +83,7 @@ export default function PersonalInformationForm() {
 
   const getMyPage = async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const res: any = await showMyPage.execute();
       setUser(res.data);
     } catch (error: any) {
@@ -77,7 +92,7 @@ export default function PersonalInformationForm() {
         description: "Unable to get user information",
       });
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 
@@ -88,19 +103,27 @@ export default function PersonalInformationForm() {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     // FLOW: UI -> use cases -> repositories -> API
     try {
-      // setLoading(true);
-      // const params: Password = {
-      //   currentPassword: data.currentPassword,
-      //   newPassword: data.newPassword,
-      // };
-      // const res = await changePassword.execute(params);
-      // if (res?.code === 0) {
-      //   toast({
-      //     description: "Change password success",
-      //     color: "bg-blue-200",
-      //   });
-      // } else {
-      // }
+      setLoading(true);
+      const params: UserProfileParams = {
+        phone: data.phone,
+        birth_day: format(data.birth_day, DATE_OF_BIRTH).toString(),
+        address: data.address,
+        country: data.country,
+        image: image,
+        updated_at: user?.updated_at || "",
+      };
+
+      console.log(format(data.birth_day, DATE_OF_BIRTH));
+      console.log(image);
+
+      const res = await editMyPage.execute(params);
+      if (res?.code === 0) {
+        toast({
+          description: "Edit profile success",
+          color: "bg-blue-200",
+        });
+      } else {
+      }
     } catch (error) {
     } finally {
       setLoading(false);
@@ -116,6 +139,7 @@ export default function PersonalInformationForm() {
         scrollbarWidth: "none",
       }}
     >
+      <StyledOverlay isVisible={loading} />
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -279,7 +303,7 @@ export default function PersonalInformationForm() {
                 <Button
                   tabIndex={3}
                   className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
-                  type="button"
+                  type="submit"
                 >
                   Update
                 </Button>

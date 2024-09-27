@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ShowMyPageUseCase } from "@/core/application/usecases/my-page/showMyPage.usecase";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import { useToast } from "@/hooks/use-toast";
-import { useEditingStore } from "@/stores/commonStore";
+import { useEditingStore, useFileStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
 import Image, { StaticImageData } from "next/image";
@@ -25,8 +25,8 @@ const ImageProfileForm: React.FC = () => {
     string | StaticImageData | null
   >(null); // State for the image URL to preview
   const { isEditing, setIsEditing } = useEditingStore((state) => state);
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [image, setImage] = useState<string | StaticImport>("");
+  const { setImage } = useFileStore();
+  const [selectedImage, setSelectedImage] = useState<string | StaticImport>("");
 
   const getMyPage = async () => {
     try {
@@ -49,7 +49,7 @@ const ImageProfileForm: React.FC = () => {
 
   useEffect(() => {
     if (!isEditing) {
-      setImage("");
+      setSelectedImage("");
     }
   }, [isEditing]);
 
@@ -69,8 +69,8 @@ const ImageProfileForm: React.FC = () => {
   const handleChooseImage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSelectedImage(file);
-      setImage(URL.createObjectURL(file));
+      setImage(file);
+      setSelectedImage(URL.createObjectURL(file));
     }
   };
 
@@ -84,7 +84,7 @@ const ImageProfileForm: React.FC = () => {
               onClick={isEditing ? undefined : handleImageClick}
             >
               <Image
-                src={image || user?.image || AvatarDefault}
+                src={selectedImage || user?.image || AvatarDefault}
                 alt=""
                 width={100}
                 height={100}
