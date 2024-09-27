@@ -1,8 +1,9 @@
 "use client";
-import { getUserRequest, LoginParams, loginRequest, logoutRequest } from "@/apis/modules/auth";
+import { getUserRequest, LoginParams, loginRequest, logoutRequest, updateUserRequest, UserProfileParams } from "@/apis/modules/auth";
 import { AuthRepository } from "@/core/application/infrastructure-interface/repositories/auth.repo-interface";
 import { AuthCredentials } from "@/core/entities/models/authCredentials.model";
 import { AuthToken } from "@/core/entities/models/authToken.model";
+import { CommonResponse } from "@/core/entities/models/responseCommon.model";
 import { useUserStore } from "@/stores/userStore";
 import { expirationDate } from "@/utilities/helper";
 
@@ -42,6 +43,17 @@ export class AuthRepositoryImpl implements AuthRepository {
       }
       return response;
   }catch(error : any) {
+      return error;
+    }
+  }
+
+  async updateUser(params : FormData): Promise<CommonResponse | null> {
+    try {
+      const res : any = await updateUserRequest(params);
+      console.log(res)
+      return res;
+    } catch (error : any) {
+      console.log(error)
       return error;
     }
   }
