@@ -1,4 +1,3 @@
-import { getPositionRequest, PositionResponse } from "@/apis/modules/common";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -29,7 +28,6 @@ import { useCommonStore } from "@/stores/commonStore";
 import { useStaffStore } from "@/stores/staffStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -49,13 +47,12 @@ interface Props {
 }
 export default function SearchArea(props: Props) {
   const { setLoading, loading } = props;
-  const [position, setPosition] = useState<any>([]);
   const route = useRouter();
 
   const { updateStaffListData, updateSearchParams } = useStaffStore(
     (state) => state
   );
-  const { updatePositionData } = useCommonStore((state) => state);
+  const { positionData } = useCommonStore((state) => state);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
@@ -96,28 +93,6 @@ export default function SearchArea(props: Props) {
       statusWorking: "-1",
     },
   });
-
-  const getPosition = async () => {
-    try {
-      setLoading(true);
-      const response: any = await getPositionRequest();
-      const formattedData = response?.data
-        ? response?.data.map((i: PositionResponse) => {
-            return { value: i.id, name: i.name };
-          })
-        : [];
-      updatePositionData(formattedData);
-      setPosition([{ value: "-1", name: "All" }, ...formattedData]);
-    } catch (error) {
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    getPosition();
-  }, []);
-
   return (
     <div className="h-[150px]">
       <Form {...form}>
@@ -125,12 +100,12 @@ export default function SearchArea(props: Props) {
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex-col w-full"
         >
-          <div className="flex w-full items-center gap-x-4">
+          <div className="flex w-full items-center gap-x-4 ">
             <FormField
               control={form.control}
               name="staffName"
               render={({ field, fieldState }) => (
-                <FormItem className="w-[220px]">
+                <FormItem className="w-[220px] ">
                   <FormLabel className=" font-normal text-[16px]">
                     Employee Name:
                   </FormLabel>
@@ -139,7 +114,7 @@ export default function SearchArea(props: Props) {
                       tabIndex={1}
                       placeholder="Name"
                       {...field}
-                      className="border-border focus:border-primary"
+                      className=" border border-border focus:border-primary px-2 "
                     />
                   </FormControl>
                 </FormItem>
@@ -163,7 +138,7 @@ export default function SearchArea(props: Props) {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent className="bg-white">
-                      {position.map((item: any) => {
+                      {positionData.map((item: any) => {
                         return (
                           <SelectItem
                             key={item.value}

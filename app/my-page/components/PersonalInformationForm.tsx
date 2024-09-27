@@ -21,7 +21,7 @@ import useFocus from "@/hooks/use-focus";
 import { useToast } from "@/hooks/use-toast";
 import { useEditingStore, useFileStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
-import { DATE_OF_BIRTH } from "@/utilities/format";
+import { DATE } from "@/utilities/format";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
@@ -105,14 +105,14 @@ export default function PersonalInformationForm() {
       setLoading(true);
       const params: UserProfileParams = {
         phone: data.phone,
-        birth_day: format(data.birth_day, DATE_OF_BIRTH).toString(),
+        birth_day: format(data.birth_day, DATE).toString(),
         address: data.address,
         country: data.country,
         image: image,
         updated_at: user?.updated_at || "",
       };
 
-      console.log(format(data.birth_day, DATE_OF_BIRTH));
+      console.log(format(data.birth_day, DATE));
       console.log(image);
 
       const res = await editMyPage.execute(params);

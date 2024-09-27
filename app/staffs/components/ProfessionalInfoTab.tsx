@@ -29,10 +29,7 @@ import { useStaffStore } from "@/stores/staffStore";
 import {
   convertIdToObject,
   formatDateToString,
-  formatDateToString1,
-  formatFullStringToDateReverse,
   formatStringToDate,
-  formatStringToDate1,
 } from "@/utilities/format";
 import { STAFF_STATUS_WORKING } from "@/utilities/static-value";
 import { EMAIL_REGEX } from "@/utilities/validate";
@@ -105,42 +102,23 @@ export default function ProfessionalInfoTab(props: Props) {
   const { updateStaffEditing, editingStaff, staffList, selectedStaff } =
     useStaffStore((state) => state);
 
-  console.log("--------selectedStaff------", selectedStaff);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues:
-      mode === "create"
-        ? {
-            username: editingStaff?.username || "",
-            email: editingStaff?.email,
-            statusWorking: editingStaff?.status_working || "",
-            position: editingStaff?.position_id || "",
-            department: [],
-            leavesHours: "0",
-          }
-        : mode === "view"
-        ? {
-            username: selectedStaff?.username || "",
-            email: selectedStaff?.email,
-            statusWorking: selectedStaff?.status_working || "",
-            position: selectedStaff?.position_id || "",
-            department: convertIdToObject(
-              selectedStaff.department || [],
-              departmentData
-            ),
-            joiningDate: formatFullStringToDateReverse(
-              selectedStaff?.started_at || ""
-            ),
-            leavesHours: selectedStaff.time_off_hours,
-          }
-        : {},
+    // defaultValues: {
+    //   username: editingStaff?.username || "",
+    //   email: editingStaff?.email,
+    //   statusWorking: editingStaff?.status_working || "",
+    //   position: editingStaff?.position_id || "",
+    //   department: [],
+    //   leavesHours: "0",
+    // },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
       const departmentIds = data.department.map((i) => i.id);
-      const joiningDateFormatted = formatDateToString1(data.joiningDate);
+      const joiningDateFormatted = formatDateToString(data.joiningDate);
       const getPositionName =
         positionData.find((i) => i.value == data.position)?.name || "";
       updateStaffEditing({
@@ -203,31 +181,6 @@ export default function ProfessionalInfoTab(props: Props) {
   }, [props.mode, windowSize.height]);
 
   useEffect(() => {
-    if (mode == "view") {
-      const departmentSelectedData = convertIdToObject(
-        selectedStaff?.department || [],
-        departmentData
-      );
-      if (selectedStaff?.username)
-        form.setValue("username", selectedStaff?.username || "");
-      if (selectedStaff?.email)
-        form.setValue("email", selectedStaff?.email || "");
-      if (selectedStaff?.status_working)
-        form.setValue("statusWorking", selectedStaff?.status_working || "");
-      if (selectedStaff?.position_id)
-        form.setValue("position", selectedStaff?.position_id || "");
-      if (departmentSelectedData?.length && departmentSelectedData?.length > 0)
-        form.setValue("department", departmentSelectedData || []);
-      if (selectedStaff?.started_at)
-        form.setValue(
-          "joiningDate",
-          formatFullStringToDateReverse(selectedStaff?.started_at)
-        );
-      form.setValue("leavesHours", selectedStaff?.time_off_hours || "0");
-    }
-  }, [mode, form.watch("username")]);
-
-  useEffect(() => {
     if (isFocus) {
       if (mode == "create") {
         const departmentSelectedData = convertIdToObject(
@@ -253,32 +206,39 @@ export default function ProfessionalInfoTab(props: Props) {
           );
         form.setValue("leavesHours", "0");
       }
-      // if (mode == "view") {
-      //   const staff: any = staffList.find((staff) => staff.id == params.id);
-      //   const departmentSelectedData = convertIdToObject(
-      //     staff?.department || [],
-      //     departmentData
-      //   );
-      //   if (staff?.username) form.setValue("username", staff?.username || "");
-      //   if (staff?.email) form.setValue("email", staff?.email || "");
-      //   if (staff?.status_working)
-      //     form.setValue("statusWorking", staff?.status_working || "");
-      //   if (staff?.position_id)
-      //     form.setValue("position", staff?.position_id || "");
-      //   if (
-      //     departmentSelectedData?.length &&
-      //     departmentSelectedData?.length > 0
-      //   )
-      //     form.setValue("department", departmentSelectedData || []);
-      //   if (staff?.started_at)
-      //     form.setValue(
-      //       "joiningDate",
-      //       formatFullStringToDateReverse(staff?.started_at)
-      //     );
-      //   form.setValue("leavesHours", staff.time_off_hours);
-      // }
+      if (mode == "view") {
+        const departmentSelectedData = convertIdToObject(
+          selectedStaff?.department || [],
+          departmentData
+        );
+
+        if (selectedStaff?.username)
+          form.setValue("username", selectedStaff?.username || "");
+        if (selectedStaff?.email)
+          form.setValue("email", selectedStaff?.email || "");
+        if (selectedStaff?.status_working) {
+          form.setValue(
+            "statusWorking",
+            String(selectedStaff?.status_working) || ""
+          );
+        }
+        if (selectedStaff?.position_id) {
+          form.setValue("position", String(selectedStaff?.position_id) || "");
+        }
+        if (
+          departmentSelectedData?.length &&
+          departmentSelectedData?.length > 0
+        )
+          form.setValue("department", departmentSelectedData || []);
+        if (selectedStaff?.started_at)
+          form.setValue(
+            "joiningDate",
+            formatStringToDate(selectedStaff?.started_at)
+          );
+        form.setValue("leavesHours", selectedStaff?.time_off_hours || "0");
+      }
     }
-  }, [isFocus]);
+  }, [isFocus, selectedStaff, form.getValues("statusWorking")]);
 
   return (
     <div
@@ -302,6 +262,7 @@ export default function ProfessionalInfoTab(props: Props) {
             <FormField
               control={form.control}
               name={"username"}
+              disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2">
                   <FormLabel className={"font-normal text-[16px]"}>
@@ -324,6 +285,7 @@ export default function ProfessionalInfoTab(props: Props) {
             <FormField
               control={form.control}
               name={"email"}
+              disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2">
                   <FormLabel className={"font-normal text-[16px]"}>
@@ -354,9 +316,10 @@ export default function ProfessionalInfoTab(props: Props) {
                     Status Working
                   </FormLabel>
                   <Select
-                    value={field.value}
+                    disabled={mode == "view"}
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    {...field}
                   >
                     <FormControl>
                       <SelectTrigger
@@ -399,6 +362,7 @@ export default function ProfessionalInfoTab(props: Props) {
                       Position
                     </FormLabel>
                     <Select
+                      disabled={mode == "view"}
                       value={field.value}
                       onValueChange={field.onChange}
                       defaultValue={field.value}
@@ -446,7 +410,11 @@ export default function ProfessionalInfoTab(props: Props) {
                     Joining Date
                   </FormLabel>
                   <FormControl>
-                    <StyledDatePicker field={field} title={""} />
+                    <StyledDatePicker
+                      disabled={mode == "view"}
+                      field={field}
+                      title={""}
+                    />
                   </FormControl>
                   {fieldState.error?.message && (
                     <p className={"text-red-500 text-[10px]"}>
@@ -458,6 +426,7 @@ export default function ProfessionalInfoTab(props: Props) {
             />
             <FormField
               control={form.control}
+              disabled={mode == "view"}
               name={"leavesHours"}
               render={({ field, fieldState }) => (
                 <FormItem className=" flex-1 w-1/2">
@@ -489,7 +458,11 @@ export default function ProfessionalInfoTab(props: Props) {
                   <FormLabel className={"font-normal text-[16px]"}>
                     Department
                   </FormLabel>
-                  <StyledComboboxDepartment field={field} form={form} />
+                  <StyledComboboxDepartment
+                    disable={mode == "view"}
+                    field={field}
+                    form={form}
+                  />
                   {fieldState.error?.message && (
                     <p className={"text-red-500 text-[10px]"}>
                       {fieldState.error?.message}

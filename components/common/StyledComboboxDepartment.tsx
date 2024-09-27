@@ -33,6 +33,7 @@ export const options: Option[] = [
 interface Props {
   field: any;
   form: any;
+  disable: boolean;
 }
 
 type Option = {
@@ -41,7 +42,7 @@ type Option = {
 };
 
 export function StyledComboboxDepartment(props: Props) {
-  const { field, form } = props;
+  const { field, form, disable } = props;
 
   const [selectedItems, setSelectedItems] = useState<Option[]>([]);
 
@@ -78,9 +79,10 @@ export function StyledComboboxDepartment(props: Props) {
 
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger disabled={disable} asChild>
         <FormControl>
           <Button
+            disabled={disable}
             role="combobox"
             className={cn(
               "border-b border-border h-10 rounded-none px-0 bg-white w-full justify-start"
