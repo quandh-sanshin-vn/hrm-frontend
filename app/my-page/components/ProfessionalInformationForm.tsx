@@ -22,12 +22,10 @@ export default function ProfessionalInformationForm() {
       setLoading(true);
       const res: any = await showMyPage.execute();
       setUser(res.data);
-      console.log(res);
     } catch (error: any) {
-      console.error("Lỗi khi lấy thông tin người dùng:", error);
       toast({
-        title: "Lỗi",
-        description: "Không thể lấy thông tin người dùng.",
+        title: "Error",
+        description: "Unable to get user information.",
       });
     } finally {
       setLoading(false);
