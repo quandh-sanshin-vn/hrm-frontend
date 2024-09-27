@@ -13,20 +13,22 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
-import { DATE_OF_BIRTH } from "@/utilities/format";
+import { DATE } from "@/utilities/format";
 
 interface Props {
   title: string;
   field: any;
   tabIndex?: number;
+  disabled?: boolean;
 }
 export function StyledDatePicker(props: Props) {
-  const { field, title } = props;
+  const { field, title, disabled = false } = props;
 
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
+          disabled={disabled}
           className={cn(
             "w-full h-10 justify-end text-left px-0 bg-white font-normal border-b border-border rounded-none",
             !field.value && "text-muted-foreground"
@@ -40,7 +42,7 @@ export function StyledDatePicker(props: Props) {
               }}
               className="w-full text-secondary"
             >
-              {format(field?.value, DATE_OF_BIRTH)}
+              {format(field?.value, DATE)}
             </p>
           ) : (
             <p className="w-full text-secondary">{props.title}</p>

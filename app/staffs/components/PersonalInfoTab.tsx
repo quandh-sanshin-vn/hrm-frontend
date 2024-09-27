@@ -13,12 +13,7 @@ import { Input } from "@/components/ui/input";
 import useFocus from "@/hooks/use-focus";
 import useWindowSize from "@/hooks/useWindowSize";
 import { useStaffStore } from "@/stores/staffStore";
-import {
-  formatDateToString,
-  formatDateToString1,
-  formatStringToDate,
-  formatStringToDateReverse,
-} from "@/utilities/format";
+import { formatDateToString, formatStringToDate } from "@/utilities/format";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -61,9 +56,8 @@ export default function PersonalInfoTab(props: Props) {
 
   const [loading, setLoading] = useState(false);
   const [formMaxHeight, setFormMaxHeight] = useState(windowSize.height);
-  const { updateStaffEditing, editingStaff, staffList } = useStaffStore(
-    (state) => state
-  );
+  const { updateStaffEditing, editingStaff, staffList, selectedStaff } =
+    useStaffStore((state) => state);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -92,34 +86,45 @@ export default function PersonalInfoTab(props: Props) {
         if (editingStaff.phone)
           form.setValue("phoneNumber", editingStaff?.phone);
         if (editingStaff.birth_day)
-          formatStringToDate(editingStaff?.birth_day || "");
+          form.setValue(
+            "dateOfBirth",
+            formatStringToDate(editingStaff?.birth_day || "")
+          );
         if (editingStaff.address)
           form.setValue("address", editingStaff?.address || "");
         if (editingStaff.country)
           form.setValue("country", editingStaff?.country || "");
       }
       if (mode == "view") {
-        const staff: any = staffList.find((staff) => staff.id == params.id);
-        if (staff?.fullname) form.setValue("fullname", staff?.fullname || "");
-        if (staff?.phone) form.setValue("phoneNumber", staff?.phone);
-        if (staff?.birth_day) formatStringToDateReverse(staff?.birth_day || "");
-        if (staff?.address) form.setValue("address", staff?.address || "");
-        if (staff?.country) form.setValue("country", staff?.country || "");
+        if (selectedStaff?.fullname)
+          form.setValue("fullname", selectedStaff?.fullname || "");
+        if (selectedStaff?.phone)
+          form.setValue("phoneNumber", selectedStaff?.phone);
+        if (selectedStaff?.birth_day)
+          form.setValue(
+            "dateOfBirth",
+            formatStringToDate(selectedStaff?.birth_day || "")
+          );
+        if (selectedStaff?.address)
+          form.setValue("address", selectedStaff?.address || "");
+        if (selectedStaff?.country)
+          form.setValue("country", selectedStaff?.country || "");
       }
       if (mode == "edit") {
       }
     }
-  }, [isFocus]);
+  }, [isFocus, selectedStaff]);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     try {
       updateStaffEditing({
         fullname: data.fullname,
         phone: data.phoneNumber,
-        birth_day: formatDateToString1(data.dateOfBirth),
+        birth_day: formatDateToString(data.dateOfBirth),
         address: data.address,
         country: data.country,
       });
+
       props.changeTab("professional");
     } catch (error) {
     } finally {
@@ -150,6 +155,7 @@ export default function PersonalInfoTab(props: Props) {
             <FormField
               control={form.control}
               name={"fullname"}
+              disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={1}>
                   <FormLabel className={"font-normal text-[16px]"}>
@@ -172,6 +178,7 @@ export default function PersonalInfoTab(props: Props) {
             <FormField
               control={form.control}
               name={"phoneNumber"}
+              disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={2}>
                   <FormLabel className={"font-normal text-[16px]"}>
@@ -202,7 +209,11 @@ export default function PersonalInfoTab(props: Props) {
                     Date Of Birth
                   </FormLabel>
                   <FormControl>
-                    <StyledDatePicker field={field} title={""} />
+                    <StyledDatePicker
+                      disabled={mode == "view"}
+                      field={field}
+                      title={""}
+                    />
                   </FormControl>
                   {fieldState.error?.message && (
                     <p className={"text-red-500 text-[10px]"}>
@@ -215,6 +226,7 @@ export default function PersonalInfoTab(props: Props) {
             <FormField
               control={form.control}
               name={"address"}
+              disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={4}>
                   <FormLabel className={"font-normal text-[16px]"}>
@@ -239,6 +251,7 @@ export default function PersonalInfoTab(props: Props) {
             <FormField
               control={form.control}
               name={"country"}
+              disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={5}>
                   <FormLabel className={"font-normal text-[16px]"}>
