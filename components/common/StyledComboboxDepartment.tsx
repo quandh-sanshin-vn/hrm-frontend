@@ -85,13 +85,11 @@ export function StyledComboboxDepartment(props: Props) {
             disabled={disable}
             role="combobox"
             className={cn(
-              "border-b border-border h-10 rounded-none px-0 bg-white w-full justify-start"
+              "border-b border-border h-10 rounded-none px-0 bg-white w-full justify-start disabled:opacity-100"
             )}
           >
             {selectedItems?.length == 0 ? (
-              <p className="text-[14px] font-normal text-secondary">
-                Select department
-              </p>
+              <p className="text-[14px] font-normal"></p>
             ) : (
               renderListDepartment()
             )}
@@ -101,7 +99,7 @@ export function StyledComboboxDepartment(props: Props) {
       <PopoverContent className="flex flex-col flex-1 bg-white p-0 max-h-[340px] overflow-y-auto ">
         <Command>
           <CommandList>
-            <CommandEmpty>No language found.</CommandEmpty>
+            <CommandEmpty>No Data.</CommandEmpty>
             <CommandGroup>
               {departmentData.map((i) => (
                 <CommandItem

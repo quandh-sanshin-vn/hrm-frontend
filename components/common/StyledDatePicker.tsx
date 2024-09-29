@@ -23,14 +23,16 @@ interface Props {
 }
 export function StyledDatePicker(props: Props) {
   const { field, title, disabled = false } = props;
-
   return (
     <Popover>
-      <PopoverTrigger asChild>
+      <PopoverTrigger
+        asChild
+        disabled={disabled}
+        // className={`${disabled ? "" : "pointer-events-none"}`}
+      >
         <Button
-          disabled={disabled}
           className={cn(
-            "w-full h-10 justify-end text-left px-0 bg-white font-normal border-b border-border rounded-none",
+            "w-full h-10 justify-end text-left px-0 bg-white font-normal border-b border-border rounded-none disabled:opacity-100",
             !field.value && "text-muted-foreground"
           )}
           tabIndex={props.tabIndex}

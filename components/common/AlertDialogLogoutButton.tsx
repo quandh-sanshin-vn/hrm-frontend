@@ -47,7 +47,7 @@ export function AlertDialogLogoutButton(props: Props) {
   const token = useMemo(() => getCookie(ACCESS_TOKEN_KEY), []);
 
   useEffect(() => {
-    if (!token) router.push("/login");
+    if (!!token) router.push("/login");
   }, [router, token]);
 
   return (

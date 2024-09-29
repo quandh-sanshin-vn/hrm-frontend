@@ -41,7 +41,7 @@ export function StyledDatePicker_v1(props: Props) {
           )}
           tabIndex={props.tabIndex}
         >
-          {field.value ? (
+          {/* {field.value ? (
             <p
               style={{
                 color: !field.value ? "var(--secondary)" : "black",
@@ -54,6 +54,18 @@ export function StyledDatePicker_v1(props: Props) {
             <p className="w-full text-[#16151C] text-base">
               {props?.title && format(props.title, DATE)}
             </p>
+          )} */}
+          {field.value ? (
+            <p
+              style={{
+                color: !field.value ? "var(--secondary)" : "black",
+              }}
+              className="w-full text-secondary"
+            >
+              {format(field?.value, DATE)}
+            </p>
+          ) : (
+            <p className="w-full text-secondary">{props.title}</p>
           )}
           <Image src={IconCalendar} alt="" />
         </Button>

@@ -20,14 +20,17 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 const formSchema = z.object({
-  fullname: z.string().trim().min(1, "Full name is required"),
+  fullname: z
+    .string({ message: "Full name is required" })
+    .trim()
+    .min(1, "Full name is required"),
   phoneNumber: z
-    .string()
+    .string({ message: "Phone number is required" })
     .trim()
     .min(1, "Phone number is required")
     .regex(/^[0-9]*$/, "Phone number must contain only digits"),
   dateOfBirth: z
-    .union([z.string(), z.date()])
+    .union([z.string({ message: "Date of birth is required" }), z.date()])
     .refine(
       (value) => {
         const date = new Date(value);
@@ -39,8 +42,14 @@ const formSchema = z.object({
       }
     )
     .transform((value) => new Date(value)),
-  address: z.string().trim().min(1, "Address is required"),
-  country: z.string().trim().min(1, "Country is required"),
+  address: z
+    .string({ message: "Address is required" })
+    .trim()
+    .min(1, "Address is required"),
+  country: z
+    .string({ message: "Country is required" })
+    .trim()
+    .min(1, "Country is required"),
 });
 
 interface Props {
@@ -65,7 +74,6 @@ export default function PersonalInfoTab(props: Props) {
       phoneNumber: "",
       address: "",
       country: "",
-      dateOfBirth: new Date(),
     },
   });
 
@@ -111,6 +119,19 @@ export default function PersonalInfoTab(props: Props) {
           form.setValue("country", selectedStaff?.country || "");
       }
       if (mode == "edit") {
+        if (selectedStaff?.fullname)
+          form.setValue("fullname", selectedStaff?.fullname || "");
+        if (selectedStaff?.phone)
+          form.setValue("phoneNumber", selectedStaff?.phone);
+        if (selectedStaff?.birth_day)
+          form.setValue(
+            "dateOfBirth",
+            formatStringToDate(selectedStaff?.birth_day || "")
+          );
+        if (selectedStaff?.address)
+          form.setValue("address", selectedStaff?.address || "");
+        if (selectedStaff?.country)
+          form.setValue("country", selectedStaff?.country || "");
       }
     }
   }, [isFocus, selectedStaff]);
@@ -158,7 +179,9 @@ export default function PersonalInfoTab(props: Props) {
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={1}>
-                  <FormLabel className={"font-normal text-[16px]"}>
+                  <FormLabel
+                    className={"font-normal text-[14px] text-secondary "}
+                  >
                     Full name
                   </FormLabel>
                   <FormControl>
@@ -181,7 +204,9 @@ export default function PersonalInfoTab(props: Props) {
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={2}>
-                  <FormLabel className={"font-normal text-[16px]"}>
+                  <FormLabel
+                    className={"font-normal text-[14px] text-secondary "}
+                  >
                     Phone number
                   </FormLabel>
                   <FormControl>
@@ -205,7 +230,9 @@ export default function PersonalInfoTab(props: Props) {
               name={"dateOfBirth"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={3}>
-                  <FormLabel className={"font-normal text-[16px]"}>
+                  <FormLabel
+                    className={"font-normal text-[14px] text-secondary "}
+                  >
                     Date Of Birth
                   </FormLabel>
                   <FormControl>
@@ -229,7 +256,9 @@ export default function PersonalInfoTab(props: Props) {
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={4}>
-                  <FormLabel className={"font-normal text-[16px]"}>
+                  <FormLabel
+                    className={"font-normal text-[14px] text-secondary "}
+                  >
                     Address
                   </FormLabel>
                   <FormControl>
@@ -254,7 +283,9 @@ export default function PersonalInfoTab(props: Props) {
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2" tabIndex={5}>
-                  <FormLabel className={"font-normal text-[16px]"}>
+                  <FormLabel
+                    className={"font-normal text-[14px] text-secondary "}
+                  >
                     Country
                   </FormLabel>
                   <FormControl>
@@ -274,6 +305,19 @@ export default function PersonalInfoTab(props: Props) {
             <div className="w-1/2" />
           </div>
           {props.mode == "create" && (
+            <div className="flex flex-1 justify-end items-end gap-x-4">
+              <Button
+                disabled={loading}
+                tabIndex={3}
+                className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
+                type="submit"
+              >
+                Next
+              </Button>
+            </div>
+          )}
+
+          {props.mode == "edit" && (
             <div className="flex flex-1 justify-end items-end gap-x-4">
               <Button
                 disabled={loading}

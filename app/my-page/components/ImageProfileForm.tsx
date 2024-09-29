@@ -28,24 +28,24 @@ const ImageProfileForm: React.FC = () => {
   const { setImage } = useFileStore();
   const [selectedImage, setSelectedImage] = useState<string | StaticImport>("");
 
-  const getMyPage = async () => {
-    try {
-      setLoading(true);
-      const res: any = await showMyPage.execute();
-      setUser(res.data);
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: "Unable to get user information",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const getMyPage = async () => {
+  //   try {
+  //     setLoading(true);
+  //     const res: any = await showMyPage.execute();
+  //     setUser(res.data);
+  //   } catch (error: any) {
+  //     toast({
+  //       title: "Error",
+  //       description: "Unable to get user information",
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    getMyPage();
-  }, []);
+  // useEffect(() => {
+  //   getMyPage();
+  // }, []);
 
   useEffect(() => {
     if (!isEditing) {
@@ -54,7 +54,9 @@ const ImageProfileForm: React.FC = () => {
   }, [isEditing]);
 
   const handleImageClick = () => {
-    setPreviewImage(user?.image ? user.image : AvatarDefault);
+    setPreviewImage(
+      user?.image ? "http://192.168.1.171:8000" + user.image : AvatarDefault
+    );
     setIsPreviewOpen(true);
   };
 
@@ -84,7 +86,11 @@ const ImageProfileForm: React.FC = () => {
               onClick={isEditing ? undefined : handleImageClick}
             >
               <Image
-                src={selectedImage || user?.image || AvatarDefault}
+                src={
+                  selectedImage ||
+                  "http://192.168.1.171:8000" + user.image ||
+                  AvatarDefault
+                }
                 alt=""
                 width={100}
                 height={100}
@@ -155,9 +161,9 @@ const ImageProfileForm: React.FC = () => {
           >
             <div className="flex items-center justify-center bg-black w-full h-full">
               <Image
-                src={previewImage || ""}
+                src={previewImage}
                 alt="Preview"
-                className="max-w-full max-h-full object-contain"
+                className="max-w-full max-h-full  object-contain"
                 priority
               />
             </div>

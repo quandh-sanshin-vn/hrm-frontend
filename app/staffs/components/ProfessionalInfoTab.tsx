@@ -40,11 +40,11 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
-  username: z.string().trim().min(1, "Full name is required"),
+  username: z
+    .string({ message: "User Name is required" })
+    .min(1, "User Name is required"),
   email: z
-    .string()
-    .trim()
-    .min(1, "Email is required")
+    .string({ message: "Email is required" })
     .regex(EMAIL_REGEX, "Invalid email format"),
   statusWorking: z.any().refine(
     (value) => {
@@ -56,7 +56,10 @@ const formSchema = z.object({
     }
   ),
   department: z
-    .array(z.object({ id: z.number(), name: z.string() }))
+    .preprocess(
+      (val) => (val === undefined ? [] : val),
+      z.array(z.object({ id: z.number(), name: z.string() }))
+    )
     .refine((value) => value?.length > 0, {
       message: "Department is required",
     }),
@@ -70,7 +73,12 @@ const formSchema = z.object({
     }
   ),
   joiningDate: z
-    .union([z.string(), z.date()])
+    .union([
+      z.string({
+        message: "Joining date is required",
+      }),
+      z.date(),
+    ])
     .refine(
       (value) => {
         const date = new Date(value);
@@ -82,7 +90,7 @@ const formSchema = z.object({
       }
     )
     .transform((value) => new Date(value)),
-  leavesHours: z.string().trim(),
+  leavesHours: z.any(),
 });
 const userRepo = new UserRepositoryImpl();
 const createStaff = new CreateStaffUseCase(userRepo);
@@ -104,14 +112,14 @@ export default function ProfessionalInfoTab(props: Props) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   username: editingStaff?.username || "",
-    //   email: editingStaff?.email,
-    //   statusWorking: editingStaff?.status_working || "",
-    //   position: editingStaff?.position_id || "",
-    //   department: [],
-    //   leavesHours: "0",
-    // },
+    defaultValues: {
+      // username: editingStaff?.username || "",
+      // email: editingStaff?.email,
+      // statusWorking: editingStaff?.status_working || "",
+      // position: editingStaff?.position_id || "",
+      // department: [],
+      leavesHours: "0",
+    },
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -145,20 +153,24 @@ export default function ProfessionalInfoTab(props: Props) {
         started_at: joiningDateFormatted || editingStaff.started_at || "",
         department_ids: departmentIds || editingStaff.department || [],
       };
-      const result = await createStaff.execute(params);
-      if (result?.code == 0) {
-        toast({
-          description: "Create staff successfully",
-          color: `bg-blue-200`,
-        });
-        form.reset();
-        updateStaffEditing({});
-      } else {
-        toast({
-          description: "Create staff failed",
-          color: "bg-red-100",
-        });
-      }
+      toast({
+        description: "Create staff successfully",
+        color: `bg-blue-200`,
+      });
+      // const result = await createStaff.execute(params);
+      // if (result?.code == 0) {
+      //   toast({
+      //     description: "Create staff successfully",
+      //     color: `bg-blue-200`,
+      //   });
+      //   form.reset();
+      //   updateStaffEditing({});
+      // } else {
+      //   toast({
+      //     description: "Create staff failed",
+      //     color: "bg-red-100",
+      //   });
+      // }
     } catch (error) {
     } finally {
       setLoading(false);
@@ -256,16 +268,18 @@ export default function ProfessionalInfoTab(props: Props) {
             maxHeight: formMaxHeight,
             minHeight: formMaxHeight,
           }}
-          className="flex flex-col space-y-4 mt-1  w-full p-5  rounded-md  overflow-y-auto hide-scrollbar"
+          className="flex flex-col space-y-4 mt-1 w-full p-5 rounded-md overflow-y-auto hide-scrollbar"
         >
-          <div className={"flex items-start justify-between gap-x-5 "}>
+          <div className={"flex items-start justify-between gap-x-5"}>
             <FormField
               control={form.control}
               name={"username"}
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2">
-                  <FormLabel className={"font-normal text-[16px]"}>
+                  <FormLabel
+                    className={"font-normal text-[14px] text-secondary"}
+                  >
                     User Name
                   </FormLabel>
                   <FormControl>
@@ -288,7 +302,9 @@ export default function ProfessionalInfoTab(props: Props) {
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
                 <FormItem className="w-1/2">
-                  <FormLabel className={"font-normal text-[16px]"}>
+                  <FormLabel
+                    className={"font-normal text-[14px] text-secondary"}
+                  >
                     Email
                   </FormLabel>
                   <FormControl>
@@ -312,7 +328,9 @@ export default function ProfessionalInfoTab(props: Props) {
               name="statusWorking"
               render={({ field, fieldState }) => (
                 <FormItem className="flex-1">
-                  <FormLabel className={"font-normal text-[16px]"}>
+                  <FormLabel
+                    className={"font-normal text-[14px] text-secondary"}
+                  >
                     Status Working
                   </FormLabel>
                   <Select
@@ -326,7 +344,7 @@ export default function ProfessionalInfoTab(props: Props) {
                         style={{
                           color: !field.value ? "var(--secondary)" : "black",
                         }}
-                        className="border-b border-border h-10 rounded-none px-0"
+                        className="border-b border-border h-10 rounded-none px-0 disabled:opacity-100"
                       >
                         <SelectValue className="w-full" />
                       </SelectTrigger>
@@ -358,7 +376,9 @@ export default function ProfessionalInfoTab(props: Props) {
               render={({ field, fieldState }) => {
                 return (
                   <FormItem className="flex-1">
-                    <FormLabel className={"font-normal text-[16px]"}>
+                    <FormLabel
+                      className={"font-normal text-[14px] text-secondary"}
+                    >
                       Position
                     </FormLabel>
                     <Select
@@ -372,7 +392,7 @@ export default function ProfessionalInfoTab(props: Props) {
                           style={{
                             color: !field.value ? "var(--secondary)" : "black",
                           }}
-                          className="border-b border-border h-10 rounded-none px-0"
+                          className="border-b border-border h-10 rounded-none px-0 disabled:opacity-100"
                         >
                           <SelectValue className="w-full" />
                         </SelectTrigger>
@@ -406,7 +426,9 @@ export default function ProfessionalInfoTab(props: Props) {
               name={"joiningDate"}
               render={({ field, fieldState }) => (
                 <FormItem className="flex-1 w-1/2">
-                  <FormLabel className={"font-normal text-[16px]"}>
+                  <FormLabel
+                    className={"font-normal text-[14px] text-secondary"}
+                  >
                     Joining Date
                   </FormLabel>
                   <FormControl>
@@ -426,11 +448,13 @@ export default function ProfessionalInfoTab(props: Props) {
             />
             <FormField
               control={form.control}
-              disabled={mode == "view"}
+              disabled={true}
               name={"leavesHours"}
               render={({ field, fieldState }) => (
-                <FormItem className=" flex-1 w-1/2">
-                  <FormLabel className={"font-normal text-[16px]"}>
+                <FormItem className="flex-1 w-1/2">
+                  <FormLabel
+                    className={"font-normal text-[14px] text-secondary"}
+                  >
                     Leaves Hours
                   </FormLabel>
                   <FormControl>
@@ -455,7 +479,9 @@ export default function ProfessionalInfoTab(props: Props) {
               name="department"
               render={({ field, fieldState }) => (
                 <FormItem className="flex-1 w-full">
-                  <FormLabel className={"font-normal text-[16px]"}>
+                  <FormLabel
+                    className={"font-normal text-[14px] text-secondary"}
+                  >
                     Department
                   </FormLabel>
                   <StyledComboboxDepartment

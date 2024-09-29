@@ -1,6 +1,7 @@
 "use client";
 import { UserProfileParams } from "@/apis/modules/auth";
 import { AlertDialogCancelButton } from "@/components/common/AlertDialogCancelButton";
+import { StyledDatePicker } from "@/components/common/StyledDatePicker";
 import { StyledDatePicker_v1 } from "@/components/common/StyledDatePicker_v1";
 import StyledOverlay from "@/components/common/StyledOverlay";
 import { Button } from "@/components/ui/button";
@@ -31,11 +32,19 @@ import { z } from "zod";
 const formSchema = z.object({
   fullname: z.string().trim(),
   phone: z.string().trim(),
-  birth_day: z.string().trim(),
-  // .refine((value) => {
-  //   const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{2}$/;
-  //   return regex.test(value);
-  // }),
+  birth_day: z
+    .union([z.string(), z.date()])
+    .refine(
+      (value) => {
+        const date = new Date(value);
+        const today = new Date();
+        return date < today;
+      },
+      {
+        message: "Date of birth must be in the past",
+      }
+    )
+    .transform((value) => new Date(value)),
   address: z.string().trim(),
   country: z.string().trim(),
   image: z.string().trim(),
@@ -60,7 +69,7 @@ export default function PersonalInformationForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       phone: user?.phone,
-      birth_day: user?.birth_day,
+      birth_day: formatStringToDate(user?.birth_day || ""),
       address: user?.address,
       country: user?.country,
       image: user?.image,
@@ -69,6 +78,7 @@ export default function PersonalInformationForm() {
 
   const isReserveForm = form.watch("fullname");
   const isFocus = useFocus();
+
   useEffect(() => {
     if (isFocus) {
       form.setValue("fullname", user?.fullname || "");
@@ -80,24 +90,24 @@ export default function PersonalInformationForm() {
     }
   }, [isReserveForm, isFocus]);
 
-  const getMyPage = async () => {
-    try {
-      // setLoading(true);
-      const res: any = await showMyPage.execute();
-      setUser(res.data);
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: "Unable to get user information",
-      });
-    } finally {
-      // setLoading(false);
-    }
-  };
+  // const getMyPage = async () => {
+  //   try {
+  //     // setLoading(true);
+  //     const res: any = await showMyPage.execute();
+  //     setUser(res.data);
+  //   } catch (error: any) {
+  //     toast({
+  //       title: "Error",
+  //       description: "Unable to get user information",
+  //     });
+  //   } finally {
+  //     // setLoading(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    getMyPage();
-  }, []);
+  // useEffect(() => {
+  //   getMyPage();
+  // }, []);
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     // FLOW: UI -> use cases -> repositories -> API
@@ -192,7 +202,7 @@ export default function PersonalInformationForm() {
                           Date of Birth
                         </FormLabel>
                         <FormControl>
-                          <StyledDatePicker_v1 field={field} />
+                          <StyledDatePicker_v1 title="" field={field} />
                         </FormControl>
                         {isEditing && fieldState.error?.message && (
                           <p className={"text-red-500 text-[10px]"}>
