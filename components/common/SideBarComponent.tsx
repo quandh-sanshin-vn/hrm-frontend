@@ -11,7 +11,6 @@ const SideBarComponent = () => {
   const [isOpen, setIsOpen] = useState(true);
 
   const pathname = usePathname();
-  console.log("---------", pathname.split("/")[1]);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen);

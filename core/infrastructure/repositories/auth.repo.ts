@@ -62,10 +62,8 @@ export class AuthRepositoryImpl implements AuthRepository {
   async updateUser(params: FormData): Promise<CommonResponse | null> {
     try {
       const res: any = await updateUserRequest(params);
-      console.log(res);
       return res;
     } catch (error: any) {
-      console.log(error);
       return error;
     }
   }
