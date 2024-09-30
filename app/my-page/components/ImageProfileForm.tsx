@@ -87,9 +87,9 @@ const ImageProfileForm: React.FC = () => {
             >
               <Image
                 src={
-                  selectedImage ||
-                  "http://192.168.1.171:8000" + user.image ||
-                  AvatarDefault
+                  selectedImage || user?.image
+                    ? "http://192.168.1.171:8000" + user.image
+                    : AvatarDefault
                 }
                 alt=""
                 width={100}
@@ -161,8 +161,10 @@ const ImageProfileForm: React.FC = () => {
           >
             <div className="flex items-center justify-center bg-black w-full h-full">
               <Image
-                src={previewImage}
+                src={previewImage || AvatarDefault}
                 alt="Preview"
+                width={500}
+                height={500}
                 className="max-w-full max-h-full  object-contain"
                 priority
               />
