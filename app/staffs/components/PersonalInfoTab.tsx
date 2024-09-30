@@ -183,10 +183,7 @@ export default function PersonalInfoTab(props: Props) {
           description: "Update staff information successfully",
           color: `bg-blue-200`,
         });
-        updateSelectedStaff({
-          ...selectedStaff,
-          updated_at: result.data.updated_at,
-        });
+        updateSelectedStaff(result.data);
         router.back();
       } else {
         toast({
