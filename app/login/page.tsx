@@ -105,7 +105,7 @@ const LoginPage = () => {
   return (
     <div className="max-h-screen w-screen bg-background flex flex-1 overscroll-none overflow-hidden ">
       <StyledOverlay isVisible={loading} />
-      <div className="flex flex-1 mobile:w-0 laptop:w-2/3 py-[52px] px-5 ">
+      <div className="laptop:flex flex-1 w-0 laptop:w-2/3 py-[52px] px-5">
         <Image
           src={profilePic}
           alt="Sanshin ITS member"

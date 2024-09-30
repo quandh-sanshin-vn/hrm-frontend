@@ -49,7 +49,7 @@ const SideBarComponent = () => {
                   title={i.title}
                   route={i.route}
                   sidebarOpenStatus={isOpen}
-                  pathname={pathname.split("/")[1]}
+                  pathname={`/${pathname.split("/")[1]}`}
                 />
               );
             })}
