@@ -1,5 +1,5 @@
-import { DeleteUsersParams } from "@/apis/modules/user";
 import IconTrash from "@/app/assets/icons/iconTrash.svg";
+import StyledOverlay from "@/components/common/StyledOverlay";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,14 +11,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { DeleteStaffUseCase } from "@/core/application/usecases/staff-master/deleteStaff.usecase";
 import { User } from "@/core/entities/models/user.model";
-import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
-import { toast } from "@/hooks/use-toast";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import StyledOverlay from "./StyledOverlay";
 
 interface Props {
   user: User;

@@ -23,7 +23,14 @@ const formSchema = z.object({
   status_working: z.string().trim(),
   birth_day: z.string().trim(),
   started_at: z.string().trim(),
-  department: z.string().trim(),
+  department: z.any(),
+  //   .preprocess(
+  //     (val) => (val === undefined ? [] : val),
+  //     z.array(z.object({ id: z.number(), name: z.string() }))
+  //   )
+  //   .refine((value) => value?.length > 0, {
+  //     message: "Department is required",
+  //   }),
   time_off_hours: z.string().trim(),
   username: z.string().trim(),
   email: z.string().trim(),
@@ -60,7 +67,7 @@ export default function ProfessionalInformationForm() {
     if (isFocus) {
       form.setValue("idkey", user?.idkey || "");
       form.setValue("status_working", user?.status_working || "");
-      form.setValue("department", user?.department || "");
+      form.setValue("department", user?.department || []);
       form.setValue("time_off_hours", user?.time_off_hours || "");
       form.setValue("started_at", user?.started_at || "");
       form.setValue("username", user?.username || "");
