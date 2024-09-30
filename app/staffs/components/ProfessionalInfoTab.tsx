@@ -278,7 +278,6 @@ export default function ProfessionalInfoTab(props: Props) {
         form.setValue("leavesHours", "0");
       }
       if (mode == "view" || mode == "edit") {
-        console.log("----------selectedStaffmm-------", selectedStaff);
         const departmentSelectedData = convertIdToObject(
           selectedStaff?.department || [],
           departmentData

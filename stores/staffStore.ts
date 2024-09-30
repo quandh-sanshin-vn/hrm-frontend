@@ -1,7 +1,7 @@
 import { GetStaffListParams } from "@/apis/modules/user";
 import { User } from "@/core/entities/models/user.model";
 import { create } from "zustand";
-import { devtools, persist } from "zustand/middleware";
+import { devtools } from "zustand/middleware";
 
 interface StaffState {
   editingStaff: User;
