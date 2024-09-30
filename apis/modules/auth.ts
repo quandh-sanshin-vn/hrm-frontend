@@ -38,6 +38,7 @@ export const updateUserRequest = async (params: FormData) => {
   return api.post('/my-page', params ,{
       headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
       },
   });
 };

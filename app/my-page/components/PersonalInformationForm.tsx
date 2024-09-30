@@ -1,7 +1,6 @@
 "use client";
 import { UserProfileParams } from "@/apis/modules/auth";
 import { AlertDialogCancelButton } from "@/components/common/AlertDialogCancelButton";
-import { StyledDatePicker } from "@/components/common/StyledDatePicker";
 import { StyledDatePicker_v1 } from "@/components/common/StyledDatePicker_v1";
 import StyledOverlay from "@/components/common/StyledOverlay";
 import { Button } from "@/components/ui/button";
@@ -90,25 +89,6 @@ export default function PersonalInformationForm() {
     }
   }, [isReserveForm, isFocus]);
 
-  // const getMyPage = async () => {
-  //   try {
-  //     // setLoading(true);
-  //     const res: any = await showMyPage.execute();
-  //     setUser(res.data);
-  //   } catch (error: any) {
-  //     toast({
-  //       title: "Error",
-  //       description: "Unable to get user information",
-  //     });
-  //   } finally {
-  //     // setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getMyPage();
-  // }, []);
-
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     // FLOW: UI -> use cases -> repositories -> API
     try {
@@ -122,16 +102,18 @@ export default function PersonalInformationForm() {
         updated_at: user?.updated_at || "",
       };
 
-      console.log(format(data.birth_day, DATE));
-      console.log(image);
-
       const res = await editMyPage.execute(params);
       if (res?.code === 0) {
+        setUser(res.data);
         toast({
           description: "Edit profile success",
           color: "bg-blue-200",
         });
       } else {
+        toast({
+          description: "Edit profile failed",
+          color: "bg-red-500",
+        });
       }
     } catch (error) {
     } finally {

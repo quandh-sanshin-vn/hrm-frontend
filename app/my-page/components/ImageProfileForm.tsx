@@ -1,7 +1,5 @@
 import StyledOverlay from "@/components/common/StyledOverlay";
 import { Button } from "@/components/ui/button";
-import { ShowMyPageUseCase } from "@/core/application/usecases/my-page/showMyPage.usecase";
-import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import { useToast } from "@/hooks/use-toast";
 import { useEditingStore, useFileStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
@@ -13,9 +11,6 @@ import IconCamera from "../../assets/icons/iconCamera.svg";
 import IconEmail from "../../assets/icons/iconGmail.svg";
 import AvatarDefault from "../../assets/images/avatar_default.png";
 
-const userRepo = new UserRepositoryImpl();
-const showMyPage = new ShowMyPageUseCase(userRepo);
-
 const ImageProfileForm: React.FC = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -25,27 +20,8 @@ const ImageProfileForm: React.FC = () => {
     string | StaticImageData | null
   >(null); // State for the image URL to preview
   const { isEditing, setIsEditing } = useEditingStore((state) => state);
-  const { setImage } = useFileStore();
+  const { image, setImage } = useFileStore();
   const [selectedImage, setSelectedImage] = useState<string | StaticImport>("");
-
-  // const getMyPage = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const res: any = await showMyPage.execute();
-  //     setUser(res.data);
-  //   } catch (error: any) {
-  //     toast({
-  //       title: "Error",
-  //       description: "Unable to get user information",
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   getMyPage();
-  // }, []);
 
   useEffect(() => {
     if (!isEditing) {
@@ -87,9 +63,10 @@ const ImageProfileForm: React.FC = () => {
             >
               <Image
                 src={
-                  selectedImage || user?.image
-                    ? "http://192.168.1.171:8000" + user.image
-                    : AvatarDefault
+                  selectedImage ||
+                  (user?.image
+                    ? `http://192.168.1.171:8000${user.image}`
+                    : AvatarDefault)
                 }
                 alt=""
                 width={100}
