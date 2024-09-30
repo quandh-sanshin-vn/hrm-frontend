@@ -13,13 +13,16 @@ interface Props {
 }
 export default function StyledAvatarUser(props: Props) {
   const { fullName, positionName, email, imageUrl } = props;
+  console.log("-----imageUrl-----", imageUrl);
   return (
-    <div className="flex items-center justify-start gap-x-4 p-4">
+    <div className="flex items-center justify-start gap-x-4 mb-[10px]">
       <div className=" h-[100px] aspect-square ">
         <Image
-          src={imageUrl ? imageUrl : DefaultImage}
+          src={imageUrl ? "http://192.168.1.171:8000" + imageUrl : DefaultImage}
           alt=""
           className="object-cover w-full h-full"
+          height={100}
+          width={100}
         />
       </div>
       <div className=" h-[100px] flex flex-col gap-y-2 items-start ">

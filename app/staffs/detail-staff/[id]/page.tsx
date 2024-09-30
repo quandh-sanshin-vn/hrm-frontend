@@ -10,13 +10,19 @@ import Image from "next/image";
 import { useState } from "react";
 import StyledUserInfoTab from "../../components/StyledUserInfoTab";
 import { useStaffStore } from "@/stores/staffStore";
+import { Button } from "@/components/ui/button";
+import { useParams, useRouter } from "next/navigation";
 
 export default function DetailStaffScreen() {
   const [loading, setLoading] = useState(false);
   const windowSize = useWindowSize();
+  const router = useRouter();
+  const params = useParams();
 
   const { selectedStaff } = useStaffStore((state) => state);
-
+  const goToDetailScreen = () => {
+    router.push(`/staffs/edit-staff/${params?.id || "undefined"}`);
+  };
   return (
     <div className="w-full flex ">
       <SideBarComponent />
@@ -30,13 +36,20 @@ export default function DetailStaffScreen() {
           }}
           className="w-full  border border-border rounded-md "
         >
-          <div className="h-[120px]  rounded-sm bg-white w-full">
+          <div className="h-[120px] flex justify-between items-end px-4 rounded-sm bg-white w-full">
             <StyledAvatarUser
               fullName={selectedStaff?.fullname || ""}
               positionName={selectedStaff?.position_name || ""}
               imageUrl={selectedStaff?.image}
               email={selectedStaff?.email || ""}
             />
+            <Button
+              type="button"
+              onClick={goToDetailScreen}
+              className="min-w-[172px] hover:bg-primary-hover"
+            >
+              <p className={"text-white"}>Edit Profile</p>
+            </Button>
           </div>
 
           <div

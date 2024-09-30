@@ -119,9 +119,14 @@ export default function StyledStaffMasterTable(props: Props) {
                   <div className="flex items-center gap-x-2">
                     <Image
                       alt=""
-                      src={!user.image ? DefaultImage : user.image}
+                      src={
+                        !user.image
+                          ? DefaultImage
+                          : "http://192.168.1.171:8000" + user.image
+                      }
                       className={" contain-size h-8 w-8 rounded-full"}
                       height={44}
+                      width={44}
                     />
                     <p className="text-[16px] font-normal">{user.fullname}</p>
                   </div>

@@ -1,5 +1,5 @@
 "use client";
-import { CreateUsersParams } from "@/apis/modules/user";
+import { CreateUsersParams, UpdateUsersParams } from "@/apis/modules/user";
 import { StyledComboboxDepartment } from "@/components/common/StyledComboboxDepartment";
 import { StyledDatePicker } from "@/components/common/StyledDatePicker";
 import StyledOverlay from "@/components/common/StyledOverlay";
@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { CreateStaffUseCase } from "@/core/application/usecases/staff-master/createNewStaff.usecase";
+import { EditStaffUseCase } from "@/core/application/usecases/staff-master/editStaff.usecase";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import useFocus from "@/hooks/use-focus";
 import { toast } from "@/hooks/use-toast";
@@ -34,7 +35,7 @@ import {
 import { STAFF_STATUS_WORKING } from "@/utilities/static-value";
 import { EMAIL_REGEX } from "@/utilities/validate";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -94,6 +95,7 @@ const formSchema = z.object({
 });
 const userRepo = new UserRepositoryImpl();
 const createStaff = new CreateStaffUseCase(userRepo);
+const editStaff = new EditStaffUseCase(userRepo);
 interface Props {
   changeTab(name: string): void;
   mode: "view" | "edit" | "create";
@@ -104,11 +106,17 @@ export default function ProfessionalInfoTab(props: Props) {
   const [loading, setLoading] = useState(false);
   const isFocus = useFocus();
   const windowSize = useWindowSize();
-  const params = useParams();
+  const paramsPage = useParams();
+  const router = useRouter();
   const { positionData, departmentData } = useCommonStore((state) => state);
 
-  const { updateStaffEditing, editingStaff, staffList, selectedStaff } =
-    useStaffStore((state) => state);
+  const {
+    updateStaffEditing,
+    updateSelectedStaff,
+    editingStaff,
+    staffList,
+    selectedStaff,
+  } = useStaffStore((state) => state);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -122,7 +130,56 @@ export default function ProfessionalInfoTab(props: Props) {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  const onUpdateProfessionalInfoStaff = async (
+    data: z.infer<typeof formSchema>
+  ) => {
+    try {
+      setLoading(true);
+      const departmentIds = data.department.map((i) => i.id);
+      const joiningDateFormatted = formatDateToString(data.joiningDate);
+      if (!paramsPage.id) {
+        toast({
+          description: "User id not found",
+          color: `bg-blue-200`,
+        });
+      }
+      const params: UpdateUsersParams = {
+        id: paramsPage.id,
+        idkey: selectedStaff?.idkey || "",
+        fullname: selectedStaff?.fullname || "",
+        phone: selectedStaff?.phone || "",
+        birth_day: selectedStaff?.birth_day || "",
+        address: selectedStaff?.address || "",
+        country: selectedStaff?.country || "",
+        username: data?.username || "",
+        status_working: data?.statusWorking || "",
+        email: data.email || "",
+        position: data?.position || "",
+        started_at: joiningDateFormatted || "",
+        department_ids: departmentIds || [],
+        updated_at: selectedStaff.updated_at || "",
+      };
+      const result = await editStaff.execute(params);
+      if (result?.code == 0) {
+        toast({
+          description: "Update staff information successfully",
+          color: `bg-blue-200`,
+        });
+        updateSelectedStaff(result.data);
+        router.back();
+      } else {
+        toast({
+          description: "Update staff information failed",
+          color: "bg-red-100",
+        });
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onCreateStaff = async (data: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
       const departmentIds = data.department.map((i) => i.id);
@@ -153,28 +210,30 @@ export default function ProfessionalInfoTab(props: Props) {
         started_at: joiningDateFormatted || editingStaff.started_at || "",
         department_ids: departmentIds || editingStaff.department || [],
       };
-      toast({
-        description: "Create staff successfully",
-        color: `bg-blue-200`,
-      });
-      // const result = await createStaff.execute(params);
-      // if (result?.code == 0) {
-      //   toast({
-      //     description: "Create staff successfully",
-      //     color: `bg-blue-200`,
-      //   });
-      //   form.reset();
-      //   updateStaffEditing({});
-      // } else {
-      //   toast({
-      //     description: "Create staff failed",
-      //     color: "bg-red-100",
-      //   });
-      // }
+      const result = await createStaff.execute(params);
+      if (result?.code == 0) {
+        toast({
+          description: "Create staff successfully",
+          color: `bg-blue-200`,
+        });
+        form.reset();
+        updateStaffEditing({});
+        router.back();
+      } else {
+        toast({
+          description: "Create staff failed",
+          color: "bg-red-100",
+        });
+      }
     } catch (error) {
     } finally {
       setLoading(false);
     }
+  };
+
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    if (mode === "edit") onUpdateProfessionalInfoStaff(data);
+    else onCreateStaff(data);
   };
 
   const onGoBack = () => {
@@ -218,7 +277,8 @@ export default function ProfessionalInfoTab(props: Props) {
           );
         form.setValue("leavesHours", "0");
       }
-      if (mode == "view") {
+      if (mode == "view" || mode == "edit") {
+        console.log("-----------------", selectedStaff);
         const departmentSelectedData = convertIdToObject(
           selectedStaff?.department || [],
           departmentData
@@ -250,7 +310,7 @@ export default function ProfessionalInfoTab(props: Props) {
         form.setValue("leavesHours", selectedStaff?.time_off_hours || "0");
       }
     }
-  }, [isFocus, selectedStaff, form.getValues("statusWorking")]);
+  }, [isFocus, selectedStaff?.updated_at, form.getValues("statusWorking")]);
 
   return (
     <div
@@ -519,6 +579,18 @@ export default function ProfessionalInfoTab(props: Props) {
                 type="submit"
               >
                 Create
+              </Button>
+            </div>
+          )}
+          {props.mode === "edit" && (
+            <div className="flex flex-1 justify-end items-end gap-x-4 ">
+              <Button
+                // disabled={loading}
+                tabIndex={3}
+                className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
+                type="submit"
+              >
+                Save
               </Button>
             </div>
           )}

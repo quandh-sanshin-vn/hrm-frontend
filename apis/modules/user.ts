@@ -55,19 +55,19 @@ export function createStaffRequest(params: CreateUsersParams) {
 }
 
 export interface UpdateUsersParams {
-  id: string;
+  id: any;
   idkey: string;
-  fullname: string;
-  phone: string;
-  birth_day: string; // d/m/Y && before:today
-  address: string;
-  country: string;
-  username: string;
-  status_working: string;
-  email: string;
-  position: string;
-  started_at: string;
-  department_ids: string;
+  fullname?: string;
+  phone?: string;
+  birth_day?: string; // d/m/Y && before:today
+  address?: string;
+  country?: string;
+  username?: string;
+  status_working?: string;
+  email?: string;
+  position?: string;
+  started_at?: string;
+  department_ids?: number[];
   updated_at: string;
 }
 

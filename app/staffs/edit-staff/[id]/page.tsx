@@ -10,6 +10,7 @@ import Image from "next/image";
 import { useState } from "react";
 import StyledUserInfoTab from "../../components/StyledUserInfoTab";
 import { useStaffStore } from "@/stores/staffStore";
+import { Button } from "@/components/ui/button";
 
 export default function EditStaffScreen() {
   const [loading, setLoading] = useState(false);
@@ -30,13 +31,20 @@ export default function EditStaffScreen() {
           }}
           className="w-full  border border-border rounded-md "
         >
-          <div className="h-[120px]  rounded-sm bg-white w-full">
+          <div className="h-[120px] flex justify-between items-end px-4 rounded-sm bg-white w-full">
             <StyledAvatarUser
               fullName={selectedStaff?.fullname || ""}
               positionName={selectedStaff?.position_name || ""}
               imageUrl={selectedStaff?.image}
               email={selectedStaff?.email || ""}
             />
+            {/* <Button
+              type="button"
+              onClick={() => {}}
+              className="min-w-[172px] hover:bg-primary-hover"
+            >
+              <p className={"text-white"}>Save</p>
+            </Button> */}
           </div>
 
           <div

@@ -1,4 +1,5 @@
 "use client";
+import { UpdateUsersParams } from "@/apis/modules/user";
 import { StyledDatePicker } from "@/components/common/StyledDatePicker";
 import StyledOverlay from "@/components/common/StyledOverlay";
 import { Button } from "@/components/ui/button";
@@ -10,15 +11,19 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { EditStaffUseCase } from "@/core/application/usecases/staff-master/editStaff.usecase";
+import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import useFocus from "@/hooks/use-focus";
+import { toast } from "@/hooks/use-toast";
 import useWindowSize from "@/hooks/useWindowSize";
 import { useStaffStore } from "@/stores/staffStore";
 import { formatDateToString, formatStringToDate } from "@/utilities/format";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+
 const formSchema = z.object({
   fullname: z
     .string({ message: "Full name is required" })
@@ -52,6 +57,9 @@ const formSchema = z.object({
     .min(1, "Country is required"),
 });
 
+const userRepo = new UserRepositoryImpl();
+const editStaff = new EditStaffUseCase(userRepo);
+
 interface Props {
   changeTab(name: string): void;
   mode: "view" | "edit" | "create";
@@ -61,12 +69,18 @@ export default function PersonalInfoTab(props: Props) {
   const { mode } = props;
   const windowSize = useWindowSize();
   const isFocus = useFocus();
-  const params = useParams();
+  const paramsPage = useParams();
+  const router = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [formMaxHeight, setFormMaxHeight] = useState(windowSize.height);
-  const { updateStaffEditing, editingStaff, staffList, selectedStaff } =
-    useStaffStore((state) => state);
+  const {
+    updateStaffEditing,
+    editingStaff,
+    staffList,
+    selectedStaff,
+    updateSelectedStaff,
+  } = useStaffStore((state) => state);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -136,20 +150,72 @@ export default function PersonalInfoTab(props: Props) {
     }
   }, [isFocus, selectedStaff]);
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+  const onUpdateProfessionalInfoStaff = async (
+    data: z.infer<typeof formSchema>
+  ) => {
     try {
-      updateStaffEditing({
+      setLoading(true);
+      if (!paramsPage.id) {
+        toast({
+          description: "User id not found",
+          color: `bg-blue-200`,
+        });
+      }
+      const params: UpdateUsersParams = {
+        id: paramsPage.id,
+        idkey: selectedStaff?.idkey || "",
         fullname: data.fullname,
         phone: data.phoneNumber,
         birth_day: formatDateToString(data.dateOfBirth),
         address: data.address,
         country: data.country,
-      });
-
-      props.changeTab("professional");
+        username: selectedStaff?.username || "",
+        status_working: selectedStaff?.status_working || "",
+        email: selectedStaff.email || "",
+        position: selectedStaff?.position_id || "",
+        started_at: selectedStaff.started_at || "",
+        department_ids: selectedStaff.department || [],
+        updated_at: selectedStaff.updated_at || "",
+      };
+      const result = await editStaff.execute(params);
+      if (result?.code == 0) {
+        toast({
+          description: "Update staff information successfully",
+          color: `bg-blue-200`,
+        });
+        updateSelectedStaff({
+          ...selectedStaff,
+          updated_at: result.data.updated_at,
+        });
+        router.back();
+      } else {
+        toast({
+          description: "Update staff information failed",
+          color: "bg-red-100",
+        });
+      }
     } catch (error) {
     } finally {
       setLoading(false);
+    }
+  };
+
+  const onCreateStaff = (data: z.infer<typeof formSchema>) => {
+    updateStaffEditing({
+      fullname: data.fullname,
+      phone: data.phoneNumber,
+      birth_day: formatDateToString(data.dateOfBirth),
+      address: data.address,
+      country: data.country,
+    });
+    props.changeTab("professional");
+  };
+
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    if (mode == "edit") {
+      onUpdateProfessionalInfoStaff(data);
+    } else {
+      onCreateStaff(data);
     }
   };
 
@@ -316,7 +382,6 @@ export default function PersonalInfoTab(props: Props) {
               </Button>
             </div>
           )}
-
           {props.mode == "edit" && (
             <div className="flex flex-1 justify-end items-end gap-x-4">
               <Button
@@ -325,7 +390,7 @@ export default function PersonalInfoTab(props: Props) {
                 className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
                 type="submit"
               >
-                Next
+                Save
               </Button>
             </div>
           )}
