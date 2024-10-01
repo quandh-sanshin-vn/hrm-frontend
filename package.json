@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "build-dev": "npm i && npm run build && npm run start -- -H 192.168.1.171",
+    "build-dev1": "npm i && npm run build && npm run start -- -H 192.168.0.124",
     "start": "next start",
     "lint": "next lint"
   },

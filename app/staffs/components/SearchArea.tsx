@@ -22,11 +22,13 @@ import {
 } from "@/utilities/static-value";
 
 import { GetStaffListParams } from "@/apis/modules/user";
+import IconAdd from "@/app/assets/icons/iconAdd.svg";
 import { GetStaffListUseCase } from "@/core/application/usecases/staff-master/getUserList.usecase";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import { useCommonStore } from "@/stores/commonStore";
 import { useStaffStore } from "@/stores/staffStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -94,18 +96,18 @@ export default function SearchArea(props: Props) {
     },
   });
   return (
-    <div className="h-[150px]">
+    <div className="h-[256px] laptop:h-[150px]">
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className="flex-col w-full"
         >
-          <div className="flex w-full items-center gap-x-4 ">
+          <div className="flex flex-col laptop:flex-row w-full flex-1 laptop:items-center gap-x-4 ">
             <FormField
               control={form.control}
               name="staffName"
               render={({ field, fieldState }) => (
-                <FormItem className="w-[220px] ">
+                <FormItem className="w-full laptop:w-[220px]">
                   <FormLabel className=" font-normal text-[16px]">
                     Employee Name:
                   </FormLabel>
@@ -120,77 +122,79 @@ export default function SearchArea(props: Props) {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="position"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel className=" font-normal text-[16px]">
-                    Position
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="border-border border ">
-                        <SelectValue className="w-[256px]" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-white">
-                      {positionData.map((item: any) => {
-                        return (
-                          <SelectItem
-                            key={item.value}
-                            value={String(item.value)}
-                            className="h-8 hover:bg-gray-200 pl-6"
-                          >
-                            {item.name}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormLabel className=" font-normal text-[16px]">
-                    Status
-                  </FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger className="border-border border">
-                        <SelectValue className=" border-border border w-[256px]" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent className="bg-white">
-                      {[{ value: "-1", name: "All" }, ...STAFF_STATUS].map(
-                        (item) => {
+            <div className="flex flex-row flex-1 items-center gap-x-4">
+              <FormField
+                control={form.control}
+                name="position"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel className=" font-normal text-[16px]">
+                      Position
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="border-border border ">
+                          <SelectValue className="w-[256px]" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-white">
+                        {positionData.map((item: any) => {
                           return (
                             <SelectItem
                               key={item.value}
                               value={String(item.value)}
+                              className="h-8 hover:bg-gray-200 pl-6"
                             >
                               {item.name}
                             </SelectItem>
                           );
-                        }
-                      )}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                        })}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="status"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel className=" font-normal text-[16px]">
+                      Status
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="border-border border">
+                          <SelectValue className=" border-border border w-[256px]" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent className="bg-white">
+                        {[{ value: "-1", name: "All" }, ...STAFF_STATUS].map(
+                          (item) => {
+                            return (
+                              <SelectItem
+                                key={item.value}
+                                value={String(item.value)}
+                              >
+                                {item.name}
+                              </SelectItem>
+                            );
+                          }
+                        )}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
 
             <FormField
               control={form.control}
@@ -244,6 +248,13 @@ export default function SearchArea(props: Props) {
               type="button"
               onClick={onAddNewStaff}
             >
+              <Image
+                src={IconAdd}
+                alt=""
+                width={24}
+                height={24}
+                className="mr-2"
+              />
               Add new
             </Button>
           </div>

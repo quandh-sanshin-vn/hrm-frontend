@@ -1,17 +1,17 @@
 "use client";
+import { GetStaffListParams } from "@/apis/modules/user";
 import SideBarComponent from "@/components/common/SideBarComponent";
 import StyledHeader from "@/components/common/StyledHeader";
-import React, { useEffect, useState } from "react";
-import SearchArea from "./components/SearchArea";
 import StyledOverlay from "@/components/common/StyledOverlay";
-import StyledStaffMasterTable from "./components/StyledStaffMasterTable";
 import StyledPagination from "@/components/common/StyledPagination";
+import { GetStaffListUseCase } from "@/core/application/usecases/staff-master/getUserList.usecase";
+import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
+import useWindowSize from "@/hooks/useWindowSize";
 import { useStaffStore } from "@/stores/staffStore";
 import { ITEM_PER_PAGE } from "@/utilities/static-value";
-import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
-import { GetStaffListUseCase } from "@/core/application/usecases/staff-master/getUserList.usecase";
-import { GetStaffListParams } from "@/apis/modules/user";
-import useWindowSize from "@/hooks/useWindowSize";
+import { useEffect, useState } from "react";
+import SearchArea from "./components/SearchArea";
+import StyledStaffMasterTable from "./components/StyledStaffMasterTable";
 
 export default function StaffScreen() {
   const [loading, setLoading] = useState(false);
@@ -49,6 +49,7 @@ export default function StaffScreen() {
         page: 1,
         limit: ITEM_PER_PAGE,
       };
+
       const response = await getStaffListUseCase.execute(params);
       updateStaffListData(response?.data, response?.totalItem || 0);
       updateSearchParams(params);
@@ -76,7 +77,7 @@ export default function StaffScreen() {
               maxHeight: windowSize.height - 100 - 40 - 20,
               minHeight: windowSize.height - 100 - 40 - 20,
             }}
-            className="border w-full rounded-sm px-5 py-2 "
+            className="laptop:border w-full rounded-sm laptop:px-5 laptop:py-2 "
           >
             <SearchArea loading={loading} setLoading={setLoading} />
             <StyledStaffMasterTable loading={loading} setLoading={setLoading} />
