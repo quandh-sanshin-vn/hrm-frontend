@@ -113,7 +113,7 @@ export default function ProfessionalInformationForm() {
           className="space-y-4 w-full"
         >
           {user ? (
-            <div className="grid grid-cols-2 gap-5 w-full">
+            <div className="grid grid-cols-1 laptop:grid-cols-2 gap-5 w-full">
               <div className="flex flex-col pb-2 col-span-1 gap-5">
                 <div className="flex flex-col border-b">
                   <FormField

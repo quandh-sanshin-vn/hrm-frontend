@@ -26,7 +26,7 @@ export function Toaster() {
             key={id}
             {...props}
             className={twMerge(
-              " w-[400px] h=[80px] flex-col fixed bottom-10 right-5 items-start ",
+              "w-3/4 laptop:w-[400px] h=[80px] flex-col fixed mobile:top-10 laptop:top-auto laptop:bottom-10 right-5 items-start ",
               color
             )}
           >

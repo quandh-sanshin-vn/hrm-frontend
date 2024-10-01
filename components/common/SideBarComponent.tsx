@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import ToggleIcon from "../../app/assets/icons/iconToggleSideBar.png";
 import SideBarLogo from "../../app/assets/logo/logoSideBar.png";
+import AppsIcon from "../../app/assets/icons/iconApps.svg";
 import { AlertDialogLogoutButton } from "./AlertDialogLogoutButton";
 import SideBarItem, { SideBarItemProps } from "./SideBarItem";
 import { usePathname } from "next/navigation";
@@ -10,6 +11,8 @@ import { useCommonStore } from "@/stores/commonStore";
 
 const SideBarComponent = () => {
   const { sidebarStatus, updateSideBarStatus } = useCommonStore();
+  // const [isOpen, setIsOpen] = useState(true);
+  // const { sideBarState, updateSideBarState } = useCommonStore((state) => state);
 
   const pathname = usePathname();
 
@@ -21,12 +24,12 @@ const SideBarComponent = () => {
     <div
       className={`absolute z-10 laptop:relative flex ${
         sidebarStatus
-          ? "w-1/2 laptop:w-72"
+          ? "w-7/12 laptop:w-72"
           : "w-0 laptop:w-[72px] invisible laptop:visible"
       } h-screen bg-sidebar-primary text-white transition-width duration-300 justify-center items-center`}
     >
       <div className="flex flex-col py-5 justify-between h-full items-center w-full">
-        <div className="flex flex-col w-full rounded-xl h-full">
+        <div className="flex justify-center flex-col w-full rounded-xl h-full bg-re">
           <button
             className="flex items-center justify-center border-b border-border h-10 rounded-none px-0"
             onClick={toggleSidebar}
@@ -57,7 +60,9 @@ const SideBarComponent = () => {
               );
             })}
           </ul>
-          <AlertDialogLogoutButton isOpen={sidebarStatus} />
+          <div className="hidden laptop:flex">
+            <AlertDialogLogoutButton isOpen={sidebarStatus} />
+          </div>
         </div>
       </div>
     </div>

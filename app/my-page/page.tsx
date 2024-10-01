@@ -8,12 +8,12 @@ import { useDetectDevice } from "@/hooks/use-detect-device";
 export default function MyPageScreen() {
   useDetectDevice();
   return (
-    <div className="flex flex-1 w-full h-full">
+    <div className="flex flex-1 w-full h-full relative">
       <SideBarComponent />
       <div className="block max-h-screen w-full">
         <StyledHeader />
         <ImageProfileForm />
-        <div className="flex-1 p-4">
+        <div className="flex-1 laptop:px-4 px-2">
           <MyPageTab />
         </div>
       </div>
