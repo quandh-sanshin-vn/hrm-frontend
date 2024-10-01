@@ -55,7 +55,7 @@ const ImageProfileForm: React.FC = () => {
   return (
     <>
       {user ? (
-        <div className="flex flex-row justify-between items-center ml-3">
+        <div className="laptop:flex flex-row justify-between items-center ml-3 hidden">
           <div className="flex items-center gap-4 p-4">
             <div
               className="relative w-[100px] h-[100px]"

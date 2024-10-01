@@ -2,6 +2,7 @@ import Image from "next/image";
 import React, { useState } from "react";
 import GoodMorningIcon from "../../app/assets/icons/iconSunrise.png";
 import GoodAfternoonIcon from "../../app/assets/icons/iconSunset.png";
+import AppsIcon from "../../app/assets/icons/iconApps.svg";
 import { isMorningTime } from "@/utilities/helper";
 import ToggleIcon from "../../app/assets/icons/iconToggleSideBar.png";
 import { useCommonStore } from "@/stores/commonStore";

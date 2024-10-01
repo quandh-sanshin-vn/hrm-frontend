@@ -123,7 +123,7 @@ export default function ChangePasswordForm() {
             control={form.control}
             name={"currentPassword"}
             render={({ field, fieldState }) => (
-              <FormItem className="w-1/2">
+              <FormItem className="laptop:w-1/2 w-full">
                 <FormControl>
                   <Input
                     tabIndex={1}
@@ -147,7 +147,7 @@ export default function ChangePasswordForm() {
             control={form.control}
             name={"newPassword"}
             render={({ field, fieldState }) => (
-              <FormItem className="w-1/2">
+              <FormItem className="laptop:w-1/2 w-full">
                 <FormControl>
                   <Input
                     tabIndex={2}
@@ -171,7 +171,7 @@ export default function ChangePasswordForm() {
             control={form.control}
             name={"confirmPassword"}
             render={({ field, fieldState }) => (
-              <FormItem className="w-1/2">
+              <FormItem className="laptop:w-1/2 w-full">
                 <FormControl>
                   <Input
                     tabIndex={3}
@@ -191,7 +191,7 @@ export default function ChangePasswordForm() {
               </FormItem>
             )}
           />
-          <div className="flex justify-end gap-x-4 pt-[70px]">
+          <div className="flex justify-center laptop:justify-end gap-x-4 pt-[70px]">
             <Button
               onClick={onClearForm}
               variant="outline"

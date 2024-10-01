@@ -53,17 +53,17 @@ export function AlertDialogLogoutButton(props: Props) {
   return (
     <AlertDialog>
       <StyledOverlay isVisible={loading} />
-      <AlertDialogTrigger asChild className="mx-2">
+      <AlertDialogTrigger asChild className="laptop:mx-2 mobile:p-2">
         <Button
           disabled={loading}
-          className="flex items-center justify-center  bg-red_login hover:bg-red_login_hover"
+          className="flex items-center justify-center bg-[#D14918CC] laptop:bg-red_login hover:bg-red_login_hover"
           style={{
             width: props.isOpen ? "60" : "unset",
           }}
         >
           <Image src={IconLogout} alt="" className="h-6 w-6" />
           {props.isOpen && (
-            <p className="text-[16px] text-white ml-2">
+            <p className="text-[16px] text-white laptop:ml-2 hidden laptop:block">
               {loading ? "Loading" : "Logout"}
             </p>
           )}
@@ -77,7 +77,7 @@ export function AlertDialogLogoutButton(props: Props) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <div className="flex flex-1 items-center justify-end gap-2 ">
+          <div className="flex flex-1 items-center justify-center laptop:justify-end gap-2 ">
             <AlertDialogCancel className="mt-0 w-[120px]">
               Close
             </AlertDialogCancel>

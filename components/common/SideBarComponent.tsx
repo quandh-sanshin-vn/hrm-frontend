@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import ToggleIcon from "../../app/assets/icons/iconToggleSideBar.png";
 import SideBarLogo from "../../app/assets/logo/logoSideBar.png";
+import AppsIcon from "../../app/assets/icons/iconApps.svg";
 import { AlertDialogLogoutButton } from "./AlertDialogLogoutButton";
 import SideBarItem, { SideBarItemProps } from "./SideBarItem";
 import { usePathname } from "next/navigation";
@@ -10,6 +11,8 @@ import { useCommonStore } from "@/stores/commonStore";
 
 const SideBarComponent = () => {
   const { sidebarStatus, updateSideBarStatus } = useCommonStore();
+  // const [isOpen, setIsOpen] = useState(true);
+  // const { sideBarState, updateSideBarState } = useCommonStore((state) => state);
 
   const pathname = usePathname();
 
@@ -26,7 +29,7 @@ const SideBarComponent = () => {
       } h-screen bg-sidebar-primary text-white transition-width duration-300 justify-center items-center`}
     >
       <div className="flex flex-col py-5 justify-between h-full items-center w-full">
-        <div className="flex flex-col w-full rounded-xl h-full">
+        <div className="laptop:flex flex-col w-full rounded-xl h-full bg-re">
           <button
             className="flex items-center justify-center border-b border-border h-10 rounded-none px-0"
             onClick={toggleSidebar}
@@ -37,7 +40,7 @@ const SideBarComponent = () => {
             <Image src={ToggleIcon} alt="" className="h-8 w-8" />
           </button>
           <ul
-            className="mt-4 flex flex-1 flex-col gap-y-1"
+            className="mt-4 bg-red-200 flex flex-1 flex-col gap-y-1"
             style={{
               paddingLeft: sidebarStatus ? 32 : 12,
               paddingRight: sidebarStatus ? 32 : 12,

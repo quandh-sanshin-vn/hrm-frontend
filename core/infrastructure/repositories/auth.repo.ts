@@ -18,7 +18,6 @@ import {
 import { useCommonStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
 import { expirationDate } from "@/utilities/helper";
-
 export class AuthRepositoryImpl implements AuthRepository {
   async signIn(credentials: AuthCredentials): Promise<AuthToken | any> {
     try {

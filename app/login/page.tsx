@@ -51,6 +51,7 @@ const formSchema = z.object({
 const LoginPage = () => {
   const [hidePassword, setHidePassword] = useState(true);
   const [loading, setLoading] = useState(false);
+  const { updateSideBarState } = useCommonStore((state) => state);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -91,6 +92,9 @@ const LoginPage = () => {
       } else {
         setCookie(ACCESS_TOKEN_KEY, response.token);
         setCookie(REFRESH_TOKEN_KEY, response.refreshToken);
+
+        // updateSideBarState(true);
+
         router.push("/dashboard");
       }
     } catch (error) {

@@ -40,7 +40,7 @@ export function AlertDialogCancelButton(props: Props) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <div className="flex flex-1 items-center justify-end gap-2 ">
+          <div className="flex flex-1 items-center justify-center gap-2 laptop:justify-end">
             <AlertDialogCancel className="mt-0 w-[120px]">NO</AlertDialogCancel>
             <AlertDialogAction
               onClick={onConfirmOK}

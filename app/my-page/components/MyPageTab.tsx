@@ -14,10 +14,12 @@ import ChangePasswordActiveIcon from "../../assets/icons/iconLockActive.svg";
 import PersonalIcon from "../../assets/icons/iconUser.svg";
 import PersonalActiveIcon from "../../assets/icons/iconUserActive.svg";
 import ChangePasswordForm from "./ChangePasswordForm";
+import useWindowSize from "@/hooks/use-dimession";
 
 export default function MyPageTab() {
   const [tab, changeTab] = useState("personal");
   const { isEditing, setIsEditing } = useEditingStore((state) => state);
+  const useDimession = useWindowSize();
 
   useEffect(() => {
     if (isEditing) {
@@ -32,14 +34,24 @@ export default function MyPageTab() {
       defaultValue="personal"
       className="flex flex-1 flex-col bg-white h-full w-full min-w-full"
     >
-      <TabsList className="w-full justify-start ">
+      <TabsList className="w-full justify-start mobile:max-w-screen mobile:overflow-x-auto hide-scrollbar">
         <TabsTrigger value="personal" className="flex-col">
-          <div className="flex items-center">
-            {tab === "personal" ? (
-              <Image src={PersonalActiveIcon} alt="" className="h-6 w-6 mx-1" />
-            ) : (
-              <Image src={PersonalIcon} alt="" className="h-6 w-6 mx-1" />
-            )}
+          <div className="flex flex-1 items-center">
+            <div className="w-6 h-6 mr-1 laptop:mr-2">
+              {tab === "personal" ? (
+                <Image
+                  src={PersonalActiveIcon}
+                  alt=""
+                  className="h-6 w-6 laptop:mx-1"
+                />
+              ) : (
+                <Image
+                  src={PersonalIcon}
+                  alt=""
+                  className="h-6 w-6 laptop:mx-1"
+                />
+              )}
+            </div>
             <p
               className="text-[16px] font-normal"
               style={{
@@ -47,7 +59,9 @@ export default function MyPageTab() {
                 color: tab === "personal" ? "var(--primary)" : "black",
               }}
             >
-              Personal Information
+              {/* Personal Information */}
+              <span className="block laptop:hidden">Personal</span>
+              <span className="hidden laptop:block">Personal Information</span>
             </p>
           </div>
           <div
@@ -60,15 +74,21 @@ export default function MyPageTab() {
         {!isEditing && (
           <TabsTrigger value="professional" className="flex-col">
             <div className="flex items-center">
-              {tab === "professional" ? (
-                <Image
-                  src={ProfessionalActiveIcon}
-                  alt=""
-                  className="h-6 w-6 mx-1"
-                />
-              ) : (
-                <Image src={ProfessionalIcon} alt="" className="h-6 w-6 mx-1" />
-              )}
+              <div className="w-6 h-6 mr-1 laptop:mr-2">
+                {tab === "professional" ? (
+                  <Image
+                    src={ProfessionalActiveIcon}
+                    alt=""
+                    className="h-6 w-6 laptop:mx-1"
+                  />
+                ) : (
+                  <Image
+                    src={ProfessionalIcon}
+                    alt=""
+                    className="h-6 w-6 laptop:mx-1"
+                  />
+                )}
+              </div>
               <p
                 className="text-[16px] font-normal"
                 style={{
@@ -76,7 +96,11 @@ export default function MyPageTab() {
                   color: tab === "professional" ? "var(--primary)" : "black",
                 }}
               >
-                Professional Information
+                {/* Professional Information */}
+                <span className="block laptop:hidden">Professional</span>
+                <span className="hidden laptop:block">
+                  Professional Information
+                </span>
               </p>
             </div>
 
@@ -92,19 +116,21 @@ export default function MyPageTab() {
         {!isEditing && (
           <TabsTrigger value="password" className="flex-col">
             <div className="flex items-center">
-              {tab === "password" ? (
-                <Image
-                  src={ChangePasswordActiveIcon}
-                  alt=""
-                  className="h-6 w-6 mx-1"
-                />
-              ) : (
-                <Image
-                  src={ChangePasswordIcon}
-                  alt=""
-                  className="h-6 w-6 mx-1"
-                />
-              )}
+              <div className="w-6 h-6 mr-1 laptop:mr-2">
+                {tab === "password" ? (
+                  <Image
+                    src={ChangePasswordActiveIcon}
+                    alt=""
+                    className="h-6 w-6 laptop:mx-1"
+                  />
+                ) : (
+                  <Image
+                    src={ChangePasswordIcon}
+                    alt=""
+                    className="h-6 w-6 laptop:mx-1"
+                  />
+                )}
+              </div>
               <p
                 className="text-[16px] font-normal"
                 style={{

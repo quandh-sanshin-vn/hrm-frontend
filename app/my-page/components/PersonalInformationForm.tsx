@@ -121,6 +121,10 @@ export default function PersonalInformationForm() {
     }
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
   return (
     <div
       className="bg-white flex flex-1 p-4 flex-col w-full max-h-screen overflow-y-auto"
@@ -137,7 +141,7 @@ export default function PersonalInformationForm() {
           className="space-y-4 w-full"
         >
           {user ? (
-            <div className="grid grid-cols-2 gap-5 w-full">
+            <div className="grid grid-cols-1 laptop:grid-cols-2 gap-5 w-full">
               <div className="flex flex-col pb-2 col-span-1 gap-5">
                 <div className={`flex flex-col border-b`}>
                   <FormField
@@ -282,6 +286,16 @@ export default function PersonalInformationForm() {
                   />
                 </div>
               </div>
+              {!isEditing && (
+                <Button
+                  tabIndex={3}
+                  className="laptop:hidden h-[50px] mx-4 fixed bottom-[14px] right-0 left-0 font-normal text-white text-[16px] hover:bg-primary-hover rounded-lg"
+                  type="button"
+                  onClick={handleEdit}
+                >
+                  Edit
+                </Button>
+              )}
             </div>
           ) : (
             <StyledOverlay isVisible={loading} />
