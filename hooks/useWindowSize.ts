@@ -9,6 +9,7 @@ export default function useWindowSize() {
   });
   useEffect(() => {
     function handleResize() {
+      console.log("-------------------------,", window.innerWidth);
       setWindowSize({
         width: window.innerWidth,
         height: window.innerHeight,

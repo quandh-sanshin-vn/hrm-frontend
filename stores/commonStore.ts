@@ -11,8 +11,10 @@ interface DepartmentProps {
   name: string;
 }
 interface CommonState {
+  sidebarStatus: boolean;
   positionData: PositionProps[];
   departmentData: DepartmentProps[];
+  updateSideBarStatus: (positionData: boolean) => void;
   updatePositionData: (positionData: PositionProps[]) => void;
   updateDepartmentData: (departmentData: DepartmentProps[]) => void;
 }
@@ -20,8 +22,11 @@ export const useCommonStore = create<CommonState>()(
   devtools(
     persist(
       (set) => ({
+        sidebarStatus: false,
         positionData: [],
         departmentData: [],
+        updateSideBarStatus: (sidebarStatus) =>
+          set((state) => ({ ...state, sidebarStatus: sidebarStatus })),
         updatePositionData: (positionData) =>
           set((state) => ({ ...state, positionData: positionData })),
         updateDepartmentData: (departmentData) =>

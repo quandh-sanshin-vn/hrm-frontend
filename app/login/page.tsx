@@ -26,6 +26,9 @@ import { getCookie, setCookie } from "cookies-next";
 import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/utilities/static-value";
 import { toast } from "@/hooks/use-toast";
 import StyledOverlay from "@/components/common/StyledOverlay";
+import { useCommonStore } from "@/stores/commonStore";
+import useWindowSize from "@/hooks/useWindowSize";
+import { useDetectDevice } from "@/hooks/use-detect-device";
 
 const authRepo = new AuthRepositoryImpl();
 const loginUseCase = new LoginUseCase(authRepo);
@@ -61,6 +64,8 @@ const LoginPage = () => {
   const toggleHidePassword = () => {
     setHidePassword(!hidePassword);
   };
+
+  useDetectDevice();
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     // FLOW: UI --> use cases -> repositories -> API

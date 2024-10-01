@@ -1,25 +1,28 @@
 import { SIDEBAR_ITEMS } from "@/utilities/static-value";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ToggleIcon from "../../app/assets/icons/iconToggleSideBar.png";
 import SideBarLogo from "../../app/assets/logo/logoSideBar.png";
 import { AlertDialogLogoutButton } from "./AlertDialogLogoutButton";
 import SideBarItem, { SideBarItemProps } from "./SideBarItem";
 import { usePathname } from "next/navigation";
+import { useCommonStore } from "@/stores/commonStore";
 
 const SideBarComponent = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const { sidebarStatus, updateSideBarStatus } = useCommonStore();
 
   const pathname = usePathname();
 
   const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+    updateSideBarStatus(!sidebarStatus);
   };
 
   return (
     <div
-      className={`flex ${
-        isOpen ? "w-72" : "w-[72px]"
+      className={`absolute z-10 laptop:relative flex ${
+        sidebarStatus
+          ? "w-1/2 laptop:w-72"
+          : "w-0 laptop:w-[72px] invisible laptop:visible"
       } h-screen bg-sidebar-primary text-white transition-width duration-300 justify-center items-center`}
     >
       <div className="flex flex-col py-5 justify-between h-full items-center w-full">
@@ -28,7 +31,7 @@ const SideBarComponent = () => {
             className="flex items-center justify-center border-b border-border h-10 rounded-none px-0"
             onClick={toggleSidebar}
           >
-            {isOpen && (
+            {sidebarStatus && (
               <Image src={SideBarLogo} alt="" className="h-6 w-auto mr-3" />
             )}
             <Image src={ToggleIcon} alt="" className="h-8 w-8" />
@@ -36,8 +39,8 @@ const SideBarComponent = () => {
           <ul
             className="mt-4 flex flex-1 flex-col gap-y-1"
             style={{
-              paddingLeft: isOpen ? 32 : 12,
-              paddingRight: isOpen ? 32 : 12,
+              paddingLeft: sidebarStatus ? 32 : 12,
+              paddingRight: sidebarStatus ? 32 : 12,
             }}
           >
             {SIDEBAR_ITEMS.map((i: SideBarItemProps) => {
@@ -48,13 +51,13 @@ const SideBarComponent = () => {
                   iconActive={i.iconActive}
                   title={i.title}
                   route={i.route}
-                  sidebarOpenStatus={isOpen}
+                  sidebarOpenStatus={sidebarStatus}
                   pathname={`/${pathname.split("/")[1]}`}
                 />
               );
             })}
           </ul>
-          <AlertDialogLogoutButton isOpen={isOpen} />
+          <AlertDialogLogoutButton isOpen={sidebarStatus} />
         </div>
       </div>
     </div>
