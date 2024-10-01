@@ -24,12 +24,12 @@ const SideBarComponent = () => {
     <div
       className={`absolute z-10 laptop:relative flex ${
         sidebarStatus
-          ? "w-1/2 laptop:w-72"
+          ? "w-7/12 laptop:w-72"
           : "w-0 laptop:w-[72px] invisible laptop:visible"
       } h-screen bg-sidebar-primary text-white transition-width duration-300 justify-center items-center`}
     >
       <div className="flex flex-col py-5 justify-between h-full items-center w-full">
-        <div className="laptop:flex flex-col w-full rounded-xl h-full bg-re">
+        <div className="flex justify-center flex-col w-full rounded-xl h-full bg-re">
           <button
             className="flex items-center justify-center border-b border-border h-10 rounded-none px-0"
             onClick={toggleSidebar}
@@ -40,7 +40,7 @@ const SideBarComponent = () => {
             <Image src={ToggleIcon} alt="" className="h-8 w-8" />
           </button>
           <ul
-            className="mt-4 bg-red-200 flex flex-1 flex-col gap-y-1"
+            className="mt-4 flex flex-1 flex-col gap-y-1"
             style={{
               paddingLeft: sidebarStatus ? 32 : 12,
               paddingRight: sidebarStatus ? 32 : 12,
@@ -60,7 +60,9 @@ const SideBarComponent = () => {
               );
             })}
           </ul>
-          <AlertDialogLogoutButton isOpen={sidebarStatus} />
+          <div className="hidden laptop:flex">
+            <AlertDialogLogoutButton isOpen={sidebarStatus} />
+          </div>
         </div>
       </div>
     </div>

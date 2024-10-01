@@ -191,13 +191,13 @@ export default function ChangePasswordForm() {
               </FormItem>
             )}
           />
-          <div className="flex justify-center laptop:justify-end gap-x-4 pt-[70px]">
+          <div className="flex w-full gap-3 flex-col-reverse laptop:flex-row justify-center laptop:justify-end gap-x-4 pt-[70px]">
             <Button
               onClick={onClearForm}
               variant="outline"
               disabled={loading}
               tabIndex={3}
-              className="w-[152px] h-[50px] font-normal border-border bg-white text-[14px] hover:bg-gray-100 rounded-lg"
+              className="laptop:w-[152px] h-[50px] font-normal border-border bg-white text-[14px] hover:bg-gray-100 rounded-lg"
               type="button"
             >
               {"Clear"}
@@ -205,7 +205,7 @@ export default function ChangePasswordForm() {
             <Button
               disabled={loading}
               tabIndex={3}
-              className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
+              className="laptop:w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
               type="submit"
             >
               {loading ? "Loading" : "Change Password"}

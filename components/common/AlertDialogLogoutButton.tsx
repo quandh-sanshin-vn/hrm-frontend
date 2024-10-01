@@ -53,10 +53,10 @@ export function AlertDialogLogoutButton(props: Props) {
   return (
     <AlertDialog>
       <StyledOverlay isVisible={loading} />
-      <AlertDialogTrigger asChild className="laptop:mx-2 mobile:p-2">
+      <AlertDialogTrigger asChild className=" laptop:mx-2 mobile:p-2 w-full">
         <Button
           disabled={loading}
-          className="flex items-center justify-center bg-[#D14918CC] laptop:bg-red_login hover:bg-red_login_hover"
+          className="w-full flex-1 items-center justify-center bg-[#D14918CC] laptop:bg-red_login hover:bg-red_login_hover"
           style={{
             width: props.isOpen ? "60" : "unset",
           }}
