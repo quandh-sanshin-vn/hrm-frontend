@@ -6,12 +6,12 @@ import { GetStaffListUseCase } from "@/core/application/usecases/staff-master/ge
 import { User } from "@/core/entities/models/user.model";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import useWindowSize from "@/hooks/useWindowSize";
+import { useCommonStore } from "@/stores/commonStore";
 import { useStaffStore } from "@/stores/staffStore";
 import { STAFF_STATUS, STAFF_STATUS_WORKING } from "@/utilities/static-value";
 import Image from "next/image";
-import StyledTableStatusItem from "./StyledTableStatusItem";
 import { useRouter } from "next/navigation";
-import { useCommonStore, useEditingStore } from "@/stores/commonStore";
+import StyledTableStatusItem from "./StyledTableStatusItem";
 
 const userRepo = new UserRepositoryImpl();
 const getStaffListUseCase = new GetStaffListUseCase(userRepo);
@@ -65,14 +65,22 @@ export default function StyledStaffMasterTable(props: Props) {
     <div
       style={{
         maxHeight:
-          windowSize.height - 100 - 52 - (sidebarStatus ? 150 : 256) - 20,
+          windowSize.height -
+          100 -
+          52 -
+          (window.innerWidth > 1024 ? 150 : 256 + 18) -
+          20,
         minHeight:
-          windowSize.height - 100 - 52 - (sidebarStatus ? 150 : 256) - 20,
+          windowSize.height -
+          100 -
+          52 -
+          (window.innerWidth > 1024 ? 150 : 256 + 18) -
+          20,
         scrollbarWidth: "none",
       }}
-      className="overflow-y-auto mt-[18px] overscroll-none block rounded-sm w-full relative"
+      className="overflow-y-auto mobile:mt-[18px] laptop:mt-0 max-h-screen overscroll-none block rounded-sm w-full relative"
     >
-      <table className="overflow-y-none overscroll-none w-full border-separate border-spacing-0 relative">
+      <table className="overflow-y-none max-h-screen overscroll-none w-full border-separate border-spacing-0 relative">
         <thead className="border-border border-b sticky top-0">
           <tr className=" align-center bg-white ">
             <th

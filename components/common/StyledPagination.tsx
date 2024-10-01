@@ -23,7 +23,7 @@ const StyledPagination = (props: Props) => {
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="flex items-center justify-end gap-x-1 pr-5 h-10 mt-2 ">
+    <div className="flex items-center justify-center laptop:justify-end gap-x-1 pr-5 h-10 laptop:mt-2 ">
       {/* <button
         className="px-3 py-1 mx-1 text-sm font-medium text-gray-500 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
         onClick={() => handlePageChange(1)}

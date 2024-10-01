@@ -22,15 +22,15 @@ import {
 } from "@/utilities/static-value";
 
 import { GetStaffListParams } from "@/apis/modules/user";
+import IconAdd from "@/app/assets/icons/iconAdd.svg";
 import { GetStaffListUseCase } from "@/core/application/usecases/staff-master/getUserList.usecase";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import { useCommonStore } from "@/stores/commonStore";
 import { useStaffStore } from "@/stores/staffStore";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import IconAdd from "@/app/assets/icons/iconAdd.svg";
-import Image from "next/image";
 import { z } from "zod";
 
 const userRepo = new UserRepositoryImpl();
