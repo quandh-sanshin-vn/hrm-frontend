@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { DayOff } from "@/core/entities/models/dayoff.model";
 import { useScheduleStore } from "@/stores/scheduleStore";
 import { formatStringToDate } from "@/utilities/format";
+import useWindowSize from "@/hooks/use-dimession";
 
 interface Props {
   type: "single" | "fullyear";
@@ -18,11 +19,9 @@ export default function StyledCalendar(props: Props) {
   const { type = "single" } = props;
 
   const [selectedYear, setSelectedYear] = useState(getYear(new Date()));
-  const [selectedMonth, setSelectedMonth] = useState(getMonth(new Date()) + 1);
+  const [selectedMonth, setSelectedMonth] = useState(getMonth(new Date()));
 
   const { dayOffList } = useScheduleStore((state) => state);
-
-  console.log("------------", selectedYear);
 
   const dayOffListFormatted = useMemo(() => {
     const data = dayOffList.map((item: DayOff) =>
@@ -42,24 +41,34 @@ export default function StyledCalendar(props: Props) {
   };
 
   const onNextMonth = () => {
-    if (selectedMonth >= 12) return;
+    if (selectedMonth >= 11) return;
     setSelectedMonth((pre) => pre + 1);
   };
   const onBackMonth = () => {
-    if (selectedMonth <= 1) return;
+    if (selectedMonth <= 0) return;
     setSelectedMonth((pre) => pre - 1);
   };
   // const onSelectDay = () => {};
 
   const onSelectToday = () => {
-    setSelectedMonth(getMonth(new Date()) + 1);
+    setSelectedMonth(getMonth(new Date()));
     setSelectedYear(getYear(new Date()));
   };
 
+  const windowSize = useWindowSize();
+
   return (
-    <div>
+    <div
+      style={{
+        maxHeight: windowSize.height - 150,
+        minHeight: windowSize.height - 150,
+      }}
+      className=" overflow-y-auto flex flex-1 flex-col"
+    >
       <div className="flex items-center justify-start gap-x-4 py-3">
-        <p className="text-[14px] font-normal text-secondary">Year</p>
+        <p className=" flex laptop:hidden text-[14px] font-normal text-secondary">
+          Year
+        </p>
         <div className="flex w-fit px-1 items-center justify-center">
           <Image
             onClick={onBackYear}
@@ -77,56 +86,85 @@ export default function StyledCalendar(props: Props) {
             className="p-1 hover:cursor-pointer rotate-180 h-8 w-8"
           />
         </div>
-        <p className="text-[14px] font-normal text-secondary">Month</p>
-
-        <div className="flex w-fit px-1 items-center justify-center">
+        <p className="flex laptop:hidden text-[14px] font-normal text-secondary ">
+          Month
+        </p>
+        <div className="flex laptop:hidden w-fit px-1 items-center justify-center ">
           <Image
             onClick={onBackMonth}
             src={IconArrowLeft}
             alt=" "
             className={`p-1 hover:cursor-pointer h-8 w-8  ${
-              selectedMonth == 1 ? `opacity-50` : `opacity-100`
+              selectedMonth == 0 ? `opacity-50` : `opacity-100`
             }`}
           />
-          <p>{selectedMonth}</p>
+          <p>{selectedMonth + 1}</p>
 
           <Image
             onClick={onNextMonth}
             src={IconArrowLeft}
             alt=" "
             className={`p-1 hover:cursor-pointer h-8 w-8 rotate-180 ${
-              selectedMonth == 12 ? `opacity-50` : `opacity-100`
+              selectedMonth == 11 ? `opacity-50` : `opacity-100`
             }`}
           />
         </div>
-
         <Button
           variant="outline"
           onClick={onSelectToday}
-          className=" h-8 border border-border"
+          className=" h-8 border border-border hidden"
         >
           Today
         </Button>
       </div>
-      <div className="border border-border ">
-        {type == "fullyear" ? (
-          monthsArray.map((item, index) => {
-            return (
-              <Months
-                key={String(index)}
-                monthIndex={item}
-                year={selectedYear}
-              />
-            );
-          })
-        ) : (
+      {type == "fullyear" ? (
+        <div className="flex flex-col w-full overflow-y-auto">
+          <div className="flex items-center justify-center ">
+            {[0, 1, 2, 3].map((item: number, index: number) => {
+              return (
+                <Months
+                  key={index.toString()}
+                  monthIndex={item}
+                  year={selectedYear}
+                  dayOffs={dayOffListFormatted}
+                />
+              );
+            })}
+          </div>
+          <div className="flex items-center justify-center">
+            {[4, 5, 6, 7].map((item: number, index: number) => {
+              return (
+                <Months
+                  key={index.toString()}
+                  monthIndex={item}
+                  year={selectedYear}
+                  dayOffs={dayOffListFormatted}
+                />
+              );
+            })}
+          </div>
+          <div className="flex items-center justify-center">
+            {[8, 9, 10, 11].map((item: number, index: number) => {
+              return (
+                <Months
+                  key={index.toString()}
+                  monthIndex={item}
+                  year={selectedYear}
+                  dayOffs={dayOffListFormatted}
+                />
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col ">
           <Months
             dayOffs={dayOffListFormatted}
-            monthIndex={selectedMonth - 1}
+            monthIndex={selectedMonth}
             year={selectedYear}
           />
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

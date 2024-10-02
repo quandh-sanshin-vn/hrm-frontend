@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import WeekColumn, { WeekColumnProps } from "./WeekColumn";
 import { getMonthData } from "@/utilities/helper";
-import { format, getYear } from "date-fns";
+import { format, getMonth, getYear } from "date-fns";
 import { DATE } from "@/utilities/format";
 import { DateProps } from "./Day";
+import { useScheduleStore } from "@/stores/scheduleStore";
 
 export interface MonthProps {
   title: string;
@@ -23,18 +24,25 @@ export default function Months(props: Props) {
     title: "",
     columns: [],
   });
+  const { dayOffList } = useScheduleStore((state) => state);
 
   const formatDataForMonth = () => {
     const month = getMonthData(year, monthIndex);
-
+    console.log("----monthIndex------", monthIndex);
     const dayOffString = dayOffs.map((item) => format(item, DATE));
-
     const updateDayOffData = month.columns.map((item: any) => {
       const columnDateString = item.date.map((item: DateProps) => {
-        return {
+        const tempDate = dayOffList.find(
+          (day) => day.day_off == format(item.date, DATE)
+        );
+        let tempItem = {
           ...item,
           isSpecial: dayOffString.includes(format(item.date, DATE)),
         };
+        if (dayOffString.includes(format(item.date, DATE))) {
+          tempItem.type = tempDate?.status == "0" ? "off" : "work";
+        }
+        return tempItem;
       });
       return { ...item, date: columnDateString };
     });
@@ -43,17 +51,30 @@ export default function Months(props: Props) {
 
   useEffect(() => {
     formatDataForMonth();
-  }, [monthIndex, year, dayOffs]);
+  }, [dayOffs, year, monthIndex]);
+
+  const isPastMonth = useMemo(
+    () => monthIndex < getMonth(new Date()),
+    [year, monthIndex]
+  );
 
   return (
-    <div className="flex-1 flex-col flex items-start justify-start gap-x-2 py-1 ">
-      <p className="font-medium text-[16px] invisible laptop:visible h-0 laptop:h-auto">
+    <div className="flex-1 flex-col flex items-start justify-start gap-x-1 m-1   ">
+      <p className="font-semibold text-[20px] invisible laptop:visible h-0 laptop:h-auto">
         {monthData.title}
       </p>
-      <div className={"flex flex-1 h-full gap-x-2  w-full"}>
-        {monthData.columns.map((col: WeekColumnProps) => {
+      <div
+        className={`flex flex-1 h-full gap-x-2  w-full pt-2  ${
+          isPastMonth ? `bg-[#D8D4D4]` : `bg-white`
+        }  border border-border shadow-sm`}
+      >
+        {monthData.columns.map((col: WeekColumnProps, index: number) => {
           return (
-            <WeekColumn key={col.title} title={col.title} date={col.date} />
+            <WeekColumn
+              key={index.toString()}
+              title={col.title}
+              date={col.date}
+            />
           );
         })}
       </div>

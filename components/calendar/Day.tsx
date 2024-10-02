@@ -1,3 +1,5 @@
+import { useScheduleStore } from "@/stores/scheduleStore";
+import { formatDateToString } from "@/utilities/format";
 import { isToday } from "date-fns";
 
 export interface DateProps {
@@ -10,22 +12,26 @@ export interface DateProps {
 export default function Day(props: DateProps) {
   const { date, isSpecial = false, type, isDayOfOtherMonth = false } = props;
 
+  const { dayOffList } = useScheduleStore();
+
   return (
     <div
       className={`relative flex flex-col h-8 w-8 hover:cursor-pointer ${
-        isToday(date) ? `bg-primary` : `bg-white`
+        isToday(date) ? `bg-primary` : `bg-transparent`
       } hover:bg-gray-200  rounded-full items-center justify-center ${
-        isDayOfOtherMonth && "opacity-50"
+        isDayOfOtherMonth && "opacity-50 bg-transparent "
       }`}
     >
       <p
         className={`text-[14px] font-semibold ${
           isToday(date)
-            ? `text-white`
+            ? isDayOfOtherMonth
+              ? `text-black`
+              : `text-white`
             : type == "work"
             ? `text-black`
             : "text-red-500"
-        } hover:text-primary`}
+        } hover:text-primary ${isDayOfOtherMonth && `text-black`}`}
       >
         {date.getDate().toString()}
       </p>
