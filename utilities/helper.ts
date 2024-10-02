@@ -1,21 +1,19 @@
 import {
+  addDays,
   addSeconds,
+  eachDayOfInterval,
+  eachMonthOfInterval,
   endOfMonth,
+  endOfYear,
+  format,
   getDay,
   isAfter,
   isBefore,
-  startOfMonth,
-  startOfYear,
-  endOfYear,
-  eachDayOfInterval,
-  format,
-  eachMonthOfInterval,
-  subDays,
-  addDays,
   isEqual,
+  startOfYear,
+  subDays,
 } from "date-fns";
 import { WEEKDAYS_TITLE } from "./static-value";
-import { DateProps } from "@/components/calendar/Day";
 
 const now = new Date();
 export const expirationDate = (expirationTime: number) =>
