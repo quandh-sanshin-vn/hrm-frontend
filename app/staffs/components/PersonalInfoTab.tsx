@@ -95,7 +95,12 @@ export default function PersonalInfoTab(props: Props) {
       setFormMaxHeight(windowSize.height - 100 - 40 - 48 - 50 - 20);
     }
     if (props.mode == "view" || props.mode == "edit") {
-      setFormMaxHeight(windowSize.height - 100 - 40 - 48 - 50 - 20 - 120);
+      // setFormMaxHeight(windowSize.height - 100 - 40 - 48 - 50 - 20 - 120);
+      setFormMaxHeight(
+        windowSize.height >= 1024
+          ? windowSize.height - 100 - 40 - 48 - 50 - 20 - 120
+          : windowSize.height - 100 - 40 - 48 - 50 - 20 - 120 - 52
+      );
     }
   }, [props.mode, windowSize.height]);
 
@@ -391,7 +396,7 @@ export default function PersonalInfoTab(props: Props) {
             </div>
           )}
           {props.mode == "edit" && (
-            <div className="flex flex-1 justify-end items-end gap-x-4">
+            <div className="fixed bottom-[20px] laptop:bottom-[82px] right-0 laptop:right-[68px] left-0 laptop:left-auto flex flex-1 justify-end items-end gap-x-4 mx-4 laptop:mx-0">
               <Button
                 disabled={loading}
                 tabIndex={3}

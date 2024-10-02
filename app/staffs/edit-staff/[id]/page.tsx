@@ -17,14 +17,14 @@ export default function EditStaffScreen() {
   return (
     <div className="w-full flex ">
       <SideBarComponent />
-      <div className="w-full max-h-screen block bg-white p-5  ">
+      <div className="w-full max-h-screen block bg-white laptop:p-5  ">
         <StyledHeader />
         <div
           style={{
             maxHeight: windowSize.height - 100 - 40,
             minHeight: windowSize.height - 100 - 40,
           }}
-          className="w-full  border border-border rounded-md "
+          className="w-full laptop:border border-border rounded-md "
         >
           <div className="h-[120px] flex justify-between items-end px-4 rounded-sm bg-white w-full">
             <StyledAvatarUser
@@ -43,21 +43,22 @@ export default function EditStaffScreen() {
           </div>
 
           <div
-            className="w-full flex gap-x-8 px-4 py-4 "
+            className="w-full flex flex-col laptop:flex-row gap-x-8 px-4 py-4 "
             style={{
               maxHeight: windowSize.height - 100 - 40 - 120 - 20,
               minHeight: windowSize.height - 100 - 40 - 120 - 20,
             }}
           >
-            <div className="w-[242px] h-[110px] border border-border rounded-md flex items-center justify-center flex-col ">
-              <div className="flex flex-1 items-center justify-start px-5 bg-primary w-full rounded-tl-md rounded-tr-md hover:cursor-pointer">
+            <div className="w-full laptop:w-[242px] h-[110px] border border-border rounded-md flex items-center justify-center flex-row laptop:flex-col">
+              <div className="flex h-full py-3 laptop:py-0 flex-1 items-center justify-start px-5 bg-primary w-full rounded-tl-md rounded-tr-none laptop:rounded-tr-md rounded-bl-md laptop:rounded-bl-none">
                 <Image alt="" src={IconUserWhite} />
                 <p className="text-[16px] font-semibold text-white mx-2">
                   Profile
                 </p>
               </div>
-              <div className="flex flex-1 items-center justify-start px-5 bg-white w-full rounded-bl-md rounded-br-md hover:cursor-not-allowed">
-                <Image alt="" src={IconLeaves} />
+              <div className="flex h-full py-3 laptop:py-0 flex-1 items-center justify-start px-5 bg-white w-full rounded-bl-md rounded-br-md hover:cursor-not-allowed">
+                {/* <div className="h-3 w-3 rounded-full bg-white mx-2" /> */}
+                <Image alt="" src={IconLeaves} width={24} height={24} />
                 <p className="text-[16px] font-semibold text-secondary mx-2">
                   Leaves
                 </p>
@@ -68,7 +69,7 @@ export default function EditStaffScreen() {
                 maxHeight: windowSize.height - 100 - 40 - 120 - 48 - 20,
                 minHeight: windowSize.height - 100 - 40 - 120 - 48 - 20,
               }}
-              className="w-full border border-border flex items-center justify-center flex-col rounded-md "
+              className="w-full laptop:border border-border flex items-center justify-center flex-col rounded-md "
             >
               <StyledUserInfoTab mode={"edit"} />
             </div>
