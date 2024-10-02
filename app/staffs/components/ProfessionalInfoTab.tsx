@@ -243,7 +243,11 @@ export default function ProfessionalInfoTab(props: Props) {
 
   useEffect(() => {
     if (props.mode == "create") {
-      setFormMaxHeight(windowSize.height - 100 - 40 - 48 - 50 - 20);
+      setFormMaxHeight(
+        windowSize.height >= 1024
+          ? windowSize.height - 100 - 40 - 48 - 50 - 20
+          : windowSize.height - 100 - 40 - 48 - 50 - 20 - 110
+      );
     }
     if (props.mode == "view" || props.mode == "edit") {
       setFormMaxHeight(windowSize.height - 100 - 40 - 48 - 50 - 20 - 120);
@@ -315,8 +319,9 @@ export default function ProfessionalInfoTab(props: Props) {
       style={{
         maxHeight: formMaxHeight,
         minHeight: formMaxHeight,
+        scrollbarWidth: "none",
       }}
-      className="bg-white flex flex-1 h-full rounded-md "
+      className="bg-white flex flex-1 h-full rounded-md max-h-screen overflow-y-auto"
     >
       <StyledOverlay isVisible={loading} />
       <Form {...form}>
@@ -326,15 +331,19 @@ export default function ProfessionalInfoTab(props: Props) {
             maxHeight: formMaxHeight,
             minHeight: formMaxHeight,
           }}
-          className="flex flex-col space-y-4 mt-1 w-full p-5 rounded-md overflow-y-auto hide-scrollbar"
+          className="flex flex-col space-y-4 mt-1 w-full p-2 laptop:p-5 rounded-md overflow-y-auto hide-scrollbar"
         >
-          <div className={"flex items-start justify-between gap-x-5"}>
+          <div
+            className={
+              "flex flex-col laptop:flex-row items-start justify-between gap-x-5"
+            }
+          >
             <FormField
               control={form.control}
               name={"username"}
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
-                <FormItem className="w-1/2">
+                <FormItem className="w-full laptop:w-1/2">
                   <FormLabel
                     className={"font-normal text-[14px] text-secondary"}
                   >
@@ -359,7 +368,7 @@ export default function ProfessionalInfoTab(props: Props) {
               name={"email"}
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
-                <FormItem className="w-1/2">
+                <FormItem className="w-full laptop:w-1/2">
                   <FormLabel
                     className={"font-normal text-[14px] text-secondary"}
                   >
@@ -380,12 +389,16 @@ export default function ProfessionalInfoTab(props: Props) {
               )}
             />
           </div>
-          <div className={"flex items-start justify-between gap-x-5"}>
+          <div
+            className={
+              "flex flex-col laptop:flex-row items-start justify-between gap-x-5"
+            }
+          >
             <FormField
               control={form.control}
               name="statusWorking"
               render={({ field, fieldState }) => (
-                <FormItem className="flex-1">
+                <FormItem className="flex-1 w-full laptop:w-1/2">
                   <FormLabel
                     className={"font-normal text-[14px] text-secondary"}
                   >
@@ -433,7 +446,7 @@ export default function ProfessionalInfoTab(props: Props) {
               name="position"
               render={({ field, fieldState }) => {
                 return (
-                  <FormItem className="flex-1">
+                  <FormItem className="flex-1 w-full laptop:w-1/2">
                     <FormLabel
                       className={"font-normal text-[14px] text-secondary"}
                     >
@@ -478,12 +491,16 @@ export default function ProfessionalInfoTab(props: Props) {
               }}
             />
           </div>
-          <div className={"flex items-start justify-between gap-x-5"}>
+          <div
+            className={
+              "flex flex-col laptop:flex-row items-start justify-between gap-x-5"
+            }
+          >
             <FormField
               control={form.control}
               name={"joiningDate"}
               render={({ field, fieldState }) => (
-                <FormItem className="flex-1 w-1/2">
+                <FormItem className="flex-1 w-full laptop:w-1/2">
                   <FormLabel
                     className={"font-normal text-[14px] text-secondary"}
                   >
@@ -509,7 +526,7 @@ export default function ProfessionalInfoTab(props: Props) {
               disabled={true}
               name={"leavesHours"}
               render={({ field, fieldState }) => (
-                <FormItem className="flex-1 w-1/2">
+                <FormItem className="flex-1 w-full laptop:w-1/2">
                   <FormLabel
                     className={"font-normal text-[14px] text-secondary"}
                   >
@@ -531,7 +548,11 @@ export default function ProfessionalInfoTab(props: Props) {
               )}
             />
           </div>
-          <div className={"flex items-start justify-between gap-x-5"}>
+          <div
+            className={
+              "flex flex-col laptop:flex-row items-start justify-between gap-x-5"
+            }
+          >
             <FormField
               control={form.control}
               name="department"
@@ -559,13 +580,13 @@ export default function ProfessionalInfoTab(props: Props) {
             <div className="w-1/2" />
           </div>
           {props.mode === "create" && (
-            <div className="flex flex-1 justify-end items-end gap-x-4 ">
+            <div className="fixed bottom-[20px] laptop:bottom-[82px] right-0 laptop:right-[68px] left-0 laptop:left-auto flex flex-1 flex-col-reverse laptop:flex-row justify-end items-end gap-x-4 gap-y-3 mx-4 laptop:mx-0">
               <Button
                 onClick={onGoBack}
                 variant="outline"
                 // disabled={loading}
                 tabIndex={3}
-                className="w-[152px] h-[50px] font-normal border-border bg-white text-[14px] hover:bg-gray-100 rounded-lg"
+                className="w-full laptop:w-[152px] h-[50px] font-normal border-border bg-white text-[14px] hover:bg-gray-100 rounded-lg"
                 type="button"
               >
                 Back
@@ -573,7 +594,7 @@ export default function ProfessionalInfoTab(props: Props) {
               <Button
                 // disabled={loading}
                 tabIndex={3}
-                className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
+                className="w-full laptop:w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
                 type="submit"
               >
                 Create
@@ -585,7 +606,7 @@ export default function ProfessionalInfoTab(props: Props) {
               <Button
                 // disabled={loading}
                 tabIndex={3}
-                className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
+                className="w-full laptop:w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
                 type="submit"
               >
                 Save

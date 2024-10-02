@@ -79,7 +79,7 @@ export default function StyledStaffMasterTable(props: Props) {
       }}
       className="overflow-y-auto mobile:mt-[18px] laptop:mt-0 max-h-screen overscroll-none block rounded-sm w-full relative"
     >
-      <table className="overflow-y-none max-h-screen overscroll-none w-full border-separate border-spacing-0 relative">
+      <table className="overflow-y-none overscroll-x-none max-h-screen overscroll-none w-full border-separate border-spacing-0 relative">
         <thead className="border-border border-b sticky top-0">
           <tr className=" align-center bg-white ">
             <th
@@ -124,12 +124,12 @@ export default function StyledStaffMasterTable(props: Props) {
             </th>
           </tr>
         </thead>
-        <tbody className=" hide-scrollbar">
+        <tbody className="hide-scrollbar">
           {staffList.map((user: User, index: number) => {
             return (
               <tr
                 key={user?.id ? user?.id.toString() : String(index)}
-                className="align-center bg-white h-[52px]"
+                className="overflow-x-auto w-screen align-center h-[52px]"
               >
                 <td className="pl-2 w-[116px] text-start text-[16px] font-normal border-b border-[#F6F6F6]">
                   {user.idkey}
