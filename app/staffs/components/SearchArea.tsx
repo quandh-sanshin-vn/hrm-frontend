@@ -48,7 +48,7 @@ interface Props {
   loading: boolean;
 }
 export default function SearchArea(props: Props) {
-  const { setLoading, loading } = props;
+  const { setLoading } = props;
   const route = useRouter();
 
   const { updateStaffListData, updateSearchParams } = useStaffStore(
@@ -106,7 +106,7 @@ export default function SearchArea(props: Props) {
             <FormField
               control={form.control}
               name="staffName"
-              render={({ field, fieldState }) => (
+              render={({ field }) => (
                 <FormItem className="w-full laptop:w-[220px]">
                   <FormLabel className=" font-normal text-[16px]">
                     Employee Name:

@@ -1,3 +1,4 @@
+"use client";
 import IconEdit from "@/app/assets/icons/iconEdit.svg";
 import IconDetail from "@/app/assets/icons/iconViewDetail.svg";
 import DefaultImage from "@/app/assets/images/avatar_default.png";
@@ -6,7 +7,6 @@ import { GetStaffListUseCase } from "@/core/application/usecases/staff-master/ge
 import { User } from "@/core/entities/models/user.model";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import useWindowSize from "@/hooks/useWindowSize";
-import { useCommonStore } from "@/stores/commonStore";
 import { useStaffStore } from "@/stores/staffStore";
 import { STAFF_STATUS, STAFF_STATUS_WORKING } from "@/utilities/static-value";
 import Image from "next/image";
@@ -26,9 +26,6 @@ export default function StyledStaffMasterTable(props: Props) {
   const windowSize = useWindowSize();
   const router = useRouter();
   const staffList = useStaffStore((state) => state.staffList);
-  const { sidebarStatus, updateSideBarStatus } = useCommonStore(
-    (state) => state
-  );
 
   const {
     searchParams,
@@ -59,7 +56,9 @@ export default function StyledStaffMasterTable(props: Props) {
       setLoading(false);
     }
   };
-  const onClickColumnHeader = (columnName: string) => {};
+  const onClickColumnHeader = (columnName: string) => {
+    return columnName;
+  };
 
   return (
     <div
@@ -68,13 +67,13 @@ export default function StyledStaffMasterTable(props: Props) {
           windowSize.height -
           100 -
           52 -
-          (window.innerWidth > 1024 ? 150 : 256 + 18) -
+          (windowSize.width > 1024 ? 150 : 256 + 18) -
           20,
         minHeight:
           windowSize.height -
           100 -
           52 -
-          (window.innerWidth > 1024 ? 150 : 256 + 18) -
+          (windowSize.width > 1024 ? 150 : 256 + 18) -
           20,
         scrollbarWidth: "none",
       }}

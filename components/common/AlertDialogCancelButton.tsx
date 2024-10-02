@@ -17,7 +17,7 @@ interface Props {
   tabIndex: number;
 }
 export function AlertDialogCancelButton(props: Props) {
-  const { isEditing, setIsEditing } = useEditingStore((state) => state);
+  const { setIsEditing } = useEditingStore((state) => state);
   const onConfirmOK = async () => {
     setIsEditing(false);
   };

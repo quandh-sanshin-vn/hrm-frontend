@@ -4,9 +4,6 @@ import { AlertDialogCancelButton } from "@/components/common/AlertDialogCancelBu
 import { StyledDatePicker_v1 } from "@/components/common/StyledDatePicker_v1";
 import StyledOverlay from "@/components/common/StyledOverlay";
 import { Button } from "@/components/ui/button";
-import IconCamera from "../../assets/icons/iconCamera.svg";
-import AvatarDefault from "../../assets/images/avatar_default.png";
-import Image, { StaticImageData } from "next/image";
 import {
   Form,
   FormControl,
@@ -16,9 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { EditMyPageUseCase } from "@/core/application/usecases/my-page/editMyPage.usecase";
-import { ShowMyPageUseCase } from "@/core/application/usecases/my-page/showMyPage.usecase";
 import { AuthRepositoryImpl } from "@/core/infrastructure/repositories/auth.repo";
-import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import useWindowSize from "@/hooks/use-dimession";
 import useFocus from "@/hooks/use-focus";
 import { useToast } from "@/hooks/use-toast";
@@ -27,10 +22,13 @@ import { useUserStore } from "@/stores/userStore";
 import { DATE, formatStringToDate } from "@/utilities/format";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import Image, { StaticImageData } from "next/image";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
+import IconCamera from "../../assets/icons/iconCamera.svg";
+import AvatarDefault from "../../assets/images/avatar_default.png";
 
 const formSchema = z.object({
   fullname: z.string().trim(),
@@ -53,9 +51,6 @@ const formSchema = z.object({
   image: z.string().trim(),
 });
 
-const userRepo = new UserRepositoryImpl();
-const showMyPage = new ShowMyPageUseCase(userRepo);
-
 const authRepo = new AuthRepositoryImpl();
 const editMyPage = new EditMyPageUseCase(authRepo);
 
@@ -65,8 +60,8 @@ export default function PersonalInformationForm() {
   const useDimession = useWindowSize();
   const { user, setUser } = useUserStore((state) => state);
   const { isEditing, setIsEditing } = useEditingStore((state) => state);
-  const [isOpen, setIsOpen] = useState(true);
-  const { image, setImage, clearImage } = useFileStore();
+  // const [isOpen, setIsOpen] = useState(true);
+  const { image, setImage } = useFileStore();
   const [selectedImage, setSelectedImage] = useState<string | StaticImport>("");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false); // State to control modal visibility
   const [previewImage, setPreviewImage] = useState<
@@ -381,7 +376,7 @@ export default function PersonalInformationForm() {
                 <div className="fixed flex-col-reverse laptop:flex-row bottom-[26px] right-0 mobile:left-0 laptop:right-[27px]">
                   {isEditing && (
                     <div className="flex gap-2 laptop:gap-4 w-full flex-col-reverse laptop:flex-row justify-end">
-                      <AlertDialogCancelButton isOpen={isOpen} tabIndex={7} />
+                      <AlertDialogCancelButton isOpen={true} tabIndex={7} />
                       <Button
                         tabIndex={8}
                         className="laptop:w-[152px] mx-4 laptop:mx-0 h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"

@@ -1,4 +1,5 @@
 "use client";
+import StyledOverlay from "@/components/common/StyledOverlay";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,8 +12,12 @@ import { Input } from "@/components/ui/input";
 import { LoginUseCase } from "@/core/application/usecases/auth/signIn.usecase";
 import { AuthCredentials } from "@/core/entities/models/authCredentials.model";
 import { AuthRepositoryImpl } from "@/core/infrastructure/repositories/auth.repo";
+import { useDetectDevice } from "@/hooks/use-detect-device";
+import { toast } from "@/hooks/use-toast";
+import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/utilities/static-value";
 import { EMAIL_REGEX } from "@/utilities/validate";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { getCookie, setCookie } from "cookies-next";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -22,13 +27,6 @@ import iconEyeOn from "../assets/icons/iconEye.png";
 import iconEyeOff from "../assets/icons/iconEyeOff.png";
 import profilePic from "../assets/images/bgLogin.png";
 import loginLogo from "../assets/logo/loginLogo.png";
-import { getCookie, setCookie } from "cookies-next";
-import { ACCESS_TOKEN_KEY, REFRESH_TOKEN_KEY } from "@/utilities/static-value";
-import { toast } from "@/hooks/use-toast";
-import StyledOverlay from "@/components/common/StyledOverlay";
-import { useCommonStore } from "@/stores/commonStore";
-import useWindowSize from "@/hooks/useWindowSize";
-import { useDetectDevice } from "@/hooks/use-detect-device";
 
 const authRepo = new AuthRepositoryImpl();
 const loginUseCase = new LoginUseCase(authRepo);
@@ -51,7 +49,6 @@ const formSchema = z.object({
 const LoginPage = () => {
   const [hidePassword, setHidePassword] = useState(true);
   const [loading, setLoading] = useState(false);
-  const { updateSideBarState } = useCommonStore((state) => state);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

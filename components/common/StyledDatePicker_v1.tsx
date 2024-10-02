@@ -21,8 +21,8 @@ interface Props {
   tabIndex?: number;
 }
 export function StyledDatePicker_v1(props: Props) {
-  const { field, title } = props;
-  const { isEditing, setIsEditing } = useEditingStore((state) => state);
+  const { field } = props;
+  const { isEditing } = useEditingStore((state) => state);
 
   return (
     <Popover>

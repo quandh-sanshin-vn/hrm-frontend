@@ -1,5 +1,4 @@
 import IconTrash from "@/app/assets/icons/iconTrash.svg";
-import StyledOverlay from "@/components/common/StyledOverlay";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +12,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { User } from "@/core/entities/models/user.model";
 import Image from "next/image";
-import { useState } from "react";
 
 interface Props {
   user: User;
@@ -21,8 +19,8 @@ interface Props {
   onConfirm?(): void;
 }
 export function ALertDialogDeleteStaff(props: Props) {
-  const { user, onClose = () => {}, onConfirm = () => {} } = props;
-  const [loading, setLoading] = useState(false);
+  const { user, onConfirm = () => {} } = props;
+  // const [loading, setLoading] = useState(false);
 
   const onConfirmDelete = async () => {
     onConfirm();
@@ -30,7 +28,7 @@ export function ALertDialogDeleteStaff(props: Props) {
 
   return (
     <AlertDialog>
-      <StyledOverlay isVisible={loading} />
+      {/* <StyledOverlay isVisible={loading} /> */}
       <AlertDialogTrigger asChild>
         <Image
           alt="Delete"

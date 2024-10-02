@@ -1,3 +1,4 @@
+"use client";
 import { useCommonStore } from "@/stores/commonStore";
 import { useEffect, useState } from "react";
 import useWindowSize from "./useWindowSize";

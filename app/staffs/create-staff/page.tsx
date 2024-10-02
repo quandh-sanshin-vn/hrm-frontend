@@ -1,21 +1,19 @@
 "use client";
+import IconUserWhite from "@/app/assets/icons/iconUserWhite.svg";
 import SideBarComponent from "@/components/common/SideBarComponent";
 import StyledHeader from "@/components/common/StyledHeader";
-import StyledOverlay from "@/components/common/StyledOverlay";
 import useWindowSize from "@/hooks/useWindowSize";
-import React, { useState } from "react";
-import StyledUserInfoTab from "../components/StyledUserInfoTab";
-import IconUserWhite from "@/app/assets/icons/iconUserWhite.svg";
 import Image from "next/image";
+import StyledUserInfoTab from "../components/StyledUserInfoTab";
 
 export default function CreateStaffScreen() {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const windowSize = useWindowSize();
 
   return (
     <div className="w-full flex ">
       <SideBarComponent />
-      <StyledOverlay isVisible={loading} />
+      {/* <StyledOverlay isVisible={loading} /> */}
       <div className="w-full max-h-screen block bg-white  ">
         <StyledHeader />
         <div
@@ -52,14 +50,6 @@ export default function CreateStaffScreen() {
               <StyledUserInfoTab mode={"create"} />
             </div>
           </div>
-          {/* <SearchArea loading setLoading={setLoading} />
-            <StyledStaffMasterTable />
-            <StyledPagination
-              totalItems={staffList?.length || 0}
-              itemsPerPage={ITEM_PER_PAGE}
-              currentPage={page}
-              onPageChange={setPage}
-            /> */}
         </div>
       </div>
     </div>

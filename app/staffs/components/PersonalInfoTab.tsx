@@ -77,7 +77,6 @@ export default function PersonalInfoTab(props: Props) {
   const {
     updateStaffEditing,
     editingStaff,
-    staffList,
     selectedStaff,
     updateSelectedStaff,
   } = useStaffStore((state) => state);

@@ -14,12 +14,10 @@ import ChangePasswordActiveIcon from "../../assets/icons/iconLockActive.svg";
 import PersonalIcon from "../../assets/icons/iconUser.svg";
 import PersonalActiveIcon from "../../assets/icons/iconUserActive.svg";
 import ChangePasswordForm from "./ChangePasswordForm";
-import useWindowSize from "@/hooks/use-dimession";
 
 export default function MyPageTab() {
   const [tab, changeTab] = useState("personal");
-  const { isEditing, setIsEditing } = useEditingStore((state) => state);
-  const useDimession = useWindowSize();
+  const { isEditing } = useEditingStore((state) => state);
 
   useEffect(() => {
     if (isEditing) {

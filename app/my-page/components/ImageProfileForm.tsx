@@ -1,6 +1,4 @@
-import StyledOverlay from "@/components/common/StyledOverlay";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import { useEditingStore, useFileStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
 import { StaticImport } from "next/dist/shared/lib/get-img-props";
@@ -12,15 +10,13 @@ import IconEmail from "../../assets/icons/iconGmail.svg";
 import AvatarDefault from "../../assets/images/avatar_default.png";
 
 const ImageProfileForm: React.FC = () => {
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
-  const { user, setUser } = useUserStore((state) => state);
+  const { user } = useUserStore((state) => state);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false); // State to control modal visibility
   const [previewImage, setPreviewImage] = useState<
     string | StaticImageData | null
   >(null); // State for the image URL to preview
   const { isEditing, setIsEditing } = useEditingStore((state) => state);
-  const { image, setImage } = useFileStore();
+  const { setImage } = useFileStore();
   const [selectedImage, setSelectedImage] = useState<string | StaticImport>("");
 
   useEffect(() => {
@@ -54,7 +50,7 @@ const ImageProfileForm: React.FC = () => {
 
   return (
     <>
-      {user ? (
+      {user && (
         <div className="laptop:flex flex-row justify-between items-center ml-3 hidden">
           <div className="flex items-center gap-4 p-4">
             <div
@@ -122,8 +118,6 @@ const ImageProfileForm: React.FC = () => {
             </Button>
           )}
         </div>
-      ) : (
-        <StyledOverlay isVisible={loading} />
       )}
 
       {/* Modal for image preview */}

@@ -115,14 +115,3 @@ export const checkDateInArray = (dateToCheck: Date, dateArray: Date[]) => {
     return isEqual(dateToCheck, date);
   });
 };
-
-export const updateIsSpecialDay = () => {
-  const dateSet = new Set(dateArray);
-
-  workDays.forEach((day) => {
-    // Kiểm tra nếu date của day có trong dateSet
-    if (dateSet.has(day.date)) {
-      day.isSpecial = true; // Đổi isSpecial thành true
-    }
-  });
-};

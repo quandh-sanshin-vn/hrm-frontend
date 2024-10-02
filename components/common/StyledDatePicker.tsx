@@ -22,7 +22,7 @@ interface Props {
   disabled?: boolean;
 }
 export function StyledDatePicker(props: Props) {
-  const { field, title, disabled = false } = props;
+  const { field, disabled = false } = props;
   return (
     <Popover>
       <PopoverTrigger

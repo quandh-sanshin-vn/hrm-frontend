@@ -52,7 +52,9 @@ export default function Months(props: Props) {
       </p>
       <div className={"flex flex-1 h-full gap-x-2  w-full"}>
         {monthData.columns.map((col: WeekColumnProps) => {
-          return <WeekColumn title={col.title} date={col.date} />;
+          return (
+            <WeekColumn key={col.title} title={col.title} date={col.date} />
+          );
         })}
       </div>
     </div>

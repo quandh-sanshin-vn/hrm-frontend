@@ -4,16 +4,12 @@ import IconUserWhite from "@/app/assets/icons/iconUserWhite.svg";
 import SideBarComponent from "@/components/common/SideBarComponent";
 import StyledAvatarUser from "@/components/common/StyledAvatarUser";
 import StyledHeader from "@/components/common/StyledHeader";
-import StyledOverlay from "@/components/common/StyledOverlay";
 import useWindowSize from "@/hooks/useWindowSize";
-import Image from "next/image";
-import { useState } from "react";
-import StyledUserInfoTab from "../../components/StyledUserInfoTab";
 import { useStaffStore } from "@/stores/staffStore";
-import { Button } from "@/components/ui/button";
+import Image from "next/image";
+import StyledUserInfoTab from "../../components/StyledUserInfoTab";
 
 export default function EditStaffScreen() {
-  const [loading, setLoading] = useState(false);
   const windowSize = useWindowSize();
 
   const { selectedStaff } = useStaffStore((state) => state);
@@ -21,7 +17,6 @@ export default function EditStaffScreen() {
   return (
     <div className="w-full flex ">
       <SideBarComponent />
-      <StyledOverlay isVisible={loading} />
       <div className="w-full max-h-screen block bg-white p-5  ">
         <StyledHeader />
         <div

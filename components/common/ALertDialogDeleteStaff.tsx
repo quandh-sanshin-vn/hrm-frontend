@@ -16,7 +16,6 @@ import { User } from "@/core/entities/models/user.model";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import { toast } from "@/hooks/use-toast";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import StyledOverlay from "./StyledOverlay";
 

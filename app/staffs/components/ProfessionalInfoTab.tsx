@@ -114,7 +114,6 @@ export default function ProfessionalInfoTab(props: Props) {
     updateStaffEditing,
     updateSelectedStaff,
     editingStaff,
-    staffList,
     selectedStaff,
   } = useStaffStore((state) => state);
 

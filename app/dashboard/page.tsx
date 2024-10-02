@@ -5,12 +5,9 @@ import SideBarComponent from "@/components/common/SideBarComponent";
 import StyledHeader from "@/components/common/StyledHeader";
 import StyledOverlay from "@/components/common/StyledOverlay";
 import { GetDayOffListUseCase } from "@/core/application/usecases/schedule/getDayOffList";
-import { DayOff } from "@/core/entities/models/dayoff.model";
 import { ScheduleRepositoryImpl } from "@/core/infrastructure/repositories/schedule.repo";
 import { useDetectDevice } from "@/hooks/use-detect-device";
 import { useScheduleStore } from "@/stores/scheduleStore";
-import { useUserStore } from "@/stores/userStore";
-import { formatStringToDate } from "@/utilities/format";
 import { getYear } from "date-fns";
 import { useEffect, useState } from "react";
 const scheduleRepo = new ScheduleRepositoryImpl();
@@ -18,9 +15,7 @@ const getDayOffListUseCase = new GetDayOffListUseCase(scheduleRepo);
 
 function MainScreen() {
   const [loading, setLoading] = useState(false);
-  const { dayOffList, updateDayOffListData } = useScheduleStore(
-    (state) => state
-  );
+  const { updateDayOffListData } = useScheduleStore((state) => state);
   useDetectDevice();
   useEffect(() => {
     onFirstLoad();

@@ -17,7 +17,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useCommonStore } from "@/stores/commonStore";
 import { Check } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 export const options: Option[] = [
   { id: 1, name: "Apple" },

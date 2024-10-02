@@ -1,12 +1,10 @@
+import { AlertDialogLogoutButton } from "@/components/common/AlertDialogLogoutButton";
+import { useCommonStore } from "@/stores/commonStore";
+import { isMorningTime } from "@/utilities/helper";
 import Image from "next/image";
-import React, { useState } from "react";
+import AppsIcon from "../../app/assets/icons/iconApps.svg";
 import GoodMorningIcon from "../../app/assets/icons/iconSunrise.png";
 import GoodAfternoonIcon from "../../app/assets/icons/iconSunset.png";
-import AppsIcon from "../../app/assets/icons/iconApps.svg";
-import { isMorningTime } from "@/utilities/helper";
-import ToggleIcon from "../../app/assets/icons/iconToggleSideBar.png";
-import { useCommonStore } from "@/stores/commonStore";
-import { AlertDialogLogoutButton } from "@/components/common/AlertDialogLogoutButton";
 
 export default function StyledHeader() {
   // const [isOpen, setIsOpen] = useState(true);

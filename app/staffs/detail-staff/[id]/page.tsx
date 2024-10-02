@@ -4,17 +4,15 @@ import IconUserWhite from "@/app/assets/icons/iconUserWhite.svg";
 import SideBarComponent from "@/components/common/SideBarComponent";
 import StyledAvatarUser from "@/components/common/StyledAvatarUser";
 import StyledHeader from "@/components/common/StyledHeader";
-import StyledOverlay from "@/components/common/StyledOverlay";
-import useWindowSize from "@/hooks/useWindowSize";
-import Image from "next/image";
-import { useState } from "react";
-import StyledUserInfoTab from "../../components/StyledUserInfoTab";
-import { useStaffStore } from "@/stores/staffStore";
 import { Button } from "@/components/ui/button";
+import useWindowSize from "@/hooks/useWindowSize";
+import { useStaffStore } from "@/stores/staffStore";
+import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
+import StyledUserInfoTab from "../../components/StyledUserInfoTab";
 
 export default function DetailStaffScreen() {
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const windowSize = useWindowSize();
   const router = useRouter();
   const params = useParams();
@@ -26,7 +24,7 @@ export default function DetailStaffScreen() {
   return (
     <div className="w-full flex ">
       <SideBarComponent />
-      <StyledOverlay isVisible={loading} />
+      {/* <StyledOverlay isVisible={loading} /> */}
       <div className="w-full max-h-screen block bg-white p-5  ">
         <StyledHeader />
         <div

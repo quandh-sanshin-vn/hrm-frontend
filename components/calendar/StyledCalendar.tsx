@@ -19,11 +19,8 @@ export default function StyledCalendar(props: Props) {
 
   const [selectedYear, setSelectedYear] = useState(getYear(new Date()));
   const [selectedMonth, setSelectedMonth] = useState(getMonth(new Date()) + 1);
-  const [selectedDay, setSelectedDay] = useState(new Date());
 
-  const { updateDayOffListData, dayOffList } = useScheduleStore(
-    (state) => state
-  );
+  const { dayOffList } = useScheduleStore((state) => state);
 
   console.log("------------", selectedYear);
 
@@ -52,7 +49,7 @@ export default function StyledCalendar(props: Props) {
     if (selectedMonth <= 1) return;
     setSelectedMonth((pre) => pre - 1);
   };
-  const onSelectDay = () => {};
+  // const onSelectDay = () => {};
 
   const onSelectToday = () => {
     setSelectedMonth(getMonth(new Date()) + 1);
@@ -113,8 +110,14 @@ export default function StyledCalendar(props: Props) {
       </div>
       <div className="border border-border ">
         {type == "fullyear" ? (
-          monthsArray.map((item) => {
-            return <Months monthIndex={item} year={selectedYear} />;
+          monthsArray.map((item, index) => {
+            return (
+              <Months
+                key={String(index)}
+                monthIndex={item}
+                year={selectedYear}
+              />
+            );
           })
         ) : (
           <Months

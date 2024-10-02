@@ -1,13 +1,11 @@
+import { useCommonStore } from "@/stores/commonStore";
 import { SIDEBAR_ITEMS } from "@/utilities/static-value";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import ToggleIcon from "../../app/assets/icons/iconToggleSideBar.png";
 import SideBarLogo from "../../app/assets/logo/logoSideBar.png";
-import AppsIcon from "../../app/assets/icons/iconApps.svg";
 import { AlertDialogLogoutButton } from "./AlertDialogLogoutButton";
 import SideBarItem, { SideBarItemProps } from "./SideBarItem";
-import { usePathname } from "next/navigation";
-import { useCommonStore } from "@/stores/commonStore";
 
 const SideBarComponent = () => {
   const { sidebarStatus, updateSideBarStatus } = useCommonStore();

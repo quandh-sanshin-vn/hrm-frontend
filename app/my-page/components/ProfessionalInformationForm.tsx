@@ -92,7 +92,7 @@ export default function ProfessionalInformationForm() {
     }
   };
 
-  const onSubmit = async (data: z.infer<typeof formSchema>) => {};
+  const onSubmit = async () => {};
 
   useEffect(() => {
     getMyPage();
@@ -119,7 +119,7 @@ export default function ProfessionalInformationForm() {
                   <FormField
                     control={form.control}
                     name={"idkey"}
-                    render={({ field, fieldState }) => {
+                    render={({ field }) => {
                       return (
                         <FormItem className={`w-full`}>
                           <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
@@ -143,7 +143,7 @@ export default function ProfessionalInformationForm() {
                   <FormField
                     control={form.control}
                     name={"status_working"}
-                    render={({ field, fieldState }) => {
+                    render={({ field }) => {
                       return (
                         <FormItem className={`w-full`}>
                           <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
@@ -167,7 +167,7 @@ export default function ProfessionalInformationForm() {
                   <FormField
                     control={form.control}
                     name={"department"}
-                    render={({ field, fieldState }) => {
+                    render={({ field }) => {
                       return (
                         <FormItem className={`w-full`}>
                           <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
@@ -191,7 +191,7 @@ export default function ProfessionalInformationForm() {
                   <FormField
                     control={form.control}
                     name={"started_at"}
-                    render={({ field, fieldState }) => {
+                    render={({ field }) => {
                       const formattedDate = field.value
                         ? new Date(field.value).toLocaleDateString("en-GB")
                         : "";
@@ -219,7 +219,7 @@ export default function ProfessionalInformationForm() {
                   <FormField
                     control={form.control}
                     name={"time_off_hours"}
-                    render={({ field, fieldState }) => {
+                    render={({ field }) => {
                       return (
                         <FormItem className={`w-full`}>
                           <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
@@ -245,7 +245,7 @@ export default function ProfessionalInformationForm() {
                   <FormField
                     control={form.control}
                     name={"username"}
-                    render={({ field, fieldState }) => {
+                    render={({ field }) => {
                       return (
                         <FormItem className={`w-full`}>
                           <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
@@ -269,7 +269,7 @@ export default function ProfessionalInformationForm() {
                   <FormField
                     control={form.control}
                     name={"email"}
-                    render={({ field, fieldState }) => {
+                    render={({ field }) => {
                       return (
                         <FormItem className={`w-full`}>
                           <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
@@ -293,7 +293,7 @@ export default function ProfessionalInformationForm() {
                   <FormField
                     control={form.control}
                     name={"position_name"}
-                    render={({ field, fieldState }) => {
+                    render={({ field }) => {
                       return (
                         <FormItem className={`w-full`}>
                           <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
@@ -317,7 +317,7 @@ export default function ProfessionalInformationForm() {
                   <FormField
                     control={form.control}
                     name={"ended_at"}
-                    render={({ field, fieldState }) => {
+                    render={({ field }) => {
                       const formattedDate = field.value
                         ? new Date(field.value).toLocaleDateString("en-GB")
                         : "";
