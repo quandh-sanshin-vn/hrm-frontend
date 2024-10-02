@@ -18,18 +18,19 @@ export default function StyledCalendar(props: Props) {
   const { type = "single" } = props;
 
   const [selectedYear, setSelectedYear] = useState(getYear(new Date()));
-  const [selectedMonth, setSelectedMonth] = useState(getMonth(new Date()));
+  const [selectedMonth, setSelectedMonth] = useState(getMonth(new Date()) + 1);
   const [selectedDay, setSelectedDay] = useState(new Date());
 
   const { updateDayOffListData, dayOffList } = useScheduleStore(
     (state) => state
   );
 
+  console.log("------------", selectedYear);
+
   const dayOffListFormatted = useMemo(() => {
     const data = dayOffList.map((item: DayOff) =>
       formatStringToDate(item.day_off || "")
     );
-    console.log("========dayOffList====", data);
     return data;
   }, [dayOffList]);
 

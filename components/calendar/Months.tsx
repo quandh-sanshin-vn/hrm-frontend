@@ -3,6 +3,7 @@ import WeekColumn, { WeekColumnProps } from "./WeekColumn";
 import { getMonthData } from "@/utilities/helper";
 import { format, getYear } from "date-fns";
 import { DATE } from "@/utilities/format";
+import { DateProps } from "./Day";
 
 export interface MonthProps {
   title: string;
@@ -27,18 +28,17 @@ export default function Months(props: Props) {
     const month = getMonthData(year, monthIndex);
 
     const dayOffString = dayOffs.map((item) => format(item, DATE));
-    console.log("-------dayOffString-------------", dayOffString);
 
-    month.columns.map((item: any) => {
-      item.date.forEach((day: any) => {});
-
-      const columnDateString = item.date.map((item) => {
-        return {};
+    const updateDayOffData = month.columns.map((item: any) => {
+      const columnDateString = item.date.map((item: DateProps) => {
+        return {
+          ...item,
+          isSpecial: dayOffString.includes(format(item.date, DATE)),
+        };
       });
-      console.log("-------columnDateString-------------", columnDateString);
-      console.log(item.date);
+      return { ...item, date: columnDateString };
     });
-    setMonthData(month);
+    setMonthData({ ...month, columns: updateDayOffData });
   };
 
   useEffect(() => {

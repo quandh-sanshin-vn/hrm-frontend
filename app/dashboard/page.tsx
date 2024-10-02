@@ -44,7 +44,7 @@ function MainScreen() {
     }
   };
   return (
-    <div className="flex">
+    <div className="flex max-h-screen">
       <SideBarComponent />
       <div className="block max-h-screen w-full">
         <StyledHeader />
