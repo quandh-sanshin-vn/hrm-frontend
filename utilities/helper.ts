@@ -10,9 +10,12 @@ import {
   eachDayOfInterval,
   format,
   eachMonthOfInterval,
+  subDays,
+  addDays,
+  isEqual,
 } from "date-fns";
-
-const isEqual = require("react-fast-compare");
+import { WEEKDAYS_TITLE } from "./static-value";
+import { DateProps } from "@/components/calendar/Day";
 
 const now = new Date();
 export const expirationDate = (expirationTime: number) =>
@@ -64,41 +67,40 @@ export const getDataOfYear = (year: number) => {
   console.log(months);
 };
 
-export const getDateOfMonth = () => {
-  const year = 2023; // Năm
-  const month = 9; // Tháng (0 = tháng 1, 1 = tháng 2, ..., 11 = tháng 12)
-
-  // Xác định ngày bắt đầu và kết thúc của tháng
-  const start = startOfMonth(new Date(year, month, 1));
-  const end = endOfMonth(new Date(year, month, 1));
-
-  // Lấy danh sách tất cả các ngày trong tháng
-  const datesInMonth = eachDayOfInterval({ start, end });
-
-  // Nhóm các ngày theo ngày trong tuần
-  const daysOfWeek = [
-    "Chủ Nhật",
-    "Thứ Hai",
-    "Thứ Ba",
-    "Thứ Tư",
-    "Thứ Năm",
-    "Thứ Sáu",
-    "Thứ Bảy",
-  ];
-
-  const monthDisplay = Array.from({ length: 7 }, () => []); // Mảng rỗng cho 7 ngày trong tuần
-
-  datesInMonth.forEach((date: Date | number | string) => {
-    // console.log("-------------", date);
-    const dayIndex = getDay(date); // Lấy chỉ số ngày trong tuần (0 - 6)
-    monthDisplay[dayIndex].push(format(date, "yyyy-MM-dd")); // Thêm ngày vào mảng tương ứng
+export const getMonthData = (year: number, month: number) => {
+  const start = new Date(year, month, 1);
+  const end = endOfMonth(start);
+  const firstDayOfWeek = subDays(start, getDay(start));
+  const lastDayOfWeek = addDays(end, 6 - getDay(end) + 7);
+  const daysInRange = eachDayOfInterval({
+    start: firstDayOfWeek,
+    end: lastDayOfWeek,
   });
-  console.log("----datesInMonth----------", datesInMonth);
-  // In kết quả
-  daysOfWeek.forEach((day, index) => {
-    console.log(`${day}: ${monthDisplay[index].join(", ")}`);
+  const columns: any = Array.from({ length: 7 }, () => ({
+    title: "",
+    date: [],
+  }));
+  const dayNames = WEEKDAYS_TITLE;
+  dayNames.forEach((name, index) => {
+    columns[index].title = name;
   });
-  console.log("----monthDisplay----------", monthDisplay);
+
+  daysInRange.forEach((day) => {
+    const dayIndex = getDay(day); // 0: CN, 1: T2, ..., 6: T7
+    const isSpecial = false; // Xác định nếu đây là ngày đặc biệt
+    const isDayOfOtherMonth = day.getMonth() !== month; // Kiểm tra nếu ngày thuộc tháng khác
+    const type = dayIndex === 0 || dayIndex === 6 ? "off" : "work";
+    columns[dayIndex].date.push({
+      date: day,
+      type,
+      isSpecial,
+      isDayOfOtherMonth,
+    });
+  });
+  return {
+    title: `Tháng ${month + 1}`, // Tháng bắt đầu từ 0
+    columns,
+  };
 };
 
 export const monthsOfYear = (year: number) => {
@@ -106,4 +108,21 @@ export const monthsOfYear = (year: number) => {
   const end = endOfYear(new Date(year, 0, 1));
   const months = eachMonthOfInterval({ start, end });
   console.log("months", months);
+};
+
+export const checkDateInArray = (dateToCheck: Date, dateArray: Date[]) => {
+  return dateArray.some((date) => {
+    return isEqual(dateToCheck, date);
+  });
+};
+
+export const updateIsSpecialDay = () => {
+  const dateSet = new Set(dateArray);
+
+  workDays.forEach((day) => {
+    // Kiểm tra nếu date của day có trong dateSet
+    if (dateSet.has(day.date)) {
+      day.isSpecial = true; // Đổi isSpecial thành true
+    }
+  });
 };

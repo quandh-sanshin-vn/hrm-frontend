@@ -11,7 +11,8 @@ import { SideBarItemProps } from "@/components/common/SideBarItem";
 export const ACCESS_TOKEN_KEY = "ACCESS_TOKEN_KEY";
 export const REFRESH_TOKEN_KEY = "REFRESH_TOKEN_KEY";
 export const ITEM_PER_PAGE = 10;
-
+export const WEEKDAYS_TITLE = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+export const monthsArray = Array.from({ length: 12 }, (_, index) => index);
 export interface CommonDataDropdown {
   value: string;
   name: string;

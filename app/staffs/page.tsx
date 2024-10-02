@@ -12,13 +12,13 @@ import { ITEM_PER_PAGE } from "@/utilities/static-value";
 import { useEffect, useState } from "react";
 import SearchArea from "./components/SearchArea";
 import StyledStaffMasterTable from "./components/StyledStaffMasterTable";
+const userRepo = new UserRepositoryImpl();
+const getStaffListUseCase = new GetStaffListUseCase(userRepo);
 
 export default function StaffScreen() {
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(1);
   const totalItems = useStaffStore((state) => state.totalItems);
-  const userRepo = new UserRepositoryImpl();
-  const getStaffListUseCase = new GetStaffListUseCase(userRepo);
   const windowSize = useWindowSize();
 
   const { searchParams, updateStaffListData, updateSearchParams } =

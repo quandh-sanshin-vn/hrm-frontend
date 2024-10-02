@@ -1,4 +1,4 @@
-import React from "react";
+import { isToday } from "date-fns";
 
 export interface DateProps {
   date: Date;
@@ -9,16 +9,23 @@ export interface DateProps {
 
 export default function Day(props: DateProps) {
   const { date, isSpecial = false, type, isDayOfOtherMonth = false } = props;
+
   return (
     <div
-      className={`relative h-4 aspect-square bg-white hover:bg-gray-100 rounded-full border border-border items-center justify-center ${
+      className={`relative flex flex-col h-8 w-8 hover:cursor-pointer ${
+        isToday(date) ? `bg-primary` : `bg-white`
+      } hover:bg-gray-200  rounded-full items-center justify-center ${
         isDayOfOtherMonth && "opacity-50"
       }`}
     >
       <p
-        className={`text-[14px] ${
-          type == "work" ? `text-black` : "text-red-500"
-        }`}
+        className={`text-[14px] font-semibold ${
+          isToday(date)
+            ? `text-white`
+            : type == "work"
+            ? `text-black`
+            : "text-red-500"
+        } hover:text-primary`}
       >
         {date.getDate().toString()}
       </p>
