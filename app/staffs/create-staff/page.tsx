@@ -32,7 +32,7 @@ export default function CreateStaffScreen() {
             }}
           >
             <div className="w-full laptop:w-[242px] h-[110px] border border-border rounded-md flex items-center justify-center flex-row laptop:flex-col">
-              <div className="flex h-full flex-1 items-center justify-start px-5 bg-primary w-full rounded-tl-md rounded-tr-md">
+              <div className="flex h-full flex-1 items-center justify-start px-5 bg-primary w-full rounded-tl-md rounded-tr-none laptop:rounded-tr-md rounded-bl-md laptop:rounded-bl-none">
                 <Image alt="" src={IconUserWhite} />
                 <p className="text-[16px] font-semibold text-white">Profile</p>
               </div>
