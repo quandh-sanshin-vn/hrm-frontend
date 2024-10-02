@@ -71,11 +71,22 @@ export const getMonthData = (year: number, month: number) => {
   const start = new Date(year, month, 1);
   const end = endOfMonth(start);
   const firstDayOfWeek = subDays(start, getDay(start));
-  const lastDayOfWeek = addDays(end, 6 - getDay(end) + 7);
-  const daysInRange = eachDayOfInterval({
+  const lastDayOfWeek = addDays(end, 6 - getDay(end));
+  let daysInRange = eachDayOfInterval({
     start: firstDayOfWeek,
     end: lastDayOfWeek,
   });
+  if (daysInRange.length <= 35 && daysInRange.length > 28) {
+    daysInRange = eachDayOfInterval({
+      start: firstDayOfWeek,
+      end: addDays(end, 6 - getDay(end) + 7),
+    });
+  } else if (daysInRange.length <= 28) {
+    daysInRange = eachDayOfInterval({
+      start: firstDayOfWeek,
+      end: addDays(end, 6 - getDay(end) + 14),
+    });
+  }
   const columns: any = Array.from({ length: 7 }, () => ({
     title: "",
     date: [],

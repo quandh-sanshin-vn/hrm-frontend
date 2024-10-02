@@ -10,6 +10,8 @@ import { useDetectDevice } from "@/hooks/use-detect-device";
 import { useScheduleStore } from "@/stores/scheduleStore";
 import { getYear } from "date-fns";
 import { useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
+
 const scheduleRepo = new ScheduleRepositoryImpl();
 const getDayOffListUseCase = new GetDayOffListUseCase(scheduleRepo);
 
@@ -17,6 +19,7 @@ function MainScreen() {
   const [loading, setLoading] = useState(false);
   const { updateDayOffListData } = useScheduleStore((state) => state);
   useDetectDevice();
+
   useEffect(() => {
     onFirstLoad();
   }, []);
@@ -38,15 +41,20 @@ function MainScreen() {
       setLoading(false);
     }
   };
+
   return (
-    <div className="flex max-h-screen">
+    <div className="flex flex-1 w-full h-full max-h-screen overflow-y-none overscroll-none">
       <SideBarComponent />
-      <div className="block max-h-screen w-full">
+      <div className="block w-full">
         <StyledHeader />
         <StyledOverlay isVisible={loading} />
-        <div className="px-4">
-          <p className=" font-semibold text-[20px]">Work Schedule Calendar </p>
-          <StyledCalendar type="single" />
+        <div className="px-4 w-full flex flex-col">
+          <p className=" font-semibold max-w-screen text-[20px]">
+            Work Schedule Calendar
+          </p>
+          <div className="flex flex-1 gap-x-2  max-h-screen w-full ">
+            <StyledCalendar type={isMobile ? "single" : "fullyear"} />
+          </div>
         </div>
       </div>
     </div>
