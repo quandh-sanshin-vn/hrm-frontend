@@ -63,8 +63,6 @@ export const getDataOfYear = (year: number) => {
     // Thêm ngày vào nhóm tương ứng
     months[month][dayOfWeek].push(format(date, "yyyy-MM-dd"));
   });
-
-  console.log(months);
 };
 
 export const getMonthData = (year: number, month: number) => {
@@ -118,7 +116,6 @@ export const monthsOfYear = (year: number) => {
   const start = startOfYear(new Date(year, 0, 1));
   const end = endOfYear(new Date(year, 0, 1));
   const months = eachMonthOfInterval({ start, end });
-  console.log("months", months);
 };
 
 export const checkDateInArray = (dateToCheck: Date, dateArray: Date[]) => {

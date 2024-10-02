@@ -1,5 +1,3 @@
-import { useScheduleStore } from "@/stores/scheduleStore";
-import { formatDateToString } from "@/utilities/format";
 import { isToday } from "date-fns";
 
 export interface DateProps {
@@ -11,8 +9,6 @@ export interface DateProps {
 
 export default function Day(props: DateProps) {
   const { date, isSpecial = false, type, isDayOfOtherMonth = false } = props;
-
-  const { dayOffList } = useScheduleStore();
 
   return (
     <div

@@ -1,14 +1,13 @@
-import { monthsArray } from "@/utilities/static-value";
-import React, { useMemo, useState } from "react";
-import Months from "./Months";
-import { getMonth, getYear } from "date-fns";
 import IconArrowLeft from "@/app/assets/icons/iconArrowLeft.svg";
-import Image from "next/image";
-import { Button } from "../ui/button";
 import { DayOff } from "@/core/entities/models/dayoff.model";
+import useWindowSize from "@/hooks/use-dimession";
 import { useScheduleStore } from "@/stores/scheduleStore";
 import { formatStringToDate } from "@/utilities/format";
-import useWindowSize from "@/hooks/use-dimession";
+import { getMonth, getYear } from "date-fns";
+import Image from "next/image";
+import { useMemo, useState } from "react";
+import { Button } from "../ui/button";
+import Months from "./Months";
 
 interface Props {
   type: "single" | "fullyear";

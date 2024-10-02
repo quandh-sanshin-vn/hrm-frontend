@@ -28,14 +28,13 @@ export default function Months(props: Props) {
 
   const formatDataForMonth = () => {
     const month = getMonthData(year, monthIndex);
-    console.log("----monthIndex------", monthIndex);
     const dayOffString = dayOffs.map((item) => format(item, DATE));
     const updateDayOffData = month.columns.map((item: any) => {
       const columnDateString = item.date.map((item: DateProps) => {
         const tempDate = dayOffList.find(
           (day) => day.day_off == format(item.date, DATE)
         );
-        let tempItem = {
+        const tempItem = {
           ...item,
           isSpecial: dayOffString.includes(format(item.date, DATE)),
         };

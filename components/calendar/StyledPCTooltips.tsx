@@ -9,7 +9,8 @@ import {
 interface Props {
   // type:
 }
-export default function StyledPCTooltips() {
+export default function StyledPCTooltips(props: Props) {
+  const {} = props;
   return (
     <TooltipProvider>
       <Tooltip>
