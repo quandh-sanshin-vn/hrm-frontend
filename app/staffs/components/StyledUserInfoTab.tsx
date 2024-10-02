@@ -20,16 +20,22 @@ export default function StyledUserInfoTab(props: Props) {
       value={tab}
       onValueChange={changeTab}
       defaultValue="personal"
-      className="flex flex-1 flex-col h-full w-full min-w-full rounded-md"
+      className="flex flex-1 flex-col h-full w-full min-w-full rounded-md mt-4 laptop:mt-0"
     >
-      <TabsList className="w-full justify-start border-b border-border rounded-none py-0">
-        <TabsTrigger value="personal" className="flex-col ">
+      <TabsList className="w-full justify-start laptop:border-b border-border rounded-none py-0 mobile:max-w-screen mobile:overflow-x-auto hide-scrollbar">
+        <TabsTrigger value="personal" className="flex-col px-0 laptop:px-3">
           <div className="flex items-center h-9">
-            {tab === "personal" ? (
-              <Image src={PersonalActiveIcon} alt="" className="h-6 w-6 mx-1" />
-            ) : (
-              <Image src={PersonalIcon} alt="" className="h-6 w-6 mx-1" />
-            )}
+            <div className="w-6 h-6 mr-1 laptop:mr-2">
+              {tab === "personal" ? (
+                <Image
+                  src={PersonalActiveIcon}
+                  alt=""
+                  className="h-6 w-6 mx-1"
+                />
+              ) : (
+                <Image src={PersonalIcon} alt="" className="h-6 w-6 mx-1" />
+              )}
+            </div>
             <p
               className="text-[16px] font-normal"
               style={{
@@ -37,7 +43,9 @@ export default function StyledUserInfoTab(props: Props) {
                 color: tab === "personal" ? "var(--primary)" : "black",
               }}
             >
-              Personal Information
+              {/* Personal Information */}
+              <span className="hidden laptop:flex">Personal Information</span>
+              <span className="laptop:hidden">Personal Info</span>
             </p>
           </div>
           <div
@@ -50,15 +58,21 @@ export default function StyledUserInfoTab(props: Props) {
         </TabsTrigger>
         <TabsTrigger value="professional" className="flex-col">
           <div className="flex items-center h-9">
-            {tab === "professional" ? (
-              <Image
-                src={ProfessionalActiveIcon}
-                alt=""
-                className="h-6 w-6 mx-1"
-              />
-            ) : (
-              <Image src={ProfessionalIcon} alt="" className="h-6 w-6 mx-1" />
-            )}
+            <div className="w-6 h-6 mr-1 laptop:mr-2">
+              {tab === "professional" ? (
+                <Image
+                  src={ProfessionalActiveIcon}
+                  alt=""
+                  className="h-6 w-6 laptop:mx-1"
+                />
+              ) : (
+                <Image
+                  src={ProfessionalIcon}
+                  alt=""
+                  className="h-6 w-6 laptop:mx-1"
+                />
+              )}
+            </div>
             <p
               className="text-[16px] font-normal"
               style={{
@@ -66,7 +80,11 @@ export default function StyledUserInfoTab(props: Props) {
                 color: tab === "professional" ? "var(--primary)" : "black",
               }}
             >
-              Professional Information
+              {/* Professional Information */}
+              <span className="hidden laptop:flex">
+                Professional Information
+              </span>
+              <span className="laptop:hidden">Professional Info</span>
             </p>
           </div>
 

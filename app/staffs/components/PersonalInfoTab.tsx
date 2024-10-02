@@ -232,15 +232,19 @@ export default function PersonalInfoTab(props: Props) {
             maxHeight: formMaxHeight,
             minHeight: formMaxHeight,
           }}
-          className=" flex flex-col space-y-4 mt-1  w-full p-5  rounded-md  overflow-y-auto hide-scrollbar"
+          className=" flex flex-col flex-1 space-y-4 mt-1  w-full p-2 laptop:p-5  rounded-md  overflow-y-auto hide-scrollbar"
         >
-          <div className={"flex items-start justify-between gap-x-5"}>
+          <div
+            className={
+              "flex flex-col laptop:flex-row items-start justify-between gap-x-5"
+            }
+          >
             <FormField
               control={form.control}
               name={"fullname"}
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
-                <FormItem className="w-1/2" tabIndex={1}>
+                <FormItem className="w-full laptop:w-1/2" tabIndex={1}>
                   <FormLabel
                     className={"font-normal text-[14px] text-secondary "}
                   >
@@ -265,7 +269,7 @@ export default function PersonalInfoTab(props: Props) {
               name={"phoneNumber"}
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
-                <FormItem className="w-1/2" tabIndex={2}>
+                <FormItem className="w-full laptop:w-1/2" tabIndex={2}>
                   <FormLabel
                     className={"font-normal text-[14px] text-secondary "}
                   >
@@ -286,12 +290,16 @@ export default function PersonalInfoTab(props: Props) {
               )}
             />
           </div>
-          <div className={"flex items-start justify-between gap-x-5 "}>
+          <div
+            className={
+              "flex flex-col laptop:flex-row items-start justify-between gap-x-5 "
+            }
+          >
             <FormField
               control={form.control}
               name={"dateOfBirth"}
               render={({ field, fieldState }) => (
-                <FormItem className="w-1/2" tabIndex={3}>
+                <FormItem className="w-full laptop:w-1/2" tabIndex={3}>
                   <FormLabel
                     className={"font-normal text-[14px] text-secondary "}
                   >
@@ -317,7 +325,7 @@ export default function PersonalInfoTab(props: Props) {
               name={"address"}
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
-                <FormItem className="w-1/2" tabIndex={4}>
+                <FormItem className="w-full laptop:w-1/2" tabIndex={4}>
                   <FormLabel
                     className={"font-normal text-[14px] text-secondary "}
                   >
@@ -338,13 +346,17 @@ export default function PersonalInfoTab(props: Props) {
               )}
             />
           </div>
-          <div className={"flex items-center justify-between gap-x-5 "}>
+          <div
+            className={
+              "flex flex-col laptop:flex-row items-center justify-between gap-x-5 "
+            }
+          >
             <FormField
               control={form.control}
               name={"country"}
               disabled={mode == "view"}
               render={({ field, fieldState }) => (
-                <FormItem className="w-1/2" tabIndex={5}>
+                <FormItem className="w-full laptop:w-1/2" tabIndex={5}>
                   <FormLabel
                     className={"font-normal text-[14px] text-secondary "}
                   >
@@ -367,11 +379,11 @@ export default function PersonalInfoTab(props: Props) {
             <div className="w-1/2" />
           </div>
           {props.mode == "create" && (
-            <div className="flex flex-1 justify-end items-end gap-x-4">
+            <div className="fixed bottom-[20px] laptop:bottom-[82px] right-0 laptop:right-[68px] left-0 laptop:left-auto flex flex-1 justify-end items-end gap-x-4 mx-4 laptop:mx-0">
               <Button
                 disabled={loading}
                 tabIndex={3}
-                className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
+                className="w-full laptop:w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
                 type="submit"
               >
                 Next
@@ -383,7 +395,7 @@ export default function PersonalInfoTab(props: Props) {
               <Button
                 disabled={loading}
                 tabIndex={3}
-                className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
+                className="w-full laptop:w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
                 type="submit"
               >
                 Save
