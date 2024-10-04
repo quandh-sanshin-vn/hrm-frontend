@@ -5,11 +5,12 @@ import Image from "next/image";
 import AppsIcon from "../../app/assets/icons/iconApps.svg";
 import GoodMorningIcon from "../../app/assets/icons/iconSunrise.png";
 import GoodAfternoonIcon from "../../app/assets/icons/iconSunset.png";
+import DefaultImage from "@/app/assets/images/avatar_default.png";
+import { useUserStore } from "@/stores/userStore";
 
 export default function StyledHeader() {
-  // const [isOpen, setIsOpen] = useState(true);
   const { sidebarStatus, updateSideBarStatus } = useCommonStore();
-
+  const { user } = useUserStore((state) => state);
   const toggleSidebar = () => {
     updateSideBarStatus(!sidebarStatus);
   };
@@ -40,6 +41,33 @@ export default function StyledHeader() {
       <div className="laptop:hidden">
         <AlertDialogLogoutButton isOpen={sidebarStatus} />
       </div>
+      {user && (
+        <div className="hidden laptop:flex flex-row items-center justify-start border border-border rounded-lg w-auto h-[50px] cursor-pointer mr-1">
+          <div className="flex items-center justify-center h-full aspect-square">
+            <Image
+              src={
+                user.image
+                  ? "http://192.168.1.171:8000" + user.image
+                  : DefaultImage
+              }
+              alt=""
+              className="object-cover rounded-lg w-10 h-10"
+              height={40}
+              width={40}
+            />
+          </div>
+          <div className="h-full flex flex-col items-start justify-center mr-3">
+            <p className="text-[#16151C] font-semibold text-[16px]">
+              {user.fullname}
+            </p>
+            <div className="flex items-center justify-center">
+              <p className="text-[#A2A1A8] font-normal text-[12px]">
+                {user.position_name}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
