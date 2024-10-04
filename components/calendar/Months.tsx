@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import WeekColumn, { WeekColumnProps } from "./WeekColumn";
-import { getMonthData } from "@/utilities/helper";
+import { checkMonthInThePast, getMonthData } from "@/utilities/helper";
 import { format, getMonth, getYear } from "date-fns";
 import { DATE } from "@/utilities/format";
 import { DateProps } from "./Day";
@@ -53,7 +53,7 @@ export default function Months(props: Props) {
   }, [dayOffs, year, monthIndex]);
 
   const isPastMonth = useMemo(
-    () => monthIndex < getMonth(new Date()),
+    () => checkMonthInThePast(year, monthIndex),
     [year, monthIndex]
   );
 

@@ -1,26 +1,63 @@
+import { GetDayOffListParams } from "@/apis/modules/schedule";
 import IconArrowLeft from "@/app/assets/icons/iconArrowLeft.svg";
+import { GetDayOffListUseCase } from "@/core/application/usecases/schedule/getDayOffList.usecase";
 import { DayOff } from "@/core/entities/models/dayoff.model";
+import { ScheduleRepositoryImpl } from "@/core/infrastructure/repositories/schedule.repo";
 import useWindowSize from "@/hooks/use-dimession";
 import { useScheduleStore } from "@/stores/scheduleStore";
 import { formatStringToDate } from "@/utilities/format";
 import { getMonth, getYear } from "date-fns";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "../ui/button";
 import Months from "./Months";
+import StyledOverlay from "../common/StyledOverlay";
 
 interface Props {
   type: "single" | "fullyear";
   year?: number;
   month?: number;
 }
+
+const scheduleRepo = new ScheduleRepositoryImpl();
+const getDayOffListUseCase = new GetDayOffListUseCase(scheduleRepo);
+
 export default function StyledCalendar(props: Props) {
   const { type = "single" } = props;
+  const [loading, setLoading] = useState(false);
 
   const [selectedYear, setSelectedYear] = useState(getYear(new Date()));
   const [selectedMonth, setSelectedMonth] = useState(getMonth(new Date()));
+  const { dayOffList, updateDayOffListData, reload, updateReload } =
+    useScheduleStore((state) => state);
 
-  const { dayOffList } = useScheduleStore((state) => state);
+  useEffect(() => {
+    onFirstLoad();
+  }, []);
+
+  useEffect(() => {
+    if (reload) {
+      onFirstLoad();
+      updateReload(false);
+    }
+  }, [reload]);
+
+  const onFirstLoad = async () => {
+    try {
+      setLoading(true);
+      const params: GetDayOffListParams = {
+        current_year: getYear(new Date()),
+        country: "VN",
+      };
+      const response = await getDayOffListUseCase.execute(params);
+      if (!response?.data?.day_offs && response?.data.day_offs.length === 0)
+        return;
+      updateDayOffListData(response?.data?.day_offs || []);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const dayOffListFormatted = useMemo(() => {
     const data = dayOffList.map((item: DayOff) =>
@@ -47,7 +84,6 @@ export default function StyledCalendar(props: Props) {
     if (selectedMonth <= 0) return;
     setSelectedMonth((pre) => pre - 1);
   };
-  // const onSelectDay = () => {};
 
   const onSelectToday = () => {
     setSelectedMonth(getMonth(new Date()));
@@ -64,6 +100,8 @@ export default function StyledCalendar(props: Props) {
       }}
       className=" overflow-y-auto flex flex-1 flex-col"
     >
+      <StyledOverlay isVisible={loading} />
+
       <div className="flex items-center justify-start gap-x-4 py-3">
         <p className=" flex laptop:hidden text-[14px] font-normal text-secondary">
           Year

@@ -53,8 +53,8 @@ const LoginPage = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "dev4@gmail.com",
-      password: "Admin123",
+      username: "",
+      password: "",
     },
   });
   const router = useRouter();

@@ -1,5 +1,5 @@
-import React from "react";
-import Day, { DateProps } from "./Day";
+import { DateProps } from "./Day";
+import MobilePopoverOfDay from "./popover/MobilePopoverOfDay";
 
 export interface WeekColumnProps {
   title: string;
@@ -13,7 +13,7 @@ export default function WeekColumn(props: WeekColumnProps) {
       <div className={"flex flex-col gap-x-2 gap-y-1"}>
         {date.map((item: DateProps, index: number) => {
           return (
-            <Day
+            <MobilePopoverOfDay
               key={index.toString()}
               date={item.date}
               isSpecial={item.isSpecial}

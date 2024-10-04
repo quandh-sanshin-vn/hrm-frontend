@@ -1,9 +1,11 @@
 import { isToday } from "date-fns";
 
 export interface DateProps {
+  title?: string;
   date: Date;
   isSpecial?: boolean;
   type: "off" | "work";
+  description?: string;
   isDayOfOtherMonth?: boolean;
 }
 
