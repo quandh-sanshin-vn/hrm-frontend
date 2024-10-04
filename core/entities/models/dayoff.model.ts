@@ -4,7 +4,7 @@ export class DayOff {
     public title?: string,
     public description?: string,
     public day_off?: string,
-    public status?: string,
+    public status?: "0" | "1" | "none",
     public updated_at?: string
   ) {}
 }

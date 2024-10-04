@@ -10,6 +10,8 @@ import {
   isAfter,
   isBefore,
   isEqual,
+  startOfMonth,
+  startOfToday,
   startOfYear,
   subDays,
 } from "date-fns";
@@ -22,12 +24,21 @@ export const expirationDate = (expirationTime: number) =>
 // Kiểm tra nếu targetDate trước thời gian hiện tại
 export const isTargetBeforeCurrent = (targetDate: string | any) =>
   isBefore(new Date(targetDate), now);
+
 export const isTargetAfterCurrent = (targetDate: string | any) =>
   isAfter(new Date(targetDate), now);
 
 export const isMorningTime = () => {
   const hours = now.getHours();
   return hours < 12;
+};
+
+export const checkMonthInThePast = (year: number, monthIndex: number) => {
+  const dateToCheck = new Date(year, monthIndex, 1); // Ngày đầu tiên của tháng
+
+  const startOfCurrentMonth = startOfMonth(startOfToday());
+
+  return isBefore(startOfMonth(dateToCheck), startOfCurrentMonth);
 };
 
 export const commonIsEqual = (a: any, b: any) => {
