@@ -29,7 +29,7 @@ const SideBarComponent = () => {
       <div className="flex flex-col py-5 justify-between h-full items-center w-full">
         <div className="flex justify-center flex-col w-full rounded-xl h-full bg-re">
           <button
-            className="flex items-center justify-center border-b border-border h-10 rounded-none px-0"
+            className="flex items-center justify-center h-10 rounded-none px-0"
             onClick={toggleSidebar}
           >
             {sidebarStatus && (
