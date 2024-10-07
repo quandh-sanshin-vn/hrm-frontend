@@ -36,11 +36,7 @@ const formSchema = z.object({
     .trim()
     .min(8, { message: "Fullname must be at least 8 characters long" })
     .max(255, { message: "Fullname must be at most 255 characters long" }),
-  phone: z
-    .string()
-    .trim()
-    .min(10, { message: "Phone number must be exactly 10 characters" })
-    .max(10, { message: "Phone number must be exactly 10 characters" }),
+  phone: z.string().trim(),
   birth_day: z
     .union([z.string(), z.date()])
     .refine(
