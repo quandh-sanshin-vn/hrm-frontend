@@ -167,7 +167,7 @@ export default function StyledStaffMasterTable(props: Props) {
             </th>
             <th
               onClick={() => onClickColumnHeader("status")}
-              className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start min-w-[80px] w-[144px] hover:bg-gray-100 hover:cursor-pointer  border-b"
+              className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start min-w-[96px] w-[144px] hover:bg-gray-100 hover:cursor-pointer  border-b"
             >
               <StyledHeaderColumn
                 columnName={"Status"}
