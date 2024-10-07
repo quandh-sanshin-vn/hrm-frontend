@@ -153,11 +153,6 @@ export default function MobileEditDayForm(props: Props) {
     if (!enableEdit) return false;
     const isDirty =
       titleField.isDirty || descriptionField.isDirty || typeField.isDirty;
-    console.log(
-      titleField.isDirty,
-      descriptionField.isDirty,
-      typeField.isDirty
-    );
     return isDirty;
   }, [
     titleField.isDirty,

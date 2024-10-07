@@ -12,14 +12,13 @@ export class LoginUseCase {
   async execute(credentials: AuthCredentials): Promise<AuthToken | any> {
     const authData = await this.authRepo.signIn(credentials);
     if (authData?.token) {
-      // get user info here
-      // const user = await this.authRepository.getUser(token);
       return authData;
     }
     return {
-      message: authData.response.message,
-      code: authData.response.code,
+      message: authData.message,
+      code: authData.code,
       statusCode: authData.status,
+      data: authData.data,
     };
   }
 }

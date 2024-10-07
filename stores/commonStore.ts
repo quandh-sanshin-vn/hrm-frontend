@@ -17,7 +17,6 @@ interface CommonState {
   updateSideBarStatus: (positionData: boolean) => void;
   updatePositionData: (positionData: PositionProps[]) => void;
   updateDepartmentData: (departmentData: DepartmentProps[]) => void;
-  updateSideBarState: (sideBarState: boolean) => void
 }
 export const useCommonStore = create<CommonState>()(
   devtools(
@@ -33,8 +32,6 @@ export const useCommonStore = create<CommonState>()(
           set((state) => ({ ...state, positionData: positionData })),
         updateDepartmentData: (departmentData) =>
           set((state) => ({ ...state, departmentData: departmentData })),
-        updateSideBarState: (sideBarState) => 
-          set((state) => ({...state, sideBarState: sideBarState}))
       }),
 
       { name: "commonStore" }
@@ -63,4 +60,3 @@ export const useFileStore = create<FileStore>((set) => ({
   setImage: (file: File) => set({ image: file }),
   clearImage: () => set({ image: null }),
 }));
-

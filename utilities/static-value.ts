@@ -21,7 +21,7 @@ export interface CommonDataDropdown {
 export const STAFF_STATUS = [
   {
     value: "0",
-    name: "InActive",
+    name: "Inactive",
   },
   {
     value: "1",

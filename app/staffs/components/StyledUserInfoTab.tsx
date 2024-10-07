@@ -74,7 +74,7 @@ export default function StyledUserInfoTab(props: Props) {
               )}
             </div>
             <p
-              className="text-[16px] font-normal"
+              className="text-[16px] font-semibold"
               style={{
                 // fontWeight: tab === "professional" ? "700" : "400",
                 color: tab === "professional" ? "var(--primary)" : "black",

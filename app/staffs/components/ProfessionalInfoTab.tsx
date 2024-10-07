@@ -41,6 +41,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
+  idkey: z.string(),
   username: z
     .string({ message: "User Name is required" })
     .min(1, "User Name is required"),
@@ -289,7 +290,7 @@ export default function ProfessionalInfoTab(props: Props) {
           selectedStaff?.department || [],
           departmentData
         );
-
+        form.setValue("idkey", selectedStaff.idkey || "");
         if (selectedStaff?.username)
           form.setValue("username", selectedStaff?.username || "");
         if (selectedStaff?.email)
@@ -337,6 +338,40 @@ export default function ProfessionalInfoTab(props: Props) {
           }}
           className="flex flex-col space-y-4 mt-1 w-full p-2 laptop:p-5 rounded-md overflow-y-auto hide-scrollbar"
         >
+          {mode !== "create" && (
+            <div
+              className={
+                "flex flex-col laptop:flex-row items-start justify-between gap-x-5"
+              }
+            >
+              <FormField
+                control={form.control}
+                name={"idkey"}
+                disabled
+                render={({ field, fieldState }) => (
+                  <FormItem className="w-full laptop:w-1/2">
+                    <FormLabel
+                      className={"font-normal text-[14px] text-secondary"}
+                    >
+                      Employee ID
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        className=" border-b border-border h-10 rounded-none"
+                      />
+                    </FormControl>
+                    {fieldState.error?.message && (
+                      <p className={"text-red-500 text-[10px]"}>
+                        {fieldState.error?.message}
+                      </p>
+                    )}
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
+
           <div
             className={
               "flex flex-col laptop:flex-row items-start justify-between gap-x-5"

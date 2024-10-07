@@ -7,11 +7,13 @@ import StyledPagination from "@/components/common/StyledPagination";
 import { GetStaffListUseCase } from "@/core/application/usecases/staff-master/getUserList.usecase";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
 import useWindowSize from "@/hooks/useWindowSize";
+import { useCommonStore } from "@/stores/commonStore";
 import { useStaffStore } from "@/stores/staffStore";
 import { ITEM_PER_PAGE } from "@/utilities/static-value";
 import { useEffect, useState } from "react";
 import SearchArea from "./components/SearchArea";
 import StyledStaffMasterTable from "./components/StyledStaffMasterTable";
+import { isMobile } from "react-device-detect";
 const userRepo = new UserRepositoryImpl();
 const getStaffListUseCase = new GetStaffListUseCase(userRepo);
 
@@ -20,6 +22,8 @@ export default function StaffScreen() {
   const [page, setPage] = useState(1);
   const totalItems = useStaffStore((state) => state.totalItems);
   const windowSize = useWindowSize();
+
+  const { updateSideBarStatus } = useCommonStore();
 
   const { searchParams, updateStaffListData, updateSearchParams } =
     useStaffStore((state) => state);
@@ -40,6 +44,7 @@ export default function StaffScreen() {
 
   useEffect(() => {
     onFirstLoad();
+    if (isMobile) updateSideBarStatus(false);
   }, []);
 
   const onFirstLoad = async () => {

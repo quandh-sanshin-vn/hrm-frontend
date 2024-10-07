@@ -80,8 +80,6 @@ export default function StyledStaffMasterTable(props: Props) {
     "asc"
   );
 
-  console.log("-----------", currentSortedColumn, sortDirection);
-
   const onClickColumnHeader = async (sort_column: string) => {
     if (currentSortedColumn === sort_column) {
       const direction = sortDirection === "asc" ? "desc" : "asc";
@@ -125,10 +123,10 @@ export default function StyledStaffMasterTable(props: Props) {
           <tr className=" align-center bg-white ">
             <th
               onClick={() => onClickColumnHeader("idkey")}
-              className="text-[16px] text-gray-400 pl-2 font-medium align-center w-[136px] text-start hover:bg-gray-100 hover:cursor-pointer border-b "
+              className="text-[16px] text-gray-400 pl-2 font-medium align-center  w-[132px]  text-start hover:bg-gray-100 hover:cursor-pointer border-b "
             >
               <StyledHeaderColumn
-                columnName={isMobile ? "ID" : `Employee ID`}
+                columnName={isMobile ? `ID` : `Employee ID`}
                 columnNameId="idkey"
                 currentSortedColumnId={currentSortedColumn}
                 direction={sortDirection}
@@ -136,10 +134,10 @@ export default function StyledStaffMasterTable(props: Props) {
             </th>
             <th
               onClick={() => onClickColumnHeader("employee_name")}
-              className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start min-w-[80px] laptop:min-w-[260px] hover:bg-gray-100 hover:cursor-pointer  border-b"
+              className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start min-w-[260px] w-[260px] hover:bg-gray-100 hover:cursor-pointer  border-b"
             >
               <StyledHeaderColumn
-                columnName={isMobile ? "Employee" : `Employee Name`}
+                columnName={`Employee Name`}
                 columnNameId={"employee_name"}
                 currentSortedColumnId={currentSortedColumn}
                 direction={sortDirection}
@@ -148,7 +146,7 @@ export default function StyledStaffMasterTable(props: Props) {
             </th>
             <th
               onClick={() => onClickColumnHeader("position")}
-              className="hidden laptop:table-cell text-[16px] text-gray-400 pl-2 font-medium align-center text-start w-[200px] hover:bg-gray-100 hover:cursor-pointer  border-b"
+              className=" text-[16px] text-gray-400 pl-2 font-medium align-center text-start min-w-[120px] w-[200px] hover:bg-gray-100 hover:cursor-pointer  border-b"
             >
               <StyledHeaderColumn
                 columnName={"Position"}
@@ -159,7 +157,7 @@ export default function StyledStaffMasterTable(props: Props) {
             </th>
             <th
               onClick={() => onClickColumnHeader("status_working")}
-              className="hidden laptop:table-cell text-[16px] text-gray-400 pl-2 font-medium align-center text-start w-[200px] hover:bg-gray-100 hover:cursor-pointer  border-b"
+              className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start min-w-[160px] w-[200px] hover:bg-gray-100 hover:cursor-pointer  border-b"
             >
               <StyledHeaderColumn
                 columnName={"Status working"}
@@ -198,7 +196,7 @@ export default function StyledStaffMasterTable(props: Props) {
                   {user.idkey}
                 </td>
                 <td className="pl-2 min-w-[80px] laptop:min-w-[260px] border-b border-[#F6F6F6]">
-                  <div className="flex justify-center laptop:justify-start items-center laptop:gap-x-2">
+                  <div className="flex justify-start items-center laptop:gap-x-2">
                     <Image
                       alt=""
                       src={
@@ -206,19 +204,19 @@ export default function StyledStaffMasterTable(props: Props) {
                           ? DefaultImage
                           : "http://192.168.1.171:8000" + user.image
                       }
-                      className={" contain-size h-8 w-8 rounded-full"}
+                      className={"contain-size h-8 w-8 rounded-full"}
                       height={44}
                       width={44}
                     />
-                    <p className="hidden laptop:flex text-[16px] font-normal">
+                    <p className=" text-[16px] font-normal pl-2">
                       {user.fullname}
                     </p>
                   </div>
                 </td>
-                <td className="hidden laptop:table-cell pl-2 w-[200px] text-[16px] font-normal border-b border-[#F6F6F6]">
+                <td className="pl-2 w-[200px] text-[16px] font-normal border-b border-[#F6F6F6]">
                   {user.position_name}
                 </td>
-                <td className="hidden laptop:table-cell pl-2 w-[200px] text-[16px] font-normal border-b border-[#F6F6F6]">
+                <td className="pl-2 w-[200px] text-[16px] font-normal border-b border-[#F6F6F6]">
                   {
                     STAFF_STATUS_WORKING.find(
                       (item) => item.value == user.status_working

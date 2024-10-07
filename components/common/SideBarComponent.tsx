@@ -9,8 +9,6 @@ import SideBarItem, { SideBarItemProps } from "./SideBarItem";
 
 const SideBarComponent = () => {
   const { sidebarStatus, updateSideBarStatus } = useCommonStore();
-  // const [isOpen, setIsOpen] = useState(true);
-  // const { sideBarState, updateSideBarState } = useCommonStore((state) => state);
 
   const pathname = usePathname();
 
@@ -52,7 +50,6 @@ const SideBarComponent = () => {
                   iconActive={i.iconActive}
                   title={i.title}
                   route={i.route}
-                  sidebarOpenStatus={sidebarStatus}
                   pathname={`/${pathname.split("/")[1]}`}
                 />
               );

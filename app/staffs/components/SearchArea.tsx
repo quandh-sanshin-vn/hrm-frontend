@@ -139,7 +139,6 @@ export default function SearchArea(props: Props) {
                         <SelectTrigger
                           tabIndex={2}
                           className="border-border border "
-                          onFocus={() => console.log("Focused!")}
                         >
                           <SelectValue className="w-[256px]" />
                         </SelectTrigger>

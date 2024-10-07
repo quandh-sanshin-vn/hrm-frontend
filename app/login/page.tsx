@@ -76,21 +76,19 @@ const LoginPage = () => {
       };
       const response = await loginUseCase.execute(params);
       if (response.code === 1) {
-        // toast({
-        //   duration: 2000,
-        //   description: response.message,
-        //   color: "bg-red-100",
-        // });
         toast({
           duration: 2000,
-          description: "Invalid login credentials",
+          description: "The username or password you entered is incorrect",
           color: "bg-red-100",
         });
       } else {
         setCookie(ACCESS_TOKEN_KEY, response.token);
         setCookie(REFRESH_TOKEN_KEY, response.refreshToken);
-
-        // updateSideBarState(true);
+        toast({
+          duration: 2000,
+          description: "Login successfully",
+          color: "bg-blue-200",
+        });
 
         router.push("/dashboard");
       }
@@ -123,7 +121,7 @@ const LoginPage = () => {
           }}
         />
       </div>
-      <div className="h-screen bg-background laptop:w-1/3 mobile:w-full py-[52px] pr-5 px-5 laptop:px-0 ">
+      <div className="h-screen bg-background laptop:w-1/3 mobile:w-full py-[52px]  px-5 laptop:px-2 ">
         <div className="flex w-full items-center justify-center py-8 mt-10 ">
           <Image src={loginLogo} alt="Logo" objectFit="contain" />
         </div>
