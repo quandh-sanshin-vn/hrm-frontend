@@ -123,10 +123,10 @@ export default function StyledStaffMasterTable(props: Props) {
           <tr className=" align-center bg-white ">
             <th
               onClick={() => onClickColumnHeader("idkey")}
-              className="text-[16px] text-gray-400 pl-2 font-medium align-center  w-[132px]  text-start hover:bg-gray-100 hover:cursor-pointer border-b "
+              className="text-[16px] text-gray-400 pl-2 font-medium align-center min-w-[132px]  w-[132px]  text-start hover:bg-gray-100 hover:cursor-pointer border-b "
             >
               <StyledHeaderColumn
-                columnName={isMobile ? `ID` : `Employee ID`}
+                columnName={`Employee ID`}
                 columnNameId="idkey"
                 currentSortedColumnId={currentSortedColumn}
                 direction={sortDirection}
@@ -168,7 +168,7 @@ export default function StyledStaffMasterTable(props: Props) {
             </th>
             <th
               onClick={() => onClickColumnHeader("status")}
-              className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start w-[144px] hover:bg-gray-100 hover:cursor-pointer  border-b"
+              className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start min-w-[80px] w-[144px] hover:bg-gray-100 hover:cursor-pointer  border-b"
             >
               <StyledHeaderColumn
                 columnName={"Status"}
@@ -179,7 +179,7 @@ export default function StyledStaffMasterTable(props: Props) {
             </th>
             <th
               // onClick={() => onClickColumnHeader("status")}
-              className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start w-[112px] hover:bg-gray-100 hover:cursor-pointer  border-b"
+              className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start min-w-[112px]  w-[112px] hover:bg-gray-100 hover:cursor-pointer  border-b"
             >
               Action
             </th>
