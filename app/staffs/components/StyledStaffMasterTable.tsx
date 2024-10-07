@@ -12,6 +12,8 @@ import { STAFF_STATUS, STAFF_STATUS_WORKING } from "@/utilities/static-value";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import StyledTableStatusItem from "./StyledTableStatusItem";
+import StyledHeaderColumn from "@/components/common/StyledHeaderColumn";
+import { useEffect, useState } from "react";
 
 const userRepo = new UserRepositoryImpl();
 const getStaffListUseCase = new GetStaffListUseCase(userRepo);
@@ -56,9 +58,43 @@ export default function StyledStaffMasterTable(props: Props) {
       setLoading(false);
     }
   };
-  const onClickColumnHeader = (columnName: string) => {
-    return columnName;
+
+  const onReSearch = async (sort_by: string, direction: "ASC" | "DESC") => {
+    try {
+      let params = searchParams;
+      // params = { ...searchParams, sort_by, direction };
+      const response = await getStaffListUseCase.execute(params);
+      updateSearchParams(params);
+    } catch (error) {
+    } finally {
+    }
   };
+
+  const [currentSortedColumn, setCurrentSortedColumn] = useState("");
+
+  const [sortDirection, setSortDirection] = useState<"ASC" | "DESC" | "">(
+    "ASC"
+  );
+
+  const onClickColumnHeader = async (sort_column: string) => {
+    if (currentSortedColumn === sort_column) {
+      const direction = sortDirection === "ASC" ? "DESC" : "ASC";
+      onReSearch(sort_column, direction);
+      onReloadData;
+      setSortDirection(direction);
+    } else {
+      await onReSearch(sort_column, "ASC");
+      setCurrentSortedColumn(sort_column);
+      setSortDirection("ASC");
+    }
+  };
+
+  useEffect(() => {
+    if (!searchParams.sort_by) {
+      setCurrentSortedColumn("");
+      setSortDirection("");
+    }
+  }, [searchParams]);
 
   return (
     <div
@@ -86,9 +122,14 @@ export default function StyledStaffMasterTable(props: Props) {
               onClick={() => onClickColumnHeader("idkey")}
               className="text-[16px] text-gray-400 pl-2 font-medium align-center w-[116px] text-start hover:bg-gray-100 hover:cursor-pointer border-b "
             >
+              <StyledHeaderColumn
+                columnName={`Employee ID`}
+                columnNameId="accident_type_cd"
+                currentSortedColumnId={currentSortedColumn}
+                direction={sortDirection}
+              />
               <span className="hidden laptop:flex">Employee ID</span>
               <span className="laptop:hidden">ID</span>
-              {/* Employee ID */}
             </th>
             <th
               onClick={() => onClickColumnHeader("idkey")}

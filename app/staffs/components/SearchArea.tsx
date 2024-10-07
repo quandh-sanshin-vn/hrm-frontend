@@ -136,22 +136,28 @@ export default function SearchArea(props: Props) {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="border-border border ">
+                        <SelectTrigger
+                          tabIndex={2}
+                          className="border-border border "
+                          onFocus={() => console.log("Focused!")}
+                        >
                           <SelectValue className="w-[256px]" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="bg-white">
-                        {positionData.map((item: any) => {
-                          return (
-                            <SelectItem
-                              key={item.value}
-                              value={String(item.value)}
-                              className="h-8 hover:bg-gray-200 pl-6"
-                            >
-                              {item.name}
-                            </SelectItem>
-                          );
-                        })}
+                        {[{ value: "-1", name: "All" }, ...positionData].map(
+                          (item: any) => {
+                            return (
+                              <SelectItem
+                                key={item.value}
+                                value={String(item.value)}
+                                className="h-8 hover:bg-gray-200 pl-6"
+                              >
+                                {item.name}
+                              </SelectItem>
+                            );
+                          }
+                        )}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -171,7 +177,10 @@ export default function SearchArea(props: Props) {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="border-border border">
+                        <SelectTrigger
+                          tabIndex={3}
+                          className="border-border border"
+                        >
                           <SelectValue className=" border-border border w-[256px]" />
                         </SelectTrigger>
                       </FormControl>
@@ -209,7 +218,10 @@ export default function SearchArea(props: Props) {
                     defaultValue={field.value}
                   >
                     <FormControl>
-                      <SelectTrigger className="border-border border ">
+                      <SelectTrigger
+                        tabIndex={4}
+                        className="border-border border "
+                      >
                         <SelectValue className=" border-border border w-[256px]" />
                       </SelectTrigger>
                     </FormControl>
@@ -236,14 +248,14 @@ export default function SearchArea(props: Props) {
           </div>
           <div className="items-center gap-x-4 flex justify-end mt-4">
             <Button
-              tabIndex={3}
+              tabIndex={5}
               className="w-fit h-11 text-white text-[16px] hover:bg-primary-hover"
               type="submit"
             >
               Search
             </Button>
             <Button
-              tabIndex={3}
+              tabIndex={6}
               className="w-fit h-11 text-white text-[16px] hover:bg-primary-hover"
               type="button"
               onClick={onAddNewStaff}
