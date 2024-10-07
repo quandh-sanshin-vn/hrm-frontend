@@ -41,7 +41,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const formSchema = z.object({
-  idkey: z.string(),
+  idkey: z.string().trim().optional(),
   username: z
     .string({ message: "User Name is required" })
     .min(1, "User Name is required"),
@@ -121,12 +121,13 @@ export default function ProfessionalInfoTab(props: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      idkey: selectedStaff.idkey || "",
+      leavesHours: "0",
       // username: editingStaff?.username || "",
       // email: editingStaff?.email,
       // statusWorking: editingStaff?.status_working || "",
       // position: editingStaff?.position_id || "",
       // department: [],
-      leavesHours: "0",
     },
   });
 

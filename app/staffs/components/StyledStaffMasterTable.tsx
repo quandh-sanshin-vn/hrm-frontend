@@ -13,7 +13,6 @@ import { STAFF_STATUS, STAFF_STATUS_WORKING } from "@/utilities/static-value";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { isMobile } from "react-device-detect";
 import StyledTableStatusItem from "./StyledTableStatusItem";
 
 const userRepo = new UserRepositoryImpl();
