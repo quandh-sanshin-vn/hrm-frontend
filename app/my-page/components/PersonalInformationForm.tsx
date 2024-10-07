@@ -31,8 +31,16 @@ import IconCamera from "../../assets/icons/iconCamera.svg";
 import AvatarDefault from "../../assets/images/avatar_default.png";
 
 const formSchema = z.object({
-  fullname: z.string().trim(),
-  phone: z.string().trim(),
+  fullname: z
+    .string()
+    .trim()
+    .min(8, { message: "Fullname must be at least 8 characters long" })
+    .max(255, { message: "Fullname must be at most 255 characters long" }),
+  phone: z
+    .string()
+    .trim()
+    .min(10, { message: "Phone number must be exactly 10 characters" })
+    .max(10, { message: "Phone number must be exactly 10 characters" }),
   birth_day: z
     .union([z.string(), z.date()])
     .refine(
@@ -46,8 +54,16 @@ const formSchema = z.object({
       }
     )
     .transform((value) => new Date(value)),
-  address: z.string().trim(),
-  country: z.string().trim(),
+  address: z
+    .string()
+    .trim()
+    .min(1, { message: "Address must be at least 1 characters long" })
+    .max(255, { message: "Address must be at most 255 characters long" }),
+  country: z
+    .string()
+    .trim()
+    .min(1, { message: "Country must be at least 1 characters long" })
+    .max(255, { message: "Country must be at most 255 characters long" }),
   image: z.string().trim(),
 });
 
@@ -60,7 +76,6 @@ export default function PersonalInformationForm() {
   const useDimession = useWindowSize();
   const { user, setUser } = useUserStore((state) => state);
   const { isEditing, setIsEditing } = useEditingStore((state) => state);
-  // const [isOpen, setIsOpen] = useState(true);
   const { image, setImage } = useFileStore();
   const [selectedImage, setSelectedImage] = useState<string | StaticImport>("");
   const [isPreviewOpen, setIsPreviewOpen] = useState(false); // State to control modal visibility
@@ -229,7 +244,7 @@ export default function PersonalInformationForm() {
                             <FormControl>
                               <Input
                                 {...field}
-                                tabIndex={2}
+                                // tabIndex={}
                                 disabled
                                 className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full ${
                                   isEditing ? "hover:cursor-not-allowed" : ""
@@ -264,7 +279,7 @@ export default function PersonalInformationForm() {
                             <StyledDatePicker_v1
                               title=""
                               field={field}
-                              tabIndex={3}
+                              tabIndex={2}
                             />
                           </FormControl>
                           {isEditing && fieldState.error?.message && (
@@ -289,7 +304,7 @@ export default function PersonalInformationForm() {
                             <FormControl>
                               <Input
                                 {...field}
-                                tabIndex={4}
+                                tabIndex={3}
                                 disabled={!isEditing}
                                 className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full`}
                                 style={{ color: "#16151", opacity: 1 }}
@@ -347,7 +362,7 @@ export default function PersonalInformationForm() {
                           <FormControl>
                             <Input
                               {...field}
-                              tabIndex={6}
+                              tabIndex={1}
                               disabled={!isEditing}
                               className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full`}
                               style={{ color: "#16151", opacity: 1 }}
@@ -365,7 +380,7 @@ export default function PersonalInformationForm() {
                 </div>
                 {!isEditing && (
                   <Button
-                    tabIndex={7}
+                    tabIndex={6}
                     className="laptop:hidden h-[50px] mx-4 fixed bottom-[14px] right-0 left-0 font-normal text-white text-[16px] hover:bg-primary-hover rounded-lg"
                     type="button"
                     onClick={handleEdit}
@@ -378,7 +393,7 @@ export default function PersonalInformationForm() {
                     <div className="flex gap-2 laptop:gap-4 w-full flex-col-reverse laptop:flex-row justify-end">
                       <AlertDialogCancelButton isOpen={true} tabIndex={7} />
                       <Button
-                        tabIndex={8}
+                        tabIndex={6}
                         className="laptop:w-[152px] mx-4 laptop:mx-0 h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
                         type="submit"
                       >
