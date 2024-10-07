@@ -30,7 +30,7 @@ export default function StyledHeaderColumn(props: Props) {
     );
   }
   return (
-    <div className="flex items-start justify-start hover:cursor-pointer ">
+    <div className="flex items-center justify-start text-center hover:cursor-pointer ">
       {currentSortedColumnId !== columnNameId ? (
         <Image height={24} width={24} src={SortIcon} alt="" />
       ) : (
