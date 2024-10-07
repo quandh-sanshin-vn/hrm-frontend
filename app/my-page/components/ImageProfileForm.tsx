@@ -109,7 +109,7 @@ const ImageProfileForm: React.FC = () => {
 
           {!isEditing && (
             <Button
-              tabIndex={3}
+              tabIndex={6}
               className="w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg mr-11"
               type="button"
               onClick={handleEdit}

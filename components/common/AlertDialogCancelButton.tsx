@@ -29,6 +29,7 @@ export function AlertDialogCancelButton(props: Props) {
           tabIndex={props.tabIndex}
           className="laptop:w-[152px] mx-4 laptop:mx-0 h-[50px] font-normal bg-white text-[#16151C] text-[14px] border border-[#A2A1A8] hover:bg-gray-100 rounded-lg"
           type="button"
+          variant="outline"
         >
           Cancel
         </Button>
