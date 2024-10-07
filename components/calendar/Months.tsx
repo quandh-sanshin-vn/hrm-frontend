@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react";
-import WeekColumn, { WeekColumnProps } from "./WeekColumn";
-import { checkMonthInThePast, getMonthData } from "@/utilities/helper";
-import { format, getMonth, getYear } from "date-fns";
-import { DATE } from "@/utilities/format";
-import { DateProps } from "./Day";
 import { useScheduleStore } from "@/stores/scheduleStore";
+import { DATE } from "@/utilities/format";
+import { checkMonthInThePast, getMonthData } from "@/utilities/helper";
+import { format, getYear } from "date-fns";
+import { useEffect, useMemo, useState } from "react";
+import { DateProps } from "./Day";
+import WeekColumn, { WeekColumnProps } from "./WeekColumn";
 
 export interface MonthProps {
   title: string;

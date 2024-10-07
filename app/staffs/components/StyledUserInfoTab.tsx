@@ -37,7 +37,7 @@ export default function StyledUserInfoTab(props: Props) {
               )}
             </div>
             <p
-              className="text-[16px] font-normal"
+              className="text-[16px] font-semibold"
               style={{
                 // fontWeight: tab === "personal" ? "700" : "400",
                 color: tab === "personal" ? "var(--primary)" : "black",
@@ -49,7 +49,7 @@ export default function StyledUserInfoTab(props: Props) {
             </p>
           </div>
           <div
-            className="h-[2px] w-full  mt-1"
+            className="h-[4px] w-full "
             style={{
               backgroundColor:
                 tab === "personal" ? "var(--primary)" : "transparent",
@@ -89,7 +89,7 @@ export default function StyledUserInfoTab(props: Props) {
           </div>
 
           <div
-            className="h-[2px] w-full  mt-1"
+            className="h-[4px] w-full"
             style={{
               backgroundColor:
                 tab === "professional" ? "var(--primary)" : "transparent",

@@ -3,6 +3,7 @@ import IconEdit from "@/app/assets/icons/iconEdit.svg";
 import IconDetail from "@/app/assets/icons/iconViewDetail.svg";
 import DefaultImage from "@/app/assets/images/avatar_default.png";
 import { ALertDialogDeleteStaff } from "@/components/common/ALertDialogDeleteStaff";
+import StyledHeaderColumn from "@/components/common/StyledHeaderColumn";
 import { GetStaffListUseCase } from "@/core/application/usecases/staff-master/getUserList.usecase";
 import { User } from "@/core/entities/models/user.model";
 import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
@@ -11,9 +12,9 @@ import { useStaffStore } from "@/stores/staffStore";
 import { STAFF_STATUS, STAFF_STATUS_WORKING } from "@/utilities/static-value";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import StyledTableStatusItem from "./StyledTableStatusItem";
-import StyledHeaderColumn from "@/components/common/StyledHeaderColumn";
 import { useEffect, useState } from "react";
+import { isMobile } from "react-device-detect";
+import StyledTableStatusItem from "./StyledTableStatusItem";
 
 const userRepo = new UserRepositoryImpl();
 const getStaffListUseCase = new GetStaffListUseCase(userRepo);
@@ -59,33 +60,37 @@ export default function StyledStaffMasterTable(props: Props) {
     }
   };
 
-  const onReSearch = async (sort_by: string, direction: "ASC" | "DESC") => {
+  const onReSearch = async (sort_by: string, sort_order: "asc" | "desc") => {
     try {
+      setLoading(true);
       let params = searchParams;
-      // params = { ...searchParams, sort_by, direction };
+      params = { ...searchParams, sort_by, sort_order };
       const response = await getStaffListUseCase.execute(params);
       updateSearchParams(params);
+      updateStaffListData(response?.data, response?.totalItem || 0);
     } catch (error) {
     } finally {
+      setLoading(false);
     }
   };
 
   const [currentSortedColumn, setCurrentSortedColumn] = useState("");
 
-  const [sortDirection, setSortDirection] = useState<"ASC" | "DESC" | "">(
-    "ASC"
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc" | "">(
+    "asc"
   );
+
+  console.log("-----------", currentSortedColumn, sortDirection);
 
   const onClickColumnHeader = async (sort_column: string) => {
     if (currentSortedColumn === sort_column) {
-      const direction = sortDirection === "ASC" ? "DESC" : "ASC";
+      const direction = sortDirection === "asc" ? "desc" : "asc";
       onReSearch(sort_column, direction);
-      onReloadData;
       setSortDirection(direction);
     } else {
-      await onReSearch(sort_column, "ASC");
+      await onReSearch(sort_column, "asc");
       setCurrentSortedColumn(sort_column);
-      setSortDirection("ASC");
+      setSortDirection("asc");
     }
   };
 
@@ -120,45 +125,62 @@ export default function StyledStaffMasterTable(props: Props) {
           <tr className=" align-center bg-white ">
             <th
               onClick={() => onClickColumnHeader("idkey")}
-              className="text-[16px] text-gray-400 pl-2 font-medium align-center w-[116px] text-start hover:bg-gray-100 hover:cursor-pointer border-b "
+              className="text-[16px] text-gray-400 pl-2 font-medium align-center w-[136px] text-start hover:bg-gray-100 hover:cursor-pointer border-b "
             >
               <StyledHeaderColumn
-                columnName={`Employee ID`}
-                columnNameId="accident_type_cd"
+                columnName={isMobile ? "ID" : `Employee ID`}
+                columnNameId="idkey"
                 currentSortedColumnId={currentSortedColumn}
                 direction={sortDirection}
               />
-              <span className="hidden laptop:flex">Employee ID</span>
-              <span className="laptop:hidden">ID</span>
             </th>
             <th
-              onClick={() => onClickColumnHeader("idkey")}
+              onClick={() => onClickColumnHeader("employee_name")}
               className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start min-w-[80px] laptop:min-w-[260px] hover:bg-gray-100 hover:cursor-pointer  border-b"
             >
-              <span className="hidden laptop:flex">Employee Name</span>
-              <span className="laptop:hidden">Employee</span>
+              <StyledHeaderColumn
+                columnName={isMobile ? "Employee" : `Employee Name`}
+                columnNameId={"employee_name"}
+                currentSortedColumnId={currentSortedColumn}
+                direction={sortDirection}
+              />
               {/* Employee Name */}
             </th>
             <th
-              onClick={() => onClickColumnHeader("idkey")}
+              onClick={() => onClickColumnHeader("position")}
               className="hidden laptop:table-cell text-[16px] text-gray-400 pl-2 font-medium align-center text-start w-[200px] hover:bg-gray-100 hover:cursor-pointer  border-b"
             >
-              Position
+              <StyledHeaderColumn
+                columnName={"Position"}
+                columnNameId={"position"}
+                currentSortedColumnId={currentSortedColumn}
+                direction={sortDirection}
+              />
             </th>
             <th
-              onClick={() => onClickColumnHeader("idkey")}
+              onClick={() => onClickColumnHeader("status_working")}
               className="hidden laptop:table-cell text-[16px] text-gray-400 pl-2 font-medium align-center text-start w-[200px] hover:bg-gray-100 hover:cursor-pointer  border-b"
             >
-              Status Working
+              <StyledHeaderColumn
+                columnName={"Status working"}
+                columnNameId={"status_working"}
+                currentSortedColumnId={currentSortedColumn}
+                direction={sortDirection}
+              />
             </th>
             <th
-              onClick={() => onClickColumnHeader("idkey")}
+              onClick={() => onClickColumnHeader("status")}
               className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start w-[144px] hover:bg-gray-100 hover:cursor-pointer  border-b"
             >
-              Status
+              <StyledHeaderColumn
+                columnName={"Status"}
+                columnNameId={"status"}
+                currentSortedColumnId={currentSortedColumn}
+                direction={sortDirection}
+              />
             </th>
             <th
-              onClick={() => onClickColumnHeader("idkey")}
+              // onClick={() => onClickColumnHeader("status")}
               className="text-[16px] text-gray-400 pl-2 font-medium align-center text-start w-[112px] hover:bg-gray-100 hover:cursor-pointer  border-b"
             >
               Action

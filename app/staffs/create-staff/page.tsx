@@ -47,7 +47,7 @@ export default function CreateStaffScreen() {
                 maxHeight: windowSize.height - 100 - 40 - 48,
                 minHeight: windowSize.height - 100 - 40 - 48,
               }}
-              className="w-full  laptop:border border-border flex items-center justify-center flex-col rounded-md "
+              className="w-full   flex items-center justify-center flex-col rounded-md "
             >
               <StyledUserInfoTab mode={"create"} />
             </div>
