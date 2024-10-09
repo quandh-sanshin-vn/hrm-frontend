@@ -65,7 +65,7 @@ export default function DetailStaffScreen() {
               minHeight: windowSize.height - 100 - 40 - 120 - 20,
             }}
           >
-            <div className="w-full laptop:w-[242px] h-[110px] border border-border rounded-md flex items-center justify-center flex-row laptop:flex-col">
+            <div className="w-full laptop:w-[242px] h-[52px] laptop:h-[110px] border border-border rounded-md flex items-center justify-center flex-row laptop:flex-col">
               <div className="flex h-full py-3 laptop:py-0 flex-1 items-center justify-start px-5 bg-primary w-full rounded-tl-md rounded-tr-none laptop:rounded-tr-md rounded-bl-md laptop:rounded-bl-none">
                 <Image alt="" src={IconUserWhite} />
                 <p className="text-[16px] font-semibold text-white mx-2">
