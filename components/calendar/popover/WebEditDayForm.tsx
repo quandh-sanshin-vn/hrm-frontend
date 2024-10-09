@@ -34,6 +34,10 @@ import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import Day from "../Day";
+import { formatStringToDate } from "@/utilities/format";
+import { isTargetBeforeCurrent } from "@/utilities/helper";
+import { DialogDescription } from "@radix-ui/react-dialog";
 
 interface Props {
   dayType: "0" | "1" | "none";
@@ -43,7 +47,8 @@ interface Props {
   updatedAt: string;
   id: string;
   date: string;
-  onClosePopover(): void;
+  isDayOfOtherMonth?: boolean;
+  type: "off" | "work";
 }
 
 const FormSchema = z.object({
@@ -65,7 +70,7 @@ const scheduleRepo = new ScheduleRepositoryImpl();
 const createDayOff = new CreateDayOffUseCase(scheduleRepo);
 const updateDayOff = new UpdateDayOffUseCase(scheduleRepo);
 
-export default function MobileEditDayForm(props: Props) {
+export default function WebEditDayForm(props: Props) {
   const { mode } = props;
 
   const [enableEdit, setEnableEdit] = useState(mode == "create");
@@ -137,7 +142,7 @@ export default function MobileEditDayForm(props: Props) {
     } catch (error) {
     } finally {
       setLoading(false);
-      props.onClosePopover();
+      handleClose();
     }
   };
 
@@ -162,7 +167,7 @@ export default function MobileEditDayForm(props: Props) {
   ]);
 
   useEffect(() => {
-    if (mode === "edit") {
+    if (mode === "edit" && open) {
       form.setValue("title", props.title || "");
       form.setValue("desciption", props.dayDescription || "");
       form.setValue(
@@ -170,20 +175,24 @@ export default function MobileEditDayForm(props: Props) {
         props.dayType == "0" ? "0" : props.dayType == "1" ? "1" : "none"
       );
     }
-  }, [props.title, props?.dayDescription, props?.dayType]);
+  }, [props.title, props?.dayDescription, props?.dayType, open]);
 
   const handleClose = () => {
     setOpen(false);
   };
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="p-0 mx-0 w-full">
-        <Button
-          variant={"outline"}
-          className={"text-black border-border w-full"}
-        >
-          {mode == "create" ? "Create Information" : "Edit Information"}
-        </Button>
+      <DialogTrigger
+        disabled={isTargetBeforeCurrent(props.date)}
+        className="p-0 mx-0 w-full"
+      >
+        <Day
+          key={props.date.toString()}
+          date={formatStringToDate(props.date)}
+          isSpecial={props.mode == "edit"}
+          type={props.type}
+          isDayOfOtherMonth={props.isDayOfOtherMonth}
+        />
       </DialogTrigger>
       <DialogContent
         id="modal-content"
@@ -191,11 +200,11 @@ export default function MobileEditDayForm(props: Props) {
       >
         <DialogTitle></DialogTitle>
         {mode == "create" ? (
-          <DialogTitle className="text-[20px] font-semibold ">
-            Create infomation
-          </DialogTitle>
+          <DialogDescription className="text-[20px] font-semibold ">
+            {"Create infomation"}
+          </DialogDescription>
         ) : (
-          <div className="flex items-center  justify-start">
+          <DialogDescription className="flex items-center  justify-start">
             <DialogTitle className="text-[20px] font-semibold mr-2 ">
               Edit infomation
             </DialogTitle>
@@ -204,17 +213,17 @@ export default function MobileEditDayForm(props: Props) {
                 onClick={toggleEditStatus}
                 alt="Edit"
                 src={IconEdit}
-                className="h-4 aspect-square hover:cursor-pointer"
+                className="h-[20px] aspect-square hover:cursor-pointer"
               />
             ) : (
               <Image
                 onClick={toggleEditStatus}
                 alt="Edit"
                 src={IconEditing}
-                className="h-6 aspect-square hover:cursor-pointer "
+                className="h-[24px] aspect-square hover:cursor-pointer "
               />
             )}
-          </div>
+          </DialogDescription>
         )}
         <StyledOverlay isVisible={loading} />
         <Form {...form}>
