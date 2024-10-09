@@ -16,14 +16,17 @@ import {
   subDays,
 } from "date-fns";
 import { WEEKDAYS_TITLE } from "./static-value";
+import { formatStringToDate } from "./format";
 
 const now = new Date();
 export const expirationDate = (expirationTime: number) =>
   addSeconds(now, expirationTime);
 
 // Kiểm tra nếu targetDate trước thời gian hiện tại
-export const isTargetBeforeCurrent = (targetDate: string | any) =>
-  isBefore(new Date(targetDate), now);
+export const isTargetBeforeCurrent = (targetDate: string | any) => {
+  const parsedTargetDate = formatStringToDate(targetDate); // Parse the target date
+  return isBefore(parsedTargetDate, now); // Compare the two dates
+};
 
 export const isTargetAfterCurrent = (targetDate: string | any) =>
   isAfter(new Date(targetDate), now);

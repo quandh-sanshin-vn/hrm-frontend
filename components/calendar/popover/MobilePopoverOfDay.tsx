@@ -13,8 +13,8 @@ import { isTargetBeforeCurrent } from "@/utilities/helper";
 
 export default function MobilePopoverOfDay(props: DateProps) {
   const { date, isSpecial = false, type, isDayOfOtherMonth = false } = props;
-  const { dayOffList } = useScheduleStore((state) => state);
   const [open, setOpen] = useState(false);
+  const { dayOffList } = useScheduleStore((state) => state);
 
   const getDateInfo = useMemo(() => {
     return dayOffList.find(
@@ -25,9 +25,12 @@ export default function MobilePopoverOfDay(props: DateProps) {
   const handleClose = () => {
     setOpen(false);
   };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger disabled={isTargetBeforeCurrent(date)}>
+      <PopoverTrigger
+        disabled={isTargetBeforeCurrent(formatDateToString(date))}
+      >
         <Day
           key={date.toString()}
           date={date}
