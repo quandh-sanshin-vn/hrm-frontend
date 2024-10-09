@@ -1,11 +1,9 @@
-import { isMobile } from "react-device-detect";
-import Day, { DateProps } from "./Day";
-import MobilePopoverOfDay from "./popover/MobilePopoverOfDay";
-import { StyledTooltip } from "../common/StyledToolTip";
-import WebEditDayForm from "./popover/WebEditDayForm";
 import { useScheduleStore } from "@/stores/scheduleStore";
 import { formatDateToString } from "@/utilities/format";
-import { useMemo } from "react";
+import { isMobile } from "react-device-detect";
+import { DateProps } from "./Day";
+import MobilePopoverOfDay from "./popover/MobilePopoverOfDay";
+import WebEditDayForm from "./popover/WebEditDayForm";
 
 export interface WeekColumnProps {
   title: string;
