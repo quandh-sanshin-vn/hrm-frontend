@@ -58,8 +58,8 @@ const FormSchema = z.object({
     .min(10, {
       message: "Description must be at least 10 characters.",
     })
-    .max(200, {
-      message: "Description must not be longer than 100 characters.",
+    .max(255, {
+      message: "Description must not be longer than 255 characters.",
     }),
   type: z.enum(["0", "1", "none"], {
     required_error: "Type is required",
@@ -252,6 +252,7 @@ export default function WebEditDayForm(props: Props) {
                       <Input
                         {...field}
                         className=" border-b border-border rounded-none "
+                        maxLength={20}
                       />
                     </FormControl>
                     {fieldState.error?.message && (
@@ -277,6 +278,7 @@ export default function WebEditDayForm(props: Props) {
                       <Textarea
                         placeholder="Description"
                         className=" resize-none border border-border h-[200px] items-start justify-start bg-white rounded-sm "
+                        maxLength={255}
                         {...field}
                       />
                     </FormControl>

@@ -53,8 +53,8 @@ const FormSchema = z.object({
     .min(10, {
       message: "Description must be at least 10 characters.",
     })
-    .max(200, {
-      message: "Description must not be longer than 100 characters.",
+    .max(255, {
+      message: "Description must not be longer than 255 characters.",
     }),
   type: z.enum(["0", "1", "none"], {
     required_error: "Type is required",
@@ -243,6 +243,7 @@ export default function MobileEditDayForm(props: Props) {
                       <Input
                         {...field}
                         className=" border-b border-border rounded-none "
+                        maxLength={20}
                       />
                     </FormControl>
                     {fieldState.error?.message && (
@@ -268,6 +269,7 @@ export default function MobileEditDayForm(props: Props) {
                       <Textarea
                         placeholder="Description"
                         className=" resize-none border border-border h-[200px] items-start justify-start bg-white rounded-sm "
+                        maxLength={255}
                         {...field}
                       />
                     </FormControl>
@@ -337,7 +339,7 @@ export default function MobileEditDayForm(props: Props) {
                 </Button>
               </DialogClose>
               <Button
-                disabled={!isDirtyForm}
+                disabled={!enableEdit}
                 tabIndex={3}
                 className="w-full laptop:w-[152px] h-[50px] font-normal text-white text-[14px] hover:bg-primary-hover rounded-lg"
                 type="submit"
