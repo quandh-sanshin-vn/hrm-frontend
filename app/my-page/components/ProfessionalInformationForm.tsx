@@ -13,7 +13,9 @@ import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo
 import useWindowSize from "@/hooks/use-dimession";
 import useFocus from "@/hooks/use-focus";
 import { useToast } from "@/hooks/use-toast";
+import { useCommonStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
+import { STAFF_STATUS_WORKING } from "@/utilities/static-value";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -45,6 +47,7 @@ export default function ProfessionalInformationForm() {
   const useDimession = useWindowSize();
   const [loading, setLoading] = useState(false);
   const { user, setUser } = useUserStore((state) => state);
+  const { departmentData } = useCommonStore((state) => state);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -66,7 +69,7 @@ export default function ProfessionalInformationForm() {
   useEffect(() => {
     if (isFocus) {
       form.setValue("idkey", user?.idkey || "");
-      form.setValue("status_working", user?.status_working || "");
+      form.setValue("status_working", String(user?.status_working) || "");
       form.setValue("department", user?.department || []);
       form.setValue("time_off_hours", user?.time_off_hours || "");
       form.setValue("started_at", user?.started_at || "");
@@ -144,14 +147,20 @@ export default function ProfessionalInformationForm() {
                     control={form.control}
                     name={"status_working"}
                     render={({ field }) => {
+                      const selectedStatus =
+                        STAFF_STATUS_WORKING.find(
+                          (item) => String(item.value) === String(field.value)
+                        ) || STAFF_STATUS_WORKING[0];
+
                       return (
                         <FormItem className={`w-full`}>
                           <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
-                            Employee Type
+                            Status Working
                           </FormLabel>
                           <FormControl>
                             <Input
                               {...field}
+                              value={selectedStatus.name}
                               tabIndex={2}
                               disabled
                               className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full hover:cursor-not-allowed`}
@@ -168,6 +177,10 @@ export default function ProfessionalInformationForm() {
                     control={form.control}
                     name={"department"}
                     render={({ field }) => {
+                      const selectedDepartment =
+                        departmentData.find(
+                          (item) => String(item.id) === String(field)
+                        ) || departmentData[0];
                       return (
                         <FormItem className={`w-full`}>
                           <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
@@ -176,6 +189,7 @@ export default function ProfessionalInformationForm() {
                           <FormControl>
                             <Input
                               {...field}
+                              value={selectedDepartment.name}
                               tabIndex={2}
                               disabled
                               className={`text-[#16151C] text-base focus:ring-0 border-b p-0 border-none w-full hover:cursor-not-allowed`}
@@ -249,7 +263,7 @@ export default function ProfessionalInformationForm() {
                       return (
                         <FormItem className={`w-full`}>
                           <FormLabel className="text-[#A2A1A8] font-light text-[0.9rem]">
-                            User Name
+                            Username
                           </FormLabel>
                           <FormControl>
                             <Input
