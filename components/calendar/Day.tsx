@@ -53,7 +53,13 @@ export default function Day(props: DateProps) {
         >
           {date.getDate().toString()}
         </p>
-        {isSpecial && <div className={"w-1 h-1 rounded-full bg-primary"} />}
+        {isSpecial && (
+          <div
+            className={`w-1 h-1 rounded-full ${
+              isToday(date) ? `bg-white` : `bg-primary`
+            } `}
+          />
+        )}
       </div>
     </StyledTooltip>
   );
