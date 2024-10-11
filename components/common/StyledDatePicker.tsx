@@ -20,9 +20,10 @@ interface Props {
   field: any;
   tabIndex?: number;
   disabled?: boolean;
+  triggerClass?: string;
 }
 export function StyledDatePicker(props: Props) {
-  const { field, disabled = false } = props;
+  const { field, disabled = false, triggerClass } = props;
   return (
     <Popover>
       <PopoverTrigger
@@ -33,7 +34,8 @@ export function StyledDatePicker(props: Props) {
         <Button
           className={cn(
             "w-full h-10 justify-end text-left px-0 bg-white font-normal border-b border-border rounded-none disabled:opacity-100",
-            !field.value && "text-muted-foreground"
+            !field.value && "text-muted-foreground",
+            triggerClass
           )}
           tabIndex={props.tabIndex}
         >

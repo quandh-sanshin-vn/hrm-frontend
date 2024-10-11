@@ -56,6 +56,51 @@ export const STAFF_STATUS_WORKING = [
   },
 ];
 
+export const CANCEL_REQUEST_VALUE = [
+  {
+    value: "0",
+    name: "Not available",
+  },
+  {
+    value: "1",
+    name: "Pending request",
+  },
+  {
+    value: "2",
+    name: "Accepted",
+  },
+  {
+    value: "3",
+    name: "Cancelled",
+  },
+];
+
+export const LEAVE_TYPE = [
+  {
+    value: "0",
+    name: "Unpaid",
+  },
+  {
+    value: "1",
+    name: "Paid",
+  },
+];
+
+export const LEAVE_STATUS = [
+  {
+    value: "0",
+    name: "Waiting",
+  },
+  {
+    value: "1",
+    name: "Accepted",
+  },
+  {
+    value: "2",
+    name: "Cancelled",
+  },
+];
+
 export const SIDEBAR_ITEMS: SideBarItemProps[] = [
   {
     icon: DashboardIcon,
