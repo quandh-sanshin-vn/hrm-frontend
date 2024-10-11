@@ -31,7 +31,7 @@ import useWindowSize from "@/hooks/useWindowSize";
 import { useScheduleStore } from "@/stores/scheduleStore";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -141,25 +141,25 @@ export default function MobileEditDayForm(props: Props) {
     }
   };
 
-  const titleField = form.getFieldState("title", form.formState);
-  const typeField = form.getFieldState("type", form.formState);
-  const descriptionField = form.getFieldState("desciption", form.formState);
+  // const titleField = form.getFieldState("title", form.formState);
+  // const typeField = form.getFieldState("type", form.formState);
+  // const descriptionField = form.getFieldState("desciption", form.formState);
 
   const toggleEditStatus = () => {
     setEnableEdit(!enableEdit);
   };
 
-  const isDirtyForm = useMemo(() => {
-    if (!enableEdit) return false;
-    const isDirty =
-      titleField.isDirty || descriptionField.isDirty || typeField.isDirty;
-    return isDirty;
-  }, [
-    titleField.isDirty,
-    typeField.isDirty,
-    descriptionField.isDirty,
-    enableEdit,
-  ]);
+  // const isDirtyForm = useMemo(() => {
+  //   if (!enableEdit) return false;
+  //   const isDirty =
+  //     titleField.isDirty || descriptionField.isDirty || typeField.isDirty;
+  //   return isDirty;
+  // }, [
+  //   titleField.isDirty,
+  //   typeField.isDirty,
+  //   descriptionField.isDirty,
+  //   enableEdit,
+  // ]);
 
   useEffect(() => {
     if (mode === "edit") {

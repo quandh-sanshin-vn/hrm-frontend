@@ -15,7 +15,7 @@ export const formatFullStringToDate = (date: string) => {
   return parse(date || "", FULL_DATE, new Date()) || new Date();
 };
 
-export const formatDateToString = (date: Date) => {
+export const formatDateToString = (date: Date | string) => {
   if (!date) return "";
   return format(date, DATE);
 };

@@ -1,5 +1,4 @@
-import { DeleteUsersParams } from "@/apis/modules/user";
-import IconTrash from "@/app/assets/icons/iconTrash.svg";
+import IconCheck from "@/app/assets/icons/iconCheck.svg";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,46 +10,43 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { DeleteStaffUseCase } from "@/core/application/usecases/staff-master/deleteStaff.usecase";
-import { User } from "@/core/entities/models/user.model";
-import { UserRepositoryImpl } from "@/core/infrastructure/repositories/user.repo";
-import { toast } from "@/hooks/use-toast";
+import { Leave } from "@/core/entities/models/leave.model";
 import Image from "next/image";
 import { useState } from "react";
-import StyledOverlay from "./StyledOverlay";
+import StyledOverlay from "../StyledOverlay";
 
-const userRepo = new UserRepositoryImpl();
-const deleteStaffUseCase = new DeleteStaffUseCase(userRepo);
+// const userRepo = new UserRepositoryImpl();
+// const deleteStaffUseCase = new DeleteStaffUseCase(userRepo);
 
 interface Props {
-  user: User;
+  leave: Leave;
   onClose?(): void;
 }
-export function ALertDialogDeleteStaff(props: Props) {
-  const { user, onClose = () => {} } = props;
+export function AlertDialogApproveLeave(props: Props) {
+  const { leave } = props;
   const [loading, setLoading] = useState(false);
 
   const onConfirmDelete = async () => {
     try {
       setLoading(true);
-      if (!user?.updated_at || !user?.id) return;
-      const params: DeleteUsersParams = {
-        id: user.id,
-        updated_at: user.updated_at,
-      };
-      const result = await deleteStaffUseCase.execute(params);
-      if (result?.code == 0) {
-        toast({
-          description: "Delete staff successfully.",
-          color: "bg-blue-200",
-        });
-        onClose();
-      } else {
-        toast({
-          description: "Delete staff failed",
-          color: "bg-red-100",
-        });
-      }
+      //   if (!user?.updated_at || !user?.id) return;
+      //   const params: DeleteUsersParams = {
+      //     id: user.id,
+      //     updated_at: user.updated_at,
+      //   };
+      //   const result = await deleteStaffUseCase.execute(params);
+      //   if (result?.code == 0) {
+      //     toast({
+      //       description: "Delete staff successfully.",
+      //       color: "bg-blue-200",
+      //     });
+      //     onClose();
+      //   } else {
+      //     toast({
+      //       description: "Delete staff failed",
+      //       color: "bg-red-100",
+      //     });
+      //   }
     } catch (error) {
     } finally {
       setLoading(false);
@@ -63,7 +59,7 @@ export function ALertDialogDeleteStaff(props: Props) {
       <AlertDialogTrigger asChild>
         <Image
           alt="Delete"
-          src={IconTrash}
+          src={IconCheck}
           className="h-[24px] aspect-square hover:cursor-pointer"
         />
       </AlertDialogTrigger>
@@ -71,8 +67,10 @@ export function ALertDialogDeleteStaff(props: Props) {
         <AlertDialogHeader>
           <AlertDialogTitle className="mb-2">Notification</AlertDialogTitle>
           <AlertDialogDescription className={"text-left"}>
-            Are you sure to delete
-            <span className="font-bold text-[16px] mx-1">{user.fullname}?</span>
+            Are you sure to approve leave of
+            <span className="font-bold text-[16px] mx-1">
+              {leave.employee_name}?
+            </span>
             ?
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -85,7 +83,7 @@ export function ALertDialogDeleteStaff(props: Props) {
               onClick={onConfirmDelete}
               className="mb-0 w-[120px] text-white bg-red_login_hover"
             >
-              Delete
+              Approve
             </AlertDialogAction>
           </div>
         </AlertDialogFooter>
