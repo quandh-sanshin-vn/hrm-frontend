@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -11,6 +11,13 @@ const inter = localFont({
 export const metadata: Metadata = {
   title: "HRM System",
   description: "Sanshin ITS Human resource system",
+};
+
+export const viewport: Viewport = {
+  initialScale: 1,
+  width: "device-width",
+  maximumScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
