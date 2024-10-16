@@ -7,7 +7,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
-import { StyledDatePicker } from "@/components/common/StyledDatePicker";
+import { Textarea } from "@/components/ui/textarea";
+import useWindowSize from "@/hooks/use-dimession";
 import {
   Form,
   FormControl,
@@ -16,9 +17,24 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import useFocus from "@/hooks/use-focus";
 import { useEffect } from "react";
 import { formatStringToDate } from "@/utilities/format";
+import { StyledDatePicker_v2 } from "@/components/common/StyledDatePicker_v2";
+import { LEAVE_STATUS, SHIFT_STATUS } from "@/utilities/static-value";
+import { AlertDialogExecuteLeavelButton } from "@/components/common/AlertDialogExecuteLeavelButton";
+// import { useCommonStore } from "@/stores/commonStore";
+import CanRequestIcon from "@/app/assets/icons/iconCanRequest.svg";
+import StyledCancelRequestDialog from "@/app/leaves/components/StyledCancelRequestDialog";
+import { Button } from "@/components/ui/button";
 
 interface Props {
   isOpen: boolean;
@@ -34,12 +50,19 @@ const formSchema = z.object({
   salary: z.string().trim(),
   shift: z.string().trim(),
   status: z.string().trim(),
+  other_info: z.string().trim(),
+  approval_date: z.string().trim(),
+  created_at: z.string().trim(),
+  approver_name: z.string().trim(),
 });
 
 export default function LeaveDetailModal(props: Props) {
   const { isOpen, onClose, leave } = props;
 
   const { user } = useUserStore((state) => state);
+  const useDimession = useWindowSize();
+
+  // const { approveUsersData } = useCommonStore((state) => state);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -48,10 +71,14 @@ export default function LeaveDetailModal(props: Props) {
       status: leave?.status,
       description: leave?.description,
       salary: leave?.salary,
+      shift: leave?.shift,
+      other_info: leave?.other_info,
+      approval_date: leave?.approval_date,
+      created_at: leave?.created_at,
+      approver_name: leave?.approver_name,
     },
   });
 
-  const isReserveForm = form.watch("day_leaves");
   const isFocus = useFocus();
 
   useEffect(() => {
@@ -60,9 +87,14 @@ export default function LeaveDetailModal(props: Props) {
       form.setValue("status", leave?.status || "");
       form.setValue("description", leave?.description || "");
       form.setValue("salary", leave?.salary || "");
-      form.setValue("shift", leave?.shift || "");
+      form.setValue("shift", String(leave?.shift) || "");
+      form.setValue("other_info", leave?.other_info || "");
+      form.setValue("approval_date", leave?.approval_date || "");
+      form.setValue("created_at", leave?.created_at || "");
+      form.setValue("approver_name", leave?.approver_name || "");
+      console.log(leave);
     }
-  }, [isReserveForm, isFocus]);
+  }, [isFocus]);
 
   if (!isOpen || !leave) return null;
 
@@ -72,14 +104,21 @@ export default function LeaveDetailModal(props: Props) {
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center h-screen z-10">
-      <div className="bg-white rounded-sm shadow-lg w-[664px] h-[600px] px-8 py-5">
+      <div
+        className="bg-white rounded-sm shadow-lg w-[864px] px-8 py-5"
+        style={{
+          maxHeight: useDimession.height * 0.8,
+          minHeight: useDimession.height * 0.8,
+          scrollbarWidth: "none",
+        }}
+      >
         <div className="flex justify-center">
           <h2 className="text-xl font-bold">Leave Infomation</h2>
         </div>
         <div className="flex flex-col items-start w-full">
-          <h3 className="font-bold">Requestor Information</h3>
-          <div className="flex flex-row justify-start gap-6 w-full h-[132px]">
-            <div className="flex items-center justify-center h-full">
+          <h3 className="font-bold mb-1">Requestor Information</h3>
+          <div className="flex flex-row justify-start gap-6 h-[100px]">
+            <div className="flex items-center justify-center h-full aspect-square">
               <Image
                 src={
                   user.image
@@ -87,44 +126,61 @@ export default function LeaveDetailModal(props: Props) {
                     : DefaultImage
                 }
                 alt=""
-                className="object-cover rounded-lg w-[132px] h-[132px]"
-                height={132}
-                width={132}
+                className="object-cover rounded-lg w-[100px] h-[100px]"
+                height={100}
+                width={100}
               />
             </div>
-            <div className="h-full flex flex-col items-center justify-start rounded-md border px-2 border-[#A2A1A8] flex-1">
-              <table className="w-full h-full">
+            <div className="h-full w-[460px] flex flex-col items-center justify-center rounded-[4px] border-[2px] border-opacity-25 border-black px-2 flex-1">
+              <table className="w-full h-full flex justify-start">
                 <tbody>
                   <tr>
-                    <td className="text-[#16151C] font-semibold text-[16px]"></td>
-                    <td className="text-[16px]">{user.idkey}</td>
+                    <td className="text-[#16151C] font-semibold text-[14px]">
+                      Employee ID:
+                    </td>
+                    <td className="text-[14px] font-normal">{user.idkey}</td>
                   </tr>
                   <tr>
-                    <td className="text-[#16151C] font-semibold text-[16px]">
+                    <td className="text-[#16151C] font-semibold text-[14px]">
                       Full name:
                     </td>
-                    <td className="text-[16px]">{user.fullname}</td>
+                    <td className="text-[14px] font-normal">{user.fullname}</td>
                   </tr>
                   <tr>
-                    <td className="text-[#16151C] font-semibold text-[16px]">
+                    <td className="text-[#16151C] font-semibold text-[14px]">
                       Contact:
                     </td>
-                    <td className="text-[16px]">{user.position_name}</td>
+                    <td className="text-[14px] font-normal">
+                      {user.position_name}
+                    </td>
                   </tr>
                   <tr>
-                    <td className="text-[#16151C] font-semibold text-[16px]">
+                    <td className="text-[#16151C] font-semibold text-[14px]">
                       Remaining leave:
                     </td>
-                    <td className="text-[16px]">{user.time_off_hours} hours</td>
+                    <td className="text-[14px] font-normal">
+                      {user.time_off_hours} hours
+                    </td>
                   </tr>
                 </tbody>
               </table>
             </div>
+            {leave?.can_request == "1" && (
+              <div className="h-full">
+                <Image
+                  src={CanRequestIcon}
+                  alt=""
+                  className="object-cover rounded-lg w-[100px] h-[100px]"
+                  height={100}
+                  width={100}
+                />
+              </div>
+            )}
           </div>
         </div>
 
         <div className="flex flex-col items-start w-full">
-          <h3 className="font-bold">Leave Detail</h3>
+          <h3 className="font-bold my-1">Leave Detail</h3>
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
@@ -132,7 +188,7 @@ export default function LeaveDetailModal(props: Props) {
             >
               <div className="flex flex-col gap-3">
                 <div className="flex flex-row justify-between">
-                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[180px]">
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
                     <FormField
                       control={form.control}
                       name={"day_leaves"}
@@ -140,7 +196,7 @@ export default function LeaveDetailModal(props: Props) {
                         <FormItem className="w-full">
                           <FormLabel>Date</FormLabel>
                           <FormControl>
-                            <StyledDatePicker
+                            <StyledDatePicker_v2
                               title=""
                               field={field}
                               tabIndex={2}
@@ -150,65 +206,193 @@ export default function LeaveDetailModal(props: Props) {
                       )}
                     />
                   </div>
-                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[180px]">
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
                     <FormField
                       control={form.control}
                       name="shift"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Shift</FormLabel>
-                          <FormControl>
-                            <Input className="py-0" {...field} />
-                          </FormControl>
-                          <FormMessage />
+                          <Select
+                            value={field.value}
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger
+                                style={{
+                                  color: !field.value
+                                    ? "var(--secondary)"
+                                    : "black",
+                                }}
+                                className="h-6 rounded-none px-0 disabled:opacity-100"
+                              >
+                                <SelectValue className="w-full" />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent className="bg-white">
+                              {SHIFT_STATUS.map((item) => {
+                                return (
+                                  <SelectItem
+                                    key={item.value}
+                                    value={String(item.value)}
+                                  >
+                                    {item.name}
+                                  </SelectItem>
+                                );
+                              })}
+                            </SelectContent>
+                          </Select>
                         </FormItem>
                       )}
                     />
                   </div>
-                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[180px]">
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
                     <FormField
                       control={form.control}
                       name="status"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Status</FormLabel>
-                          <FormControl>
-                            <Input className="py-0" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                      render={({ field }) => {
+                        const selectedStatus =
+                          LEAVE_STATUS.find(
+                            (item) => String(item.value) === String(field.value)
+                          ) || LEAVE_STATUS[0];
+
+                        return (
+                          <FormItem>
+                            <FormLabel>Status</FormLabel>
+                            <FormControl>
+                              <Input
+                                className="p-0 h-6"
+                                {...field}
+                                value={selectedStatus.name}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
                     />
                   </div>
                 </div>
                 <div className="flex flex-col rounded-sm p-1 border border-[#A2A1A8] w-full">
-                  <p className="font-medium">Reason for Leave</p>
-                  <p>{leave.description ?? <>&nbsp;</>}</p>
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Reason for Leave</FormLabel>
+                        <FormControl>
+                          <Textarea className="p-0 min-h-[48px]" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-col rounded-sm p-1 border border-[#A2A1A8] w-full">
+                  <FormField
+                    control={form.control}
+                    name="other_info"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Other Infomation</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            className="p-0 min-h-[48px]"
+                            {...field}
+                            placeholder="Người phụ trách/dự án phụ trách/ tình trạng công việc "
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <div className="flex flex-row justify-between">
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
+                    <FormField
+                      control={form.control}
+                      name={"created_at"}
+                      render={({ field }) => (
+                        <FormItem className="w-full">
+                          <FormLabel>Created date</FormLabel>
+                          <FormControl>
+                            <Input className="p-0 h-6" {...field} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
+                    <FormField
+                      control={form.control}
+                      name="approval_date"
+                      render={({ field }) => {
+                        return (
+                          <FormItem>
+                            <FormLabel>Approval date</FormLabel>
+                            <FormControl>
+                              <Input className="p-0 h-6" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  </div>
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
+                    <FormField
+                      control={form.control}
+                      name="approver_name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Approver</FormLabel>
+                          <FormControl>
+                            <Input className="p-0 h-6" {...field} />
+                          </FormControl>
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                 </div>
               </div>
             </form>
           </Form>
         </div>
 
-        <div className="flex flex-row justify-end gap-5">
+        <div className="flex flex-row justify-end gap-5 mt-4">
           <button
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-[10px]"
+            className="laptop:w-[152px] mx-4 laptop:mx-0 h-[48px] font-normal border border-[#A2A1A880] hover:bg-gray-100 rounded-[10px]"
             onClick={onClose}
           >
             Close
           </button>
-          <button
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-[10px]"
-            onClick={onClose}
+          {/* <AlertDialogExecuteLeavelButton
+            tabIndex={7}
+            description={`Bạn muốn xác nhận bỏ qua yêu cầu huỷ đơn của`}
+            button="Skip Cancel Request"
+            fullname={leave.employee_name}
+          /> */}
+          {/* <AlertDialogExecuteLeavelButton
+            tabIndex={7}
+            description={`Bạn muốn xác nhận huỷ đơn xin nghỉ của`}
+            button="Cancel"
+            fullname={leave.employee_name}
+          /> */}
+          <AlertDialogExecuteLeavelButton
+            tabIndex={7}
+            description={`Bạn muốn xác nhận duyệt đơn xin nghỉ của`}
+            button="Confirm"
+            fullname={leave.employee_name}
+          />
+          <StyledCancelRequestDialog canRequest={leave?.can_request} />
+          <Button
+            tabIndex={6}
+            className="laptop:w-[152px] h-[48px] font-normal text-white text-[16px] hover:bg-primary-hover rounded-[10px]"
+            type="button"
           >
-            Close
-          </button>
-          <button
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-[10px]"
-            onClick={onClose}
-          >
-            Close
-          </button>
+            Edit
+          </Button>
         </div>
       </div>
     </div>

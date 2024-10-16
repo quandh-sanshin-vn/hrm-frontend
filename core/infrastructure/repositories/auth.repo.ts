@@ -12,8 +12,7 @@ import { AuthToken } from "@/core/entities/models/authToken.model";
 import { CommonResponse } from "@/core/entities/models/responseCommon.model";
 
 import {
-  getDepartmentRequest,
-  getPositionRequest,
+  getCommonsRequest,
 } from "@/apis/modules/common";
 import { useCommonStore } from "@/stores/commonStore";
 import { useUserStore } from "@/stores/userStore";
@@ -68,14 +67,14 @@ export class AuthRepositoryImpl implements AuthRepository {
   }
   async getCommonData(token: AuthToken): Promise<boolean | null> {
     try {
-      const position: any = await getPositionRequest(token);
-      const department: any = await getDepartmentRequest(token);
+      const common: any = await getCommonsRequest(token);
 
       const updatePositionData = useCommonStore.getState().updatePositionData;
       const updateDepartmentData =
         useCommonStore.getState().updateDepartmentData;
-      if (position && position.data) {
-        const formatted = position.data.map((i: any) => {
+      const updateApproveUsersData = useCommonStore.getState().updateApproveUsersData
+      if (common && common.data.positions) {
+        const formatted = common.data.positions.map((i: any) => {
           return {
             value: i.id,
             name: i.name,
@@ -83,9 +82,13 @@ export class AuthRepositoryImpl implements AuthRepository {
         });
         updatePositionData(formatted);
       }
-      if (department && department.data) {
-        updateDepartmentData(department.data);
+      if (common && common.data.departments) {
+        updateDepartmentData(common.data.departments);
       }
+      if (common && common.data.approve_users) {
+        updateApproveUsersData(common.data.approve_users);
+      }
+
       return true;
     } catch (error: any) {
       return false;

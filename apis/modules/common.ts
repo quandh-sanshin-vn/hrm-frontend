@@ -26,3 +26,11 @@ export function getDepartmentRequest(token: AuthToken) {
     },
   });
 }
+
+export function getCommonsRequest(token: AuthToken) {
+  return api.get(`/commons`, {
+    headers: {
+      Authorization: `Bearer ${token.token}`,
+    },
+  });
+}

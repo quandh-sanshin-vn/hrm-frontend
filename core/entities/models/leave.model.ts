@@ -8,6 +8,7 @@ export class Leave {
     public status?: string,
     public day_leaves?: string,
     public approver_name?: string,
+    public approval_date?: string,
     public shift?: string,
     public other_info?: string,
     public image?: string,
