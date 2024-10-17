@@ -27,14 +27,14 @@ import {
 
 import useFocus from "@/hooks/use-focus";
 import { useEffect } from "react";
-// import { formatStringToDate } from "@/utilities/format";
-// import { StyledDatePicker_v2 } from "@/components/common/StyledDatePicker_v2";
+import { formatStringToDate } from "@/utilities/format";
 import { LEAVE_STATUS, SHIFT_STATUS } from "@/utilities/static-value";
 // import { AlertDialogExecuteLeavelButton } from "@/components/common/AlertDialogExecuteLeavelButton";
 // import { useCommonStore } from "@/stores/commonStore";
 import CanRequestIcon from "@/app/assets/icons/iconCanRequest.svg";
 import StyledCancelRequestDialog from "@/app/leaves/components/StyledCancelRequestDialog";
 import { Button } from "@/components/ui/button";
+import { StyledDatePicker } from "@/components/common/StyledDatePicker";
 
 interface Props {
   isOpen: boolean;
@@ -44,10 +44,9 @@ interface Props {
 
 const formSchema = z.object({
   description: z.string().trim(),
-  // day_leaves: z
-  //   .union([z.string(), z.date()])
-  //   .transform((value) => new Date(value)),
-  day_leaves: z.string().trim(),
+  day_leaves: z
+    .union([z.string(), z.date()])
+    .transform((value) => new Date(value)),
   salary: z.string().trim(),
   shift: z.string().trim(),
   status: z.string().trim(),
@@ -68,8 +67,7 @@ export default function LeaveDetailModal(props: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      // day_leaves: formatStringToDate(leave?.day_leaves || ""),
-      day_leaves: leave?.day_leaves,
+      day_leaves: formatStringToDate(leave?.day_leaves || ""),
       status: leave?.status,
       description: leave?.description,
       salary: leave?.salary,
@@ -85,8 +83,7 @@ export default function LeaveDetailModal(props: Props) {
 
   useEffect(() => {
     if (isFocus) {
-      // form.setValue("day_leaves", formatStringToDate(leave?.day_leaves || ""));
-      form.setValue("day_leaves", leave?.day_leaves || "");
+      form.setValue("day_leaves", formatStringToDate(leave?.day_leaves || ""));
       form.setValue("status", leave?.status || "");
       form.setValue("description", leave?.description || "");
       form.setValue("salary", leave?.salary || "");
@@ -211,12 +208,11 @@ export default function LeaveDetailModal(props: Props) {
                         <FormItem className="w-full">
                           <FormLabel>Date</FormLabel>
                           <FormControl>
-                            {/* <StyledDatePicker_v2
-                              title=""
+                            <StyledDatePicker
                               field={field}
-                              tabIndex={2}
-                            /> */}
-                            <Input className="p-0 h-6" {...field} />
+                              title={""}
+                              triggerClass="h-6 border-none rounded-md"
+                            />
                           </FormControl>
                         </FormItem>
                       )}
