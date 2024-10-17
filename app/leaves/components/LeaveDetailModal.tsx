@@ -27,10 +27,10 @@ import {
 
 import useFocus from "@/hooks/use-focus";
 import { useEffect } from "react";
-import { formatStringToDate } from "@/utilities/format";
-import { StyledDatePicker_v2 } from "@/components/common/StyledDatePicker_v2";
+// import { formatStringToDate } from "@/utilities/format";
+// import { StyledDatePicker_v2 } from "@/components/common/StyledDatePicker_v2";
 import { LEAVE_STATUS, SHIFT_STATUS } from "@/utilities/static-value";
-import { AlertDialogExecuteLeavelButton } from "@/components/common/AlertDialogExecuteLeavelButton";
+// import { AlertDialogExecuteLeavelButton } from "@/components/common/AlertDialogExecuteLeavelButton";
 // import { useCommonStore } from "@/stores/commonStore";
 import CanRequestIcon from "@/app/assets/icons/iconCanRequest.svg";
 import StyledCancelRequestDialog from "@/app/leaves/components/StyledCancelRequestDialog";
@@ -44,9 +44,10 @@ interface Props {
 
 const formSchema = z.object({
   description: z.string().trim(),
-  day_leaves: z
-    .union([z.string(), z.date()])
-    .transform((value) => new Date(value)),
+  // day_leaves: z
+  //   .union([z.string(), z.date()])
+  //   .transform((value) => new Date(value)),
+  day_leaves: z.string().trim(),
   salary: z.string().trim(),
   shift: z.string().trim(),
   status: z.string().trim(),
@@ -67,7 +68,8 @@ export default function LeaveDetailModal(props: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      day_leaves: formatStringToDate(leave?.day_leaves || ""),
+      // day_leaves: formatStringToDate(leave?.day_leaves || ""),
+      day_leaves: leave?.day_leaves,
       status: leave?.status,
       description: leave?.description,
       salary: leave?.salary,
@@ -83,7 +85,8 @@ export default function LeaveDetailModal(props: Props) {
 
   useEffect(() => {
     if (isFocus) {
-      form.setValue("day_leaves", formatStringToDate(leave?.day_leaves || ""));
+      // form.setValue("day_leaves", formatStringToDate(leave?.day_leaves || ""));
+      form.setValue("day_leaves", leave?.day_leaves || "");
       form.setValue("status", leave?.status || "");
       form.setValue("description", leave?.description || "");
       form.setValue("salary", leave?.salary || "");
@@ -92,7 +95,6 @@ export default function LeaveDetailModal(props: Props) {
       form.setValue("approval_date", leave?.approval_date || "");
       form.setValue("created_at", leave?.created_at || "");
       form.setValue("approver_name", leave?.approver_name || "");
-      console.log(leave);
     }
   }, [isFocus]);
 
@@ -103,9 +105,9 @@ export default function LeaveDetailModal(props: Props) {
   }
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center h-screen z-10">
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-10">
       <div
-        className="bg-white rounded-sm shadow-lg w-[864px] px-8 py-5"
+        className="bg-white flex flex-col justify-between rounded-sm shadow-lg w-[864px] px-8 py-5"
         style={{
           maxHeight: useDimession.height * 0.8,
           minHeight: useDimession.height * 0.8,
@@ -116,9 +118,9 @@ export default function LeaveDetailModal(props: Props) {
           <h2 className="text-xl font-bold">Leave Infomation</h2>
         </div>
         <div className="flex flex-col items-start w-full">
-          <h3 className="font-bold mb-1">Requestor Information</h3>
-          <div className="flex flex-row justify-start gap-6 h-[100px]">
-            <div className="flex items-center justify-center h-full aspect-square">
+          <h3 className="font-bold mb-3">Requestor Information</h3>
+          <div className="flex flex-row justify-start gap-6 h-[132px]">
+            <div className="flex items-center justify-center h-full">
               <Image
                 src={
                   user.image
@@ -126,39 +128,43 @@ export default function LeaveDetailModal(props: Props) {
                     : DefaultImage
                 }
                 alt=""
-                className="object-cover rounded-lg w-[100px] h-[100px]"
-                height={100}
-                width={100}
+                className="object-cover rounded-lg w-[143px] h-[132px]"
+                height={132}
+                width={143}
               />
             </div>
             <div className="h-full w-[460px] flex flex-col items-center justify-center rounded-[4px] border-[2px] border-opacity-25 border-black px-2 flex-1">
-              <table className="w-full h-full flex justify-start">
+              <table className="w-full h-full flex justify-start items-center">
                 <tbody>
                   <tr>
-                    <td className="text-[#16151C] font-semibold text-[14px]">
+                    <td className="text-[#16151C] font-semibold text-[14px] leading-6">
                       Employee ID:
                     </td>
-                    <td className="text-[14px] font-normal">{user.idkey}</td>
+                    <td className="text-[14px] font-normal leading-6 px-2">
+                      {user.idkey}
+                    </td>
                   </tr>
                   <tr>
-                    <td className="text-[#16151C] font-semibold text-[14px]">
+                    <td className="text-[#16151C] font-semibold text-[14px] leading-6">
                       Full name:
                     </td>
-                    <td className="text-[14px] font-normal">{user.fullname}</td>
+                    <td className="text-[14px] font-normal leading-6 px-2">
+                      {user.fullname}
+                    </td>
                   </tr>
                   <tr>
-                    <td className="text-[#16151C] font-semibold text-[14px]">
+                    <td className="text-[#16151C] font-semibold text-[14px] leading-6">
                       Contact:
                     </td>
-                    <td className="text-[14px] font-normal">
+                    <td className="text-[14px] font-normal leading-6 px-2">
                       {user.position_name}
                     </td>
                   </tr>
                   <tr>
-                    <td className="text-[#16151C] font-semibold text-[14px]">
+                    <td className="text-[#16151C] font-semibold text-[14px] leading-6">
                       Remaining leave:
                     </td>
-                    <td className="text-[14px] font-normal">
+                    <td className="text-[14px] font-normal leading-6 px-2">
                       {user.time_off_hours} hours
                     </td>
                   </tr>
@@ -166,47 +172,57 @@ export default function LeaveDetailModal(props: Props) {
               </table>
             </div>
             {leave?.can_request == "1" && (
-              <div className="h-full">
+              <div className="h-full relative">
                 <Image
                   src={CanRequestIcon}
                   alt=""
-                  className="object-cover rounded-lg w-[100px] h-[100px]"
-                  height={100}
-                  width={100}
+                  className="object-cover rounded-lg w-[126px] h-[126px]"
+                  height={126}
+                  width={126}
                 />
+                <p className="text-white font-bold text-[12px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 whitespace-nowrap">
+                  Cancel Request
+                </p>
               </div>
             )}
           </div>
         </div>
 
-        <div className="flex flex-col items-start w-full">
-          <h3 className="font-bold my-1">Leave Detail</h3>
+        <h3 className="font-bold mt-3 mb-7">Leave Detail</h3>
+        <div
+          className="flex flex-col items-start w-full h-full overflow-y-auto flex-1"
+          style={{
+            scrollbarWidth: "none",
+          }}
+        >
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               className="space-y-8 w-full"
             >
-              <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3 h-full">
                 <div className="flex flex-row justify-between">
-                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[242px] h-full">
                     <FormField
+                      disabled
                       control={form.control}
                       name={"day_leaves"}
                       render={({ field }) => (
                         <FormItem className="w-full">
                           <FormLabel>Date</FormLabel>
                           <FormControl>
-                            <StyledDatePicker_v2
+                            {/* <StyledDatePicker_v2
                               title=""
                               field={field}
                               tabIndex={2}
-                            />
+                            /> */}
+                            <Input className="p-0 h-6" {...field} />
                           </FormControl>
                         </FormItem>
                       )}
                     />
                   </div>
-                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[242px] h-full">
                     <FormField
                       control={form.control}
                       name="shift"
@@ -214,6 +230,7 @@ export default function LeaveDetailModal(props: Props) {
                         <FormItem>
                           <FormLabel>Shift</FormLabel>
                           <Select
+                            disabled
                             value={field.value}
                             onValueChange={field.onChange}
                             defaultValue={field.value}
@@ -247,8 +264,9 @@ export default function LeaveDetailModal(props: Props) {
                       )}
                     />
                   </div>
-                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[242px] h-full">
                     <FormField
+                      disabled
                       control={form.control}
                       name="status"
                       render={({ field }) => {
@@ -276,13 +294,14 @@ export default function LeaveDetailModal(props: Props) {
                 </div>
                 <div className="flex flex-col rounded-sm p-1 border border-[#A2A1A8] w-full">
                   <FormField
+                    disabled
                     control={form.control}
                     name="description"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Reason for Leave</FormLabel>
                         <FormControl>
-                          <Textarea className="p-0 min-h-[48px]" {...field} />
+                          <Textarea className="p-0 min-h-[108px]" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -291,6 +310,7 @@ export default function LeaveDetailModal(props: Props) {
                 </div>
                 <div className="flex flex-col rounded-sm p-1 border border-[#A2A1A8] w-full">
                   <FormField
+                    disabled
                     control={form.control}
                     name="other_info"
                     render={({ field }) => (
@@ -298,7 +318,7 @@ export default function LeaveDetailModal(props: Props) {
                         <FormLabel>Other Infomation</FormLabel>
                         <FormControl>
                           <Textarea
-                            className="p-0 min-h-[48px]"
+                            className="p-0 min-h-[108px]"
                             {...field}
                             placeholder="Người phụ trách/dự án phụ trách/ tình trạng công việc "
                           />
@@ -309,8 +329,9 @@ export default function LeaveDetailModal(props: Props) {
                   />
                 </div>
                 <div className="flex flex-row justify-between">
-                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[242px] h-full">
                     <FormField
+                      disabled
                       control={form.control}
                       name={"created_at"}
                       render={({ field }) => (
@@ -323,8 +344,9 @@ export default function LeaveDetailModal(props: Props) {
                       )}
                     />
                   </div>
-                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[242px] h-full">
                     <FormField
+                      disabled
                       control={form.control}
                       name="approval_date"
                       render={({ field }) => {
@@ -340,8 +362,9 @@ export default function LeaveDetailModal(props: Props) {
                       }}
                     />
                   </div>
-                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[240px] h-full">
+                  <div className="rounded-sm p-1 border border-[#A2A1A8] w-[242px] h-full">
                     <FormField
+                      disabled
                       control={form.control}
                       name="approver_name"
                       render={({ field }) => (
@@ -360,9 +383,9 @@ export default function LeaveDetailModal(props: Props) {
           </Form>
         </div>
 
-        <div className="flex flex-row justify-end gap-5 mt-4">
+        <div className="flex flex-row justify-end gap-5 mt-10">
           <button
-            className="laptop:w-[152px] mx-4 laptop:mx-0 h-[48px] font-normal border border-[#A2A1A880] hover:bg-gray-100 rounded-[10px]"
+            className="laptop:w-[152px] mx-4 laptop:mx-0 h-[50px] font-normal border border-[#A2A1A880] hover:bg-gray-100 rounded-[10px]"
             onClick={onClose}
           >
             Close
@@ -379,16 +402,16 @@ export default function LeaveDetailModal(props: Props) {
             button="Cancel"
             fullname={leave.employee_name}
           /> */}
-          <AlertDialogExecuteLeavelButton
+          {/* <AlertDialogExecuteLeavelButton
             tabIndex={7}
             description={`Bạn muốn xác nhận duyệt đơn xin nghỉ của`}
             button="Confirm"
             fullname={leave.employee_name}
-          />
+          /> */}
           <StyledCancelRequestDialog canRequest={leave?.can_request} />
           <Button
             tabIndex={6}
-            className="laptop:w-[152px] h-[48px] font-normal text-white text-[16px] hover:bg-primary-hover rounded-[10px]"
+            className="laptop:w-[152px] h-[50px] font-normal text-white text-[16px] hover:bg-primary-hover rounded-[10px]"
             type="button"
           >
             Edit

@@ -40,7 +40,7 @@ export function AlertDialogExecuteLeavelButton(props: Props) {
         <AlertDialogTrigger asChild className="mx-2">
           <Button
             tabIndex={props.tabIndex}
-            className={`laptop:w-[152px] mx-4 laptop:mx-0 h-[48px] font-normal bg-[#2B4CD2] hover:bg-[#5679E5] text-white text-[14px] rounded-[10px]`}
+            className={`laptop:w-[152px] mx-4 laptop:mx-0 h-[50px] font-normal bg-[#2B4CD2] hover:bg-[#5679E5] text-white text-[14px] rounded-[10px]`}
             type="button"
             variant="outline"
           >
@@ -53,7 +53,7 @@ export function AlertDialogExecuteLeavelButton(props: Props) {
         <AlertDialogTrigger asChild className="mx-2">
           <Button
             tabIndex={props.tabIndex}
-            className={`laptop:w-[152px] mx-4 laptop:mx-0 h-[48px] font-normal bg-[#BD0D10] hover:bg-[#E6393C] text-white text-[14px] rounded-[10px]`}
+            className={`laptop:w-[152px] mx-4 laptop:mx-0 h-[50px] font-normal bg-[#BD0D10] hover:bg-[#E6393C] text-white text-[14px] rounded-[10px]`}
             type="button"
             variant="outline"
           >
@@ -66,7 +66,7 @@ export function AlertDialogExecuteLeavelButton(props: Props) {
         <AlertDialogTrigger asChild className="mx-2">
           <Button
             tabIndex={props.tabIndex}
-            className={`laptop:w-[152px] mx-4 laptop:mx-0 h-[48px] font-normal border-none text-black bg-[#DCFAFF] hover:bg-[#B3E6F2] text-[14px] rounded-[10px]`}
+            className={`laptop:w-[152px] mx-4 laptop:mx-0 h-[50px] font-normal border-none text-black bg-[#DCFAFF] hover:bg-[#B3E6F2] text-[14px] rounded-[10px]`}
             type="button"
             variant="outline"
           >

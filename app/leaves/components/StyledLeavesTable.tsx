@@ -38,7 +38,6 @@ export default function StyledLeavesTable(props: Props) {
   } = useLeaveStore((state) => state);
 
   const goToDetailPage = (leave: Leave) => {
-    console.log(leave);
     updateSelectedLeave(leave);
     setIsModalOpen(true);
   };

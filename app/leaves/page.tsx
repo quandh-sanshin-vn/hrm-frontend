@@ -60,7 +60,6 @@ export default function LeavesScreen() {
       };
 
       const response = await getLeavesListUseCase.execute(params);
-      console.log("----------------", response);
       updateLeaveListData(response?.data, response?.totalItem || 0);
       updateSearchParams(params);
     } catch (error) {
