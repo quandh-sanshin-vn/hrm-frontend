@@ -17,6 +17,15 @@ export function getLeaveListRequest(params: GetLeaveListParams) {
   return api.get(`/leaves`, { params });
 }
 
+export interface GetLeaveDetailParams {
+  id?: number;
+}
+
+export function getLeaveDetailRequest(params: GetLeaveDetailParams) {
+  return api.get(`/leaves/detail`, { params });
+}
+
+
 // export interface GetDayOffParams {
 //   id?: number;
 // }

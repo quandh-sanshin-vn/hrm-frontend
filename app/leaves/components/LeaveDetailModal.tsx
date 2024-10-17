@@ -35,6 +35,8 @@ import CanRequestIcon from "@/app/assets/icons/iconCanRequest.svg";
 import StyledCancelRequestDialog from "@/app/leaves/components/StyledCancelRequestDialog";
 import { Button } from "@/components/ui/button";
 import { StyledDatePicker } from "@/components/common/StyledDatePicker";
+// import { LeaveRepositoryImpl } from "@/core/infrastructure/repositories/leave.repo";
+// import { GetLeaveDetailUseCase } from "@/core/application/usecases/leave/getLeaveDetail";
 
 interface Props {
   isOpen: boolean;
@@ -55,6 +57,9 @@ const formSchema = z.object({
   created_at: z.string().trim(),
   approver_name: z.string().trim(),
 });
+
+// const leaveRepo = new LeaveRepositoryImpl();
+// const getLeaveDetailUseCase = new GetLeaveDetailUseCase(leaveRepo);
 
 export default function LeaveDetailModal(props: Props) {
   const { isOpen, onClose, leave } = props;
@@ -96,6 +101,17 @@ export default function LeaveDetailModal(props: Props) {
   }, [isFocus]);
 
   if (!isOpen || !leave) return null;
+
+  // const onLoadLeaveDetail = async () => {
+  //   try {
+  //     const params = { id: leave.id };
+  //     const response = await getLeaveDetailUseCase.execute(params);
+  //   } catch (error) {}
+  // };
+
+  // useEffect(() => {
+  //   onLoadLeaveDetail();
+  // }, []);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
