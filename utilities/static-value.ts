@@ -101,6 +101,21 @@ export const LEAVE_STATUS = [
   },
 ];
 
+export const SHIFT_STATUS = [
+  {
+    value: "0",
+    name: "Cả ngày",
+  },
+  {
+    value: "1",
+    name: "Nghỉ sáng",
+  },
+  {
+    value: "2",
+    name: "Nghỉ chiều",
+  },
+];
+
 export const SIDEBAR_ITEMS: SideBarItemProps[] = [
   {
     icon: DashboardIcon,

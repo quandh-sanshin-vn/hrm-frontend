@@ -5,7 +5,6 @@ import { AlertDialogApproveLeave } from "@/components/common/alert-dialog/AlertD
 import StyledHeaderColumn from "@/components/common/StyledHeaderColumn";
 import { GetLeavesListUseCase } from "@/core/application/usecases/leave/getLeaveList";
 import { Leave } from "@/core/entities/models/leave.model";
-import { User } from "@/core/entities/models/user.model";
 import { LeaveRepositoryImpl } from "@/core/infrastructure/repositories/leave.repo";
 import useWindowSize from "@/hooks/useWindowSize";
 import { useLeaveStore } from "@/stores/leavesStore";
@@ -14,6 +13,7 @@ import { LEAVE_STATUS } from "@/utilities/static-value";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import StyledLeaveStatusItem from "./StyledLeaveStatusItem";
+import LeaveDetailModal from "@/app/leaves/components/LeaveDetailModal";
 
 const leaveRepo = new LeaveRepositoryImpl();
 const getLeavesListUseCase = new GetLeavesListUseCase(leaveRepo);
@@ -26,14 +26,20 @@ interface Props {
 export default function StyledLeavesTable(props: Props) {
   const { setLoading } = props;
   const windowSize = useWindowSize();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { leaveList, searchParams, updateSearchParams, updateLeaveListData } =
-    useLeaveStore((state) => state);
+  const {
+    leaveList,
+    searchParams,
+    selectedLeave,
+    updateSearchParams,
+    updateLeaveListData,
+    updateSelectedLeave,
+  } = useLeaveStore((state) => state);
 
-  const goToDetailPage = (user: User) => {
-    console.log(user);
-    // updateSelectedStaff(user);
-    // router.push(`/staffs/detail-staff/${user.id}`);
+  const goToDetailPage = (leave: Leave) => {
+    updateSelectedLeave(leave);
+    setIsModalOpen(true);
   };
 
   //   const goToEditPage = (user: User) => {
@@ -247,6 +253,12 @@ export default function StyledLeavesTable(props: Props) {
           })}
         </tbody>
       </table>
+
+      <LeaveDetailModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        leave={selectedLeave}
+      />
     </div>
   );
 }
