@@ -5,7 +5,6 @@ import { CommonResponse } from "@/core/entities/models/responseCommon.model";
 export class LeaveRepositoryImpl implements LeaveRepository {
   async getLeaveDetail(params: GetLeaveDetailParams): Promise<CommonResponse | null> {
     try {
-                                                                                 
         const response : any = await getLeaveDetailRequest(params)
         return response
     }catch (error: any) {

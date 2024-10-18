@@ -14,6 +14,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import StyledLeaveStatusItem from "./StyledLeaveStatusItem";
 import LeaveDetailModal from "@/app/leaves/components/LeaveDetailModal";
+import StyledOverlay from "@/components/common/StyledOverlay";
 
 const leaveRepo = new LeaveRepositoryImpl();
 const getLeavesListUseCase = new GetLeavesListUseCase(leaveRepo);
@@ -27,19 +28,16 @@ export default function StyledLeavesTable(props: Props) {
   const { setLoading } = props;
   const windowSize = useWindowSize();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isIdLeave, setIsIdLeave] = useState<number | undefined>();
+  const [isLoadingLeaveDetail, setIsLoadingLeaveDetail] = useState(false);
 
-  const {
-    leaveList,
-    searchParams,
-    selectedLeave,
-    updateSearchParams,
-    updateLeaveListData,
-    updateSelectedLeave,
-  } = useLeaveStore((state) => state);
+  const { leaveList, searchParams, updateSearchParams, updateLeaveListData } =
+    useLeaveStore((state) => state);
 
-  const goToDetailPage = (leave: Leave) => {
-    updateSelectedLeave(leave);
+  const goToDetailPage = (idLeave: number) => {
+    setIsIdLeave(idLeave);
     setIsModalOpen(true);
+    setIsLoadingLeaveDetail(true);
   };
 
   //   const goToEditPage = (user: User) => {
@@ -235,7 +233,7 @@ export default function StyledLeavesTable(props: Props) {
                 <td className="pl-2 w-[112px] text-[16px] font-normal border-b border-[#F6F6F6]">
                   <div className="flex items-center justify-start w-full gap-x-2">
                     <Image
-                      onClick={() => goToDetailPage(leave)}
+                      onClick={() => goToDetailPage(Number(leave.id))}
                       alt="See detail"
                       src={IconDetail}
                       className="h-[24px] aspect-square hover:cursor-pointer"
@@ -254,11 +252,17 @@ export default function StyledLeavesTable(props: Props) {
         </tbody>
       </table>
 
-      <LeaveDetailModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        leave={selectedLeave}
-      />
+      {isModalOpen && (
+        <LeaveDetailModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          idLeave={isIdLeave}
+          setLoading={setIsLoadingLeaveDetail}
+        />
+      )}
+      {isLoadingLeaveDetail && (
+        <StyledOverlay isVisible={isLoadingLeaveDetail} />
+      )}
     </div>
   );
 }

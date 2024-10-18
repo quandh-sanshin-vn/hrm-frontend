@@ -25,8 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import useFocus from "@/hooks/use-focus";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { formatStringToDate } from "@/utilities/format";
 import { LEAVE_STATUS, SHIFT_STATUS } from "@/utilities/static-value";
 // import { AlertDialogExecuteLeavelButton } from "@/components/common/AlertDialogExecuteLeavelButton";
@@ -35,13 +34,15 @@ import CanRequestIcon from "@/app/assets/icons/iconCanRequest.svg";
 import StyledCancelRequestDialog from "@/app/leaves/components/StyledCancelRequestDialog";
 import { Button } from "@/components/ui/button";
 import { StyledDatePicker } from "@/components/common/StyledDatePicker";
-// import { LeaveRepositoryImpl } from "@/core/infrastructure/repositories/leave.repo";
-// import { GetLeaveDetailUseCase } from "@/core/application/usecases/leave/getLeaveDetail";
+import { LeaveRepositoryImpl } from "@/core/infrastructure/repositories/leave.repo";
+import { GetLeaveDetailUseCase } from "@/core/application/usecases/leave/getLeaveDetail";
+import { GetLeaveDetailParams } from "@/apis/modules/leave";
 
 interface Props {
   isOpen: boolean;
   onClose(): void;
-  leave: Leave;
+  idLeave: number | undefined;
+  setLoading(value: boolean): void;
 }
 
 const formSchema = z.object({
@@ -58,11 +59,12 @@ const formSchema = z.object({
   approver_name: z.string().trim(),
 });
 
-// const leaveRepo = new LeaveRepositoryImpl();
-// const getLeaveDetailUseCase = new GetLeaveDetailUseCase(leaveRepo);
+const leaveRepo = new LeaveRepositoryImpl();
+const getLeaveDetailUseCase = new GetLeaveDetailUseCase(leaveRepo);
 
 export default function LeaveDetailModal(props: Props) {
-  const { isOpen, onClose, leave } = props;
+  const { isOpen, onClose, idLeave, setLoading } = props;
+  const [leave, setLeave] = useState<Leave>();
 
   const { user } = useUserStore((state) => state);
   const useDimession = useWindowSize();
@@ -84,41 +86,43 @@ export default function LeaveDetailModal(props: Props) {
     },
   });
 
-  const isFocus = useFocus();
+  useEffect(() => {
+    form.setValue("day_leaves", formatStringToDate(leave?.day_leaves || ""));
+    form.setValue("status", leave?.status || "");
+    form.setValue("description", leave?.description || "");
+    form.setValue("salary", leave?.salary || "");
+    form.setValue("shift", String(leave?.shift) || "");
+    form.setValue("other_info", leave?.other_info || "");
+    form.setValue("approval_date", leave?.approval_date || "");
+    form.setValue("created_at", leave?.created_at || "");
+    form.setValue("approver_name", leave?.approver_name || "");
+  }, [leave?.id]);
+
+  const onLoadLeaveDetail = async () => {
+    try {
+      setLoading(true);
+      const params: GetLeaveDetailParams = { id: idLeave };
+      const response = await getLeaveDetailUseCase.execute(params);
+      setLeave(response?.data);
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    if (isFocus) {
-      form.setValue("day_leaves", formatStringToDate(leave?.day_leaves || ""));
-      form.setValue("status", leave?.status || "");
-      form.setValue("description", leave?.description || "");
-      form.setValue("salary", leave?.salary || "");
-      form.setValue("shift", String(leave?.shift) || "");
-      form.setValue("other_info", leave?.other_info || "");
-      form.setValue("approval_date", leave?.approval_date || "");
-      form.setValue("created_at", leave?.created_at || "");
-      form.setValue("approver_name", leave?.approver_name || "");
-    }
-  }, [isFocus]);
-
-  if (!isOpen || !leave) return null;
-
-  // const onLoadLeaveDetail = async () => {
-  //   try {
-  //     const params = { id: leave.id };
-  //     const response = await getLeaveDetailUseCase.execute(params);
-  //   } catch (error) {}
-  // };
-
-  // useEffect(() => {
-  //   onLoadLeaveDetail();
-  // }, []);
+    onLoadLeaveDetail();
+  }, []);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
 
+  if (!isOpen || !leave) return null;
+
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-10">
+      {/* <StyledOverlay isVisible={loading} /> */}
       <div
         className="bg-white flex flex-col justify-between rounded-sm shadow-lg w-[864px] px-8 py-5"
         style={{
